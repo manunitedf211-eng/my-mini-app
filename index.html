@@ -1,382 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Orange 🍊</title>
+    <title>Looby Earning</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
         :root {
-            --font-family: 'Poppins', sans-serif;
-            --primary-color: #E74C3C; --secondary-color: #F39C12;
-            --background-light: #FDFEFE; --surface-light: #FFFFFF; --text-primary-light: #2C3E50; --text-secondary-light: #808B96; --border-light: #EAEDED;
-            --background-dark: #1B2631; --surface-dark: #283747; --text-primary-dark: #FDFEFE; --text-secondary-dark: #ABB2B9; --border-dark: #566573;
-            --success: #27AE60; --danger: #C0392B; --pending: #F39C12;
+            --primary-color: #E74C3C;
+            --secondary-color: #F39C12;
+            --background-dark: #1B2631;
+            --surface-dark: #283747;
+            --text-primary-dark: #FDFEFE;
+            --text-secondary-dark: #ABB2B9;
+            --border-dark: #566573;
+            --success: #27AE60;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-family); transition: background-color 0.3s, color 0.3s; -webkit-font-smoothing: antialiased; }
-        body.light-theme { background-color: var(--background-light); color: var(--text-primary-light); }
-        body.dark-theme { background-color: var(--background-dark); color: var(--text-primary-dark); }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-dark); color: var(--text-primary-dark); -webkit-font-smoothing: antialiased; }
         #app { max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
         .page { display: none; padding: 15px; }
-        .page.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: block; }
         
         .profile-header {
-            padding: 25px 15px; border-bottom: 1px solid;
+            padding: 25px 15px; border-bottom: 1px solid var(--border-dark);
             display: flex; flex-direction: column; align-items: center; text-align: center;
+            background-color: var(--surface-dark);
         }
-        .light-theme .profile-header { background-color: var(--surface-light); border-bottom-color: var(--border-light); }
-        .dark-theme .profile-header { background-color: var(--surface-dark); border-bottom-color: var(--border-dark); }
         #user-photo { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--primary-color); object-fit: cover; margin-bottom: 10px; }
         #user-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
         #user-balance-container { font-size: 1rem; font-weight: 500; }
         #user-balance { font-size: 1.1rem; font-weight: 700; color: var(--primary-color); }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid; }
-        .light-theme .stat-card { background-color: var(--surface-light); border-color: var(--border-light); }
-        .dark-theme .stat-card { background-color: var(--surface-dark); border-color: var(--border-dark); }
-        .stat-card h3 { font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; }
-        .light-theme .stat-card h3 { color: var(--text-secondary-light); } .dark-theme .stat-card h3 { color: var(--text-secondary-dark); }
+        .stat-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border-dark); background-color: var(--surface-dark); }
+        .stat-card h3 { font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; color: var(--text-secondary-dark); }
         .stat-card p { font-size: 1.4rem; font-weight: 600; color: var(--primary-color); }
         
-        .chart-container, .earning-wallet-card { padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid; }
-        .light-theme .chart-container, .light-theme .earning-wallet-card { background-color: var(--surface-light); border-color: var(--border-light); }
-        .dark-theme .chart-container, .dark-theme .earning-wallet-card { background-color: var(--surface-dark); border-color: var(--border-dark); }
-        .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 150px; border-left: 1px solid; border-bottom: 1px solid; padding-top: 10px; }
-        .light-theme .chart { border-color: var(--border-light); } .dark-theme .chart { border-color: var(--border-dark); }
-        .bar { width: 12%; background: linear-gradient(to top, var(--primary-color), var(--secondary-color)); border-radius: 5px 5px 0 0; position: relative; cursor: pointer; }
-        .bar .tooltip { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: #222; color: white; padding: 3px 7px; border-radius: 5px; font-size: 0.8rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
-        .bar:hover .tooltip { opacity: 1; }
-        .chart-labels { display: flex; justify-content: space-around; font-size: 0.75rem; margin-top: 5px; }
-
-        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-        .light-theme .history-item { background-color: var(--surface-light); border: 1px solid var(--border-light); }
-        .dark-theme .history-item { background-color: var(--surface-dark); border: 1px solid var(--border-dark); }
-        .history-details p { margin: 0; } .history-details p:first-child { font-weight: 600; }
-        .history-status { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white; text-transform: capitalize; }
-        .status-completed { background-color: var(--success); } .status-pending { background-color: var(--pending); } .status-rejected { background-color: var(--danger); }
-
-        .progress-container { margin-bottom: 20px; }
-        .progress-info { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
-        .progress-bar-bg { width: 100%; height: 10px; border-radius: 5px; }
-        .light-theme .progress-bar-bg { background-color: var(--border-light); }
-        .dark-theme .progress-bar-bg { background-color: var(--border-dark); }
-        .progress-bar-fg { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--primary-color), var(--secondary-color)); transition: width 0.3s ease; }
+        .earning-wallet-card, .chart-container { padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid var(--border-dark); background-color: var(--surface-dark); }
+        .action-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: #fff; border: none; border-radius: 8px; cursor: pointer; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); width: 100%; margin-top: 10px; }
         
-        form input, form select, form textarea { transition: all 0.2s ease-in-out; border: 1px solid; }
-        .light-theme form input, .light-theme form select { border-color: var(--border-light); }
-        .dark-theme form input, .dark-theme form select { border-color: var(--border-dark); }
-        form input:focus, form select:focus, form textarea:focus { outline: none; border-color: var(--primary-color) !important; box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-dark); background-color: var(--surface-dark); z-index: 1000; }
+        .nav-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; color: var(--text-secondary-dark); font-size: 0.75rem; flex-grow: 1; }
+        .nav-btn i { font-size: 1.5rem; margin-bottom: 4px; }
+        .nav-btn.active { color: var(--primary-color); }
 
-        .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .popup-content { padding: 30px; border-radius: 15px; text-align: center; max-width: 80%; }
-        .light-theme .popup-content { background-color: var(--surface-light); } .dark-theme .popup-content { background-color: var(--surface-dark); }
-        .popup-content h2 { margin-bottom: 15px; color: var(--primary-color); } .popup-content p { margin-bottom: 20px; }
-        .popup-close-btn { padding: 10px 25px; border: none; border-radius: 8px; color: #fff; background-color: var(--primary-color); cursor: pointer; }
-        .popup-loader .spinner { width: 40px; height: 40px; border-radius: 50%; border: 4px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; margin: 0 auto 15px;}
+        .task-container { padding: 15px; border-radius: 12px; margin-top: 15px; background-color: var(--surface-dark); border: 1px solid var(--border-dark); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-dark); background: #1B2631; color: #fff; text-align: center; }
+
+        #app-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: var(--background-dark); }
+        .spinner { width: 50px; height: 50px; border-radius: 50%; border: 5px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        #app-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .light-theme #app-loader { background-color: var(--background-light); } .dark-theme #app-loader { background-color: var(--background-dark); }
-        #app-loader .spinner { width: 50px; height: 50px; border-radius: 50%; border: 5px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; }
         #loading-progress { margin-top: 15px; font-size: 1.2rem; font-weight: 600; }
-        .light-theme #loading-progress { color: var(--text-primary-light); } .dark-theme #loading-progress { color: var(--text-primary-dark); }
-        
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid; z-index: 1000; }
-        .light-theme .bottom-nav { background-color: var(--surface-light); border-top-color: var(--border-light); }
-        .dark-theme .bottom-nav { background-color: var(--surface-dark); border-top-color: var(--border-dark); }
-        .nav-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-family: var(--font-family); font-size: 0.75rem; transition: color 0.2s; flex-grow: 1; }
-        .light-theme .nav-btn { color: var(--text-secondary-light); } .dark-theme .nav-btn { color: var(--text-secondary-dark); }
-        .nav-btn i { font-size: 1.5rem; margin-bottom: 4px; } .nav-btn.active { color: var(--primary-color); }
-        
-        .task-container { padding: 20px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
-        .light-theme .task-container { background-color: var(--surface-light); border: 1px solid var(--border-light); }
-        .dark-theme .task-container { background-color: var(--surface-dark); border: 1px solid var(--border-dark); }
-        .task-icon-img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .task-info h3 { font-size: 1.1rem; font-weight: 600; } .task-info p { font-size: 0.85rem; }
-        .action-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); margin-left: auto; white-space: nowrap; }
-        .action-btn:disabled { background: #808B96; cursor: not-allowed; }
-        
-        .leaderboard-toggle { display: flex; justify-content: space-around; margin-bottom: 15px; }
-        .toggle-btn { padding: 10px 20px; border: none; background: none; font-size: 1rem; cursor: pointer; }
-        .light-theme .toggle-btn { color: var(--text-secondary-light); } .dark-theme .toggle-btn { color: var(--text-secondary-dark); }
-        .toggle-btn.active { font-weight: 700; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); }
-        .leaderboard-list { list-style: none; }
-        .leaderboard-item { display: flex; align-items: center; padding: 10px; margin-bottom: 8px; border-radius: 8px; }
-        .light-theme .leaderboard-item { background-color: var(--surface-light); } .dark-theme .leaderboard-item { background-color: var(--surface-dark); }
-        .rank { font-size: 1.2rem; font-weight: 700; color: var(--primary-color); width: 40px; }
-        .leaderboard-item img { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover; }
-        .leaderboard-name { font-weight: 600; flex-grow: 1; } .leaderboard-score { font-weight: 600; color: var(--primary-color); }
     </style>
 </head>
-<body class="dark-theme">
-    <div id="app-loader"><div class="spinner"></div><p id="loading-progress">0%</p></div>
-    <div id="popup" class="popup-overlay"><div class="popup-content"><div id="popup-body"></div></div></div>
+<body>
+    <div id="app-loader">
+        <div class="spinner"></div>
+        <p id="loading-progress">0%</p>
+    </div>
+
     <div id="app" style="display: none;">
         <header class="profile-header">
             <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
-            <h1 id="user-name">Loading...</h1>
-            <div id="user-balance-container">Main Balance: <span id="user-balance">0.00</span> ETB</div>
+            <h1 id="user-name">ተጠቃሚ</h1>
+            <div id="user-balance-container">ዋና ሂሳብ፦ <span id="user-balance">0.00</span> ETB</div>
         </header>
-        <main id="main-content">
+
+        <main>
             <div id="home-page" class="page active">
                 <div class="stats-grid">
-                    <div class="stat-card"><h3>Today's Ads</h3><p id="daily-ads-watched">0 / 15</p></div>
-                    <div class="stat-card"><h3>Total Referrals</h3><p id="referral-count">0</p></div>
-                    <div class="stat-card"><h3>Total Ads Watched</h3><p id="total-ads-watched">0</p></div>
-                    <div class="stat-card"><h3>Total Income</h3><p id="total-earned">0.00</p></div>
+                    <div class="stat-card"><h3>የዛሬ ማስታወቂያ</h3><p id="daily-ads">0 / 15</p></div>
+                    <div class="stat-card"><h3>ጠቅላላ ግብዣ</h3><p id="ref-count">0</p></div>
+                    <div class="stat-card"><h3>የታዩ ማስታወቂያዎች</h3><p id="total-ads">0</p></div>
+                    <div class="stat-card"><h3>ጠቅላላ ገቢ</h3><p id="total-income">0.00</p></div>
                 </div>
-                <div id="earnings-graph-container" class="chart-container">
-                    <h3>Last 7 Days Earnings</h3>
-                    <div id="earnings-chart" class="chart"></div><div id="earnings-chart-labels" class="chart-labels"></div>
+                <div class="task-container">
+                    <h3>ማስታወቂያዎችን በመመልከት ያግኙ</h3>
+                    <p>በእያንዳንዱ እይታ 1.00 ETB ወደ አካውንትዎ ይጨመራል</p>
+                    <button class="action-btn" id="watch-btn">ማስታወቂያ ይመልከቱ</button>
                 </div>
-                <div id="dynamic-links-container" style="margin-top: 20px;"></div>
             </div>
+
             <div id="tasks-page" class="page">
                 <div class="earning-wallet-card">
                     <h3>Earning Wallet</h3>
-                    <p style="font-size: 1.8rem; font-weight: 700; color: var(--primary-color); margin: 10px 0;"><span id="earning-wallet-balance">0.00</span> ETB</p>
-                    <small>Minimum 50 ETB to move to main balance.</small>
-                    <button id="move-to-balance-btn" class="action-btn" style="width:100%; margin-top: 15px;" disabled>Move to Main Balance</button>
+                    <h2 style="color: var(--primary-color); margin: 10px 0;"><span id="wallet-bal">0.00</span> ETB</h2>
+                    <small>ወደ ዋናው ሂሳብ ለማስተላለፍ ቢያንስ 50 ETB ያስፈልጋል።</small>
+                    <button class="action-btn" id="transfer-btn">ወደ ዋና ሂሳብ አዛውር</button>
                 </div>
-                <div id="ad-progress-container" class="progress-container" style="margin-top:20px;"></div>
-                <div id="ad-task-container"></div>
-                <h2>Bonus Tasks</h2><div id="dynamic-tasks-container"></div>
             </div>
-            <div id="leaderboard-page" class="page">
-                <h2>Leaderboard</h2>
-                <div class="leaderboard-toggle">
-                    <button class="toggle-btn active" data-board="referral">Top Referrers</button>
-                    <button class="toggle-btn" data-board="earning">Top Earners</button>
-                </div>
-                <div id="referral-board"><ul class="leaderboard-list" id="referral-leaderboard-list"></ul></div>
-                <div id="earning-board" style="display: none;"><ul class="leaderboard-list" id="earning-leaderboard-list"></ul></div>
-            </div>
+
             <div id="profile-page" class="page">
-                <div id="referral-section"></div><div id="withdraw-section"></div>
-                <div id="withdrawal-history-section" style="margin-top: 20px;">
-                    <h2>Withdrawal History</h2><div id="withdrawal-history-list"></div>
+                <div class="task-container">
+                    <h3>ጓደኞችህን ጋብዝ</h3>
+                    <p>በእያንዳንዱ ሰው 5.00 ETB ያግኙ</p>
+                    <input type="text" id="ref-link" readonly value="https://t.me/your_bot">
+                    <button class="action-btn" id="copy-btn">ሊንኩን ኮፒ አድርግ</button>
                 </div>
             </div>
         </main>
+
         <nav class="bottom-nav">
-            <button class="nav-btn active" data-page="home-page"><i class="fas fa-home"></i><span>Home</span></button>
-            <button class="nav-btn" data-page="tasks-page"><i class="fas fa-tasks"></i><span>Tasks</span></button>
-            <button class="nav-btn" data-page="leaderboard-page"><i class="fas fa-trophy"></i><span>Leaderboard</span></button>
-            <button class="nav-btn" data-page="profile-page"><i class="fas fa-user-alt"></i><span>Profile</span></button>
+            <button class="nav-btn active" data-page="home-page"><i class="fas fa-home"></i><span>መነሻ</span></button>
+            <button class="nav-btn" data-page="tasks-page"><i class="fas fa-tasks"></i><span>ገንዘብ ማስተላለፊያ</span></button>
+            <button class="nav-btn" data-page="profile-page"><i class="fas fa-user"></i><span>መገለጫ</span></button>
         </nav>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        
-        // Firebase ቁልፎችህ ሲኖሩህ እዚህ ትተካቸዋለህ
-        const firebaseConfig = {
-            apiKey: "AIzaSy_REPLACE_WITH_YOUR_FIREBASE_KEY",
-            authDomain: "replace-with-your-app.firebaseapp.com",
-            databaseURL: "https://replace-with-your-app-default-rtdb.firebaseio.com",
-            projectId: "replace-with-your-app",
-            storageBucket: "replace-with-your-app.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef"
-        };
-        
-        let appConfig = {
-            dailyAdLimit: 15,
-            adValue: 1.0,
-            referralBonus: 5.0,
-            minimumWithdrawReferrals: 0,
-            botUsername: "Crypto_Topup_F_bot",
-            withdrawMethods: [{name: "Telebirr", min: 50}]
-        };
-        
-        let userState = {
-            id: "123456",
-            firstName: "User",
-            lastName: "",
-            balance: 0,
-            referrals: 0,
-            dailyAdCount: 0,
-            lifetimeAdCount: 0,
-            totalEarned: 0
-        };
-        
-        let tgUser = {};
-        let earningWalletBalance = 0;
-        let leaderboardData = { referral: [], earning: [] };
-        let userTransactions = [];
+        let progress = 0;
+        const progressEl = document.getElementById('loading-progress');
 
-        const popup = document.getElementById('popup');
-        const popupBody = document.getElementById('popup-body');
-        const loadingProgress = document.getElementById('loading-progress');
-
-        const showPopup = (content) => { popupBody.innerHTML = content; popup.style.display = 'flex'; };
-        const closePopup = () => { popup.style.display = 'none'; };
-        const updateProgress = (percentage) => { if(loadingProgress) loadingProgress.textContent = `${percentage}%`; };
-
-        const initApp = async () => {
-            if (tg) {
-                try { tg.ready(); tg.expand(); } catch(e){}
-                if (tg.colorScheme) document.body.className = `${tg.colorScheme}-theme`;
-            }
-
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                tgUser = tg.initDataUnsafe.user;
-                userState.firstName = tgUser.first_name || 'User';
-                userState.id = tgUser.id;
-            } else {
-                tgUser = { id: "demo_101", first_name: "Demo User" };
-            }
-
-            updateProgress(30);
-
-            // Firebase ን ለማስነሳት ይሞክራል፤ ከሌለም ስህተት ሳይሰጥ ያልፋል
-            let db = null;
-            if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("REPLACE")) {
-                try {
-                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-                    db = firebase.database();
-                    const configSnap = await db.ref('config').once('value');
-                    if (configSnap.val()) appConfig = {...appConfig, ...configSnap.val()};
-                } catch(e) {
-                    console.log("Firebase bypass:", e);
-                }
-            }
-
-            updateProgress(60);
-
-            // ከ LocalStorage መረጃዎችን መጫን
-            const savedBal = localStorage.getItem(`balance_${tgUser.id}`);
-            if (savedBal) userState.balance = parseFloat(savedBal);
-            earningWalletBalance = parseFloat(localStorage.getItem(`earningWallet_${tgUser.id}`) || '0');
-
-            updateProgress(90);
-            renderUI();
-            setupNavigation();
-            setupEventListeners();
-            updateProgress(100);
-
-            setTimeout(() => {
+        const interval = setInterval(() => {
+            progress += 25;
+            if (progressEl) progressEl.textContent = progress + '%';
+            if (progress >= 100) {
+                clearInterval(interval);
                 document.getElementById('app-loader').style.display = 'none';
                 document.getElementById('app').style.display = 'block';
-            }, 300);
-        };
-
-        const renderUI = () => {
-            document.getElementById('user-photo').src = (tgUser && tgUser.photo_url) || 'https://via.placeholder.com/80';
-            document.getElementById('user-name').textContent = `${userState.firstName} ${userState.lastName || ''}`;
-            document.getElementById('user-balance').textContent = (userState.balance || 0).toFixed(2);
-            document.getElementById('daily-ads-watched').textContent = `${userState.dailyAdCount || 0} / ${appConfig.dailyAdLimit || 15}`;
-            document.getElementById('referral-count').textContent = userState.referrals || 0;
-            document.getElementById('total-ads-watched').textContent = userState.lifetimeAdCount || 0;
-            document.getElementById('total-earned').textContent = (userState.totalEarned || 0).toFixed(2);
-            document.getElementById('earning-wallet-balance').textContent = earningWalletBalance.toFixed(2);
-            document.getElementById('move-to-balance-btn').disabled = earningWalletBalance < 50;
-            renderAdTask();
-            renderAdProgress();
-            renderReferralSection();
-            renderWithdrawSection();
-            renderEarningsGraph();
-        };
-
-        const renderAdProgress = () => {
-            const container = document.getElementById('ad-progress-container');
-            const dailyLimit = appConfig.dailyAdLimit || 15;
-            const watchedCount = userState.dailyAdCount || 0;
-            const percentage = Math.min(100, (watchedCount / dailyLimit) * 100);
-            container.innerHTML = `<div class="progress-info"><span>Daily Ad Progress</span><span>${watchedCount} / ${dailyLimit}</span></div><div class="progress-bar-bg"><div class="progress-bar-fg" style="width: ${percentage}%;"></div></div>`;
-        };
-
-        const renderEarningsGraph = () => {
-            const chartEl = document.getElementById('earnings-chart');
-            const labelsEl = document.getElementById('earnings-chart-labels');
-            chartEl.innerHTML = ''; labelsEl.innerHTML = '';
-            for (let i = 6; i >= 0; i--) {
-                const height = Math.floor(Math.random() * 60) + 20;
-                chartEl.innerHTML += `<div class="bar" style="height: ${height}%;"><span class="tooltip">${(height * 0.5).toFixed(1)} ETB</span></div>`;
-                labelsEl.innerHTML += `<span>D-${i}</span>`;
             }
-        };
+        }, 150);
 
-        const handleWatchAd = async () => {
-            if (userState.dailyAdCount >= appConfig.dailyAdLimit) {
-                alert("ዕለታዊ የማስታወቂያ ገደብ ላይ ደርሰሃል!"); return;
+        if (tg) {
+            try { tg.ready(); tg.expand(); } catch(e){}
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const u = tg.initDataUnsafe.user;
+                document.getElementById('user-name').textContent = u.first_name || 'ተጠቃሚ';
+                if (u.photo_url) document.getElementById('user-photo').src = u.photo_url;
+                document.getElementById('ref-link').value = `https://t.me/Crypto_Topup_F_bot?start=${u.id}`;
             }
-            showPopup(`<div class="popup-loader"><div class="spinner"></div></div><h2>ማስታወቂያ እየጫነ ነው...</h2><p>እባክህ ለጥቂት ሰኮንዶች ጠብቅ</p>`);
-            
-            setTimeout(() => {
-                closePopup();
-                const adValue = parseFloat(appConfig.adValue || 1.0);
-                earningWalletBalance += adValue;
-                userState.dailyAdCount += 1;
-                userState.lifetimeAdCount += 1;
-                userState.totalEarned += adValue;
+        }
 
-                localStorage.setItem(`earningWallet_${tgUser.id}`, earningWalletBalance.toString());
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert(`+${adValue.toFixed(2)} ETB ወደ Earning Wallet ገብቷል!`);
-                renderUI();
-            }, 2500);
-        };
+        let balance = parseFloat(localStorage.getItem('user_balance') || '0');
+        let wallet = parseFloat(localStorage.getItem('user_wallet') || '0');
+        let adsCount = parseInt(localStorage.getItem('user_ads') || '0');
 
-        const handleMoveToBalance = () => {
-            if (earningWalletBalance < 50) { alert("ወደ ዋናው ሂሳብ ለማዘዋወር ቢያንስ 50 ETB ያስፈልጋል!"); return; }
-            userState.balance += earningWalletBalance;
-            earningWalletBalance = 0;
-            localStorage.setItem(`earningWallet_${tgUser.id}`, '0');
-            localStorage.setItem(`balance_${tgUser.id}`, userState.balance.toString());
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert("ገንዘቡ በተሳካ ሁኔታ ወደ Main Balance ተዘዋውሯል!");
-            renderUI();
-        };
+        function updateUI() {
+            document.getElementById('user-balance').textContent = balance.toFixed(2);
+            document.getElementById('wallet-bal').textContent = wallet.toFixed(2);
+            document.getElementById('daily-ads').textContent = `${adsCount} / 15`;
+            document.getElementById('total-ads').textContent = adsCount;
+            document.getElementById('total-income').textContent = (balance + wallet).toFixed(2);
+        }
+        updateUI();
 
-        const setupNavigation = () => {
-            const navButtons = document.querySelectorAll('.nav-btn');
-            const pages = document.querySelectorAll('.page');
-            navButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const pageId = button.dataset.page;
-                    pages.forEach(page => page.classList.remove('active'));
-                    document.getElementById(pageId).classList.add('active');
-                    navButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                });
+        document.getElementById('watch-btn').addEventListener('click', () => {
+            if (adsCount >= 15) { alert('የዛሬውን ገደብ ጨርሰዋል!'); return; }
+            alert('ማስታወቂያ ተመልክተዋል! 1.00 ETB ወደ ቦርሳህ ተጨምሯል።');
+            wallet += 1.0;
+            adsCount += 1;
+            localStorage.setItem('user_wallet', wallet);
+            localStorage.setItem('user_ads', adsCount);
+            updateUI();
+        });
+
+        document.getElementById('transfer-btn').addEventListener('click', () => {
+            if (wallet < 50) { alert('ቢያንስ 50 ETB ያስፈልጋል!'); return; }
+            balance += wallet;
+            wallet = 0;
+            localStorage.setItem('user_balance', balance);
+            localStorage.setItem('user_wallet', 0);
+            alert('ገንዘቡ በተሳካ ሁኔታ ተዛውሯል!');
+            updateUI();
+        });
+
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const input = document.getElementById('ref-link');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            alert('የግብዣ ሊንክ ተገልብጧል!');
+        });
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.page).classList.add('active');
             });
-        };
-
-        const setupEventListeners = () => {
-            popup.addEventListener('click', (e) => { if (e.target.classList.contains('popup-close-btn') || e.target.id === 'popup') closePopup(); });
-            document.getElementById('move-to-balance-btn').addEventListener('click', handleMoveToBalance);
-        };
-
-        const renderAdTask = () => {
-            const container = document.getElementById('ad-task-container');
-            container.innerHTML = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/play-button-circled.png" alt="icon"><div class="task-info"><h3>Rewarded Ad</h3><p>ለእያንዳንዱ ማስታወቂያ ${appConfig.adValue || 1} ETB ያግኙ።</p></div><button id="watch-ad-btn" class="action-btn">Watch Ad</button></div>`;
-            document.getElementById('watch-ad-btn').addEventListener('click', handleWatchAd);
-        };
-
-        const renderReferralSection = () => {
-            const container = document.getElementById('referral-section');
-            const refLink = `https://t.me/${appConfig.botUsername || 'bot'}?start=${tgUser.id}`;
-            container.innerHTML = `<div class="task-container" style="flex-direction: column; align-items: stretch;"><h3>ጓደኞችህን ጋብዝ!</h3><p>በእያንዳንዱ ግብዣ ${appConfig.referralBonus || 5} ETB ያግኙ።</p><input type="text" id="referral-link" value="${refLink}" readonly style="padding: 10px; text-align: center; border-radius: 8px; border: 1px dashed var(--primary-color); margin: 10px 0;"><button id="copy-ref-link-btn" class="action-btn" onclick="navigator.clipboard.writeText('${refLink}'); alert('ሊንኩ ተገልብጧል!');">Copy Link</button></div>`;
-        };
-
-        const renderWithdrawSection = () => {
-            const container = document.getElementById('withdraw-section');
-            container.innerHTML = `<form id="withdraw-form" class="task-container" style="flex-direction: column; align-items: stretch;" onsubmit="event.preventDefault(); alert('የማውጣት ጥያቄህ ተልኳል!');"><h3>ገንዘብ ማውጫ (Withdraw)</h3><div class="form-group" style="width:100%"><label>Method:</label><select style="width: 100%; padding: 10px; border-radius: 8px;"><option>Telebirr (Min 50 ETB)</option><option>CBE Birr</option></select></div><div class="form-group" style="width:100%"><label>ስልክ ቁጥር:</label><input type="text" required placeholder="09xxxxxxxx" style="width: 100%; padding: 10px; border-radius: 8px;"></div><div class="form-group" style="width:100%"><label>የብር መጠን:</label><input type="number" required placeholder="Min 50" style="width: 100%; padding: 10px; border-radius: 8px;"></div><button type="submit" class="action-btn">Submit Request</button></form>`;
-        };
-
-        initApp();
+        });
     });
     </script>
 </body>
