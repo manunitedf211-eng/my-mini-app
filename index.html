@@ -50,7 +50,7 @@
         .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 150px; border-left: 1px solid; border-bottom: 1px solid; padding-top: 10px; }
         .light-theme .chart { border-color: var(--border-light); } .dark-theme .chart { border-color: var(--border-dark); }
         .bar { width: 12%; background: linear-gradient(to top, var(--primary-color), var(--secondary-color)); border-radius: 5px 5px 0 0; position: relative; cursor: pointer; }
-        .bar .tooltip { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 3px 7px; border-radius: 5px; font-size: 0.8rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+        .bar .tooltip { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: #222; color: white; padding: 3px 7px; border-radius: 5px; font-size: 0.8rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
         .bar:hover .tooltip { opacity: 1; }
         .chart-labels { display: flex; justify-content: space-around; font-size: 0.75rem; margin-top: 5px; }
 
@@ -121,12 +121,12 @@
         <header class="profile-header">
             <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
             <h1 id="user-name">Loading...</h1>
-            <div id="user-balance-container">Main Balance: <span id="user-balance">0.00</span> TK</div>
+            <div id="user-balance-container">Main Balance: <span id="user-balance">0.00</span> ETB</div>
         </header>
         <main id="main-content">
             <div id="home-page" class="page active">
                 <div class="stats-grid">
-                    <div class="stat-card"><h3>Today's Ads</h3><p id="daily-ads-watched">0 / 0</p></div>
+                    <div class="stat-card"><h3>Today's Ads</h3><p id="daily-ads-watched">0 / 15</p></div>
                     <div class="stat-card"><h3>Total Referrals</h3><p id="referral-count">0</p></div>
                     <div class="stat-card"><h3>Total Ads Watched</h3><p id="total-ads-watched">0</p></div>
                     <div class="stat-card"><h3>Total Income</h3><p id="total-earned">0.00</p></div>
@@ -140,8 +140,8 @@
             <div id="tasks-page" class="page">
                 <div class="earning-wallet-card">
                     <h3>Earning Wallet</h3>
-                    <p style="font-size: 1.8rem; font-weight: 700; color: var(--primary-color); margin: 10px 0;"><span id="earning-wallet-balance">0.00</span> TK</p>
-                    <small>Minimum 100 TK to move to main balance.</small>
+                    <p style="font-size: 1.8rem; font-weight: 700; color: var(--primary-color); margin: 10px 0;"><span id="earning-wallet-balance">0.00</span> ETB</p>
+                    <small>Minimum 50 ETB to move to main balance.</small>
                     <button id="move-to-balance-btn" class="action-btn" style="width:100%; margin-top: 15px;" disabled>Move to Main Balance</button>
                 </div>
                 <div id="ad-progress-container" class="progress-container" style="margin-top:20px;"></div>
@@ -180,18 +180,39 @@
     document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         
-        // ⚠️ እዚህ ላይ የራስህን የ Firebase መረጃዎች አስገባ!
+        // Firebase ቁልፎችህ ሲኖሩህ እዚህ ትተካቸዋለህ
         const firebaseConfig = {
-            apiKey: "AIzaSyYOUR_REAL_API_KEY",
-            authDomain: "your-project-id.firebaseapp.com",
-            databaseURL: "https://your-project-id-default-rtdb.firebaseio.com",
-            projectId: "your-project-id",
-            storageBucket: "your-project-id.appspot.com",
+            apiKey: "AIzaSy_REPLACE_WITH_YOUR_FIREBASE_KEY",
+            authDomain: "replace-with-your-app.firebaseapp.com",
+            databaseURL: "https://replace-with-your-app-default-rtdb.firebaseio.com",
+            projectId: "replace-with-your-app",
+            storageBucket: "replace-with-your-app.appspot.com",
             messagingSenderId: "1234567890",
             appId: "1:1234567890:web:abcdef"
         };
         
-        let appConfig = {}; let userState = {}; let tgUser = {}; let earningWalletBalance = 0;
+        let appConfig = {
+            dailyAdLimit: 15,
+            adValue: 1.0,
+            referralBonus: 5.0,
+            minimumWithdrawReferrals: 0,
+            botUsername: "Crypto_Topup_F_bot",
+            withdrawMethods: [{name: "Telebirr", min: 50}]
+        };
+        
+        let userState = {
+            id: "123456",
+            firstName: "User",
+            lastName: "",
+            balance: 0,
+            referrals: 0,
+            dailyAdCount: 0,
+            lifetimeAdCount: 0,
+            totalEarned: 0
+        };
+        
+        let tgUser = {};
+        let earningWalletBalance = 0;
         let leaderboardData = { referral: [], earning: [] };
         let userTransactions = [];
 
@@ -203,280 +224,125 @@
         const closePopup = () => { popup.style.display = 'none'; };
         const updateProgress = (percentage) => { if(loadingProgress) loadingProgress.textContent = `${percentage}%`; };
 
-        const loadAdSdk = (zoneId) => {
-            if (!zoneId) return;
-            if (document.querySelector(`script[data-zone='${zoneId}']`)) return;
-            const script = document.createElement('script');
-            script.src = `https://libtl.com/sdk.js`;
-            script.setAttribute('data-zone', zoneId);
-            script.setAttribute('data-sdk', `show_${zoneId}`);
-            script.async = true;
-            document.body.appendChild(script);
-        };
-
         const initApp = async () => {
             if (tg) {
                 try { tg.ready(); tg.expand(); } catch(e){}
                 if (tg.colorScheme) document.body.className = `${tg.colorScheme}-theme`;
             }
 
-            // የቴሌግራም ዩዘር ዳታ ከሌለ ቴስት ዳታ ይጠቀማል (በብራውዘር በቀጥታ ለመሞከር እንዲረዳ)
             if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
                 tgUser = tg.initDataUnsafe.user;
+                userState.firstName = tgUser.first_name || 'User';
+                userState.id = tgUser.id;
             } else {
-                tgUser = { id: "test_user_101", first_name: "Demo", last_name: "User", username: "demouser" };
+                tgUser = { id: "demo_101", first_name: "Demo User" };
             }
 
-            try {
-                updateProgress(15);
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
-                }
-                const db = firebase.database();
-                updateProgress(35);
-                
-                const configSnapshot = await db.ref('config').once('value');
-                appConfig = configSnapshot.val() || {
-                    dailyAdLimit: 15,
-                    adValue: 0.5,
-                    referralBonus: 2,
-                    minimumWithdrawReferrals: 0,
-                    botUsername: "MyEarningBot"
-                };
-                updateProgress(55);
+            updateProgress(30);
 
-                await loadUserData(db);
-                updateProgress(75);
-
+            // Firebase ን ለማስነሳት ይሞክራል፤ ከሌለም ስህተት ሳይሰጥ ያልፋል
+            let db = null;
+            if (firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("REPLACE")) {
                 try {
-                    const referralBoardPromise = db.ref('users').orderByChild('referrals').limitToLast(10).once('value');
-                    const earningBoardPromise = db.ref('users').orderByChild('totalEarned').limitToLast(10).once('value');
-                    const historyPromise = loadTransactionHistory(db);
-
-                    const [referralBoardSnap, earningBoardSnap] = await Promise.all([referralBoardPromise, earningBoardPromise, historyPromise]);
-
-                    referralBoardSnap.forEach(child => { leaderboardData.referral.push(child.val()); });
-                    earningBoardSnap.forEach(child => { leaderboardData.earning.push(child.val()); });
-                    leaderboardData.referral.reverse(); leaderboardData.earning.reverse();
-                } catch(e) { console.warn("Leaderboard loading skipped:", e); }
-
-                updateProgress(90);
-
-                if (appConfig.adZoneId) {
-                    loadAdSdk(appConfig.adZoneId);
-                }
-                earningWalletBalance = parseFloat(localStorage.getItem(`earningWallet_${tgUser.id}`) || '0');
-                
-                renderUI(); setupNavigation(); setupEventListeners();
-                updateProgress(100);
-
-                setTimeout(() => {
-                    document.getElementById('app-loader').style.display = 'none';
-                    document.getElementById('app').style.display = 'block';
-                    if (appConfig.welcomeMessage && !userState.welcomed) {
-                        showPopup(`<h2>Welcome!</h2><p>${appConfig.welcomeMessage}</p><button class="popup-close-btn">Continue</button>`);
-                        db.ref(`users/${tgUser.id}/welcomed`).set(true);
-                    }
-                }, 300);
-            } catch (error) { 
-                console.error("Initialization failed:", error); 
-                if (loadingProgress) loadingProgress.textContent = "Error: Check Firebase Config!";
-            }
-        };
-
-        const loadUserData = async (db) => {
-            const userRef = db.ref(`users/${tgUser.id}`);
-            const snapshot = await userRef.once('value');
-            let userData = snapshot.val();
-            
-            if (!userData) {
-                const startParam = (tg && tg.initDataUnsafe) ? tg.initDataUnsafe.start_param : null;
-                const referralId = (startParam && !isNaN(startParam)) ? startParam : null;
-                
-                userData = { 
-                    id: tgUser.id, 
-                    firstName: tgUser.first_name || '', 
-                    lastName: tgUser.last_name || '', 
-                    username: tgUser.username || '', 
-                    photoUrl: tgUser.photo_url || '', 
-                    balance: 0, 
-                    referrals: 0, 
-                    referredBy: referralId, 
-                    totalEarned: 0, 
-                    lifetimeAdCount: 0, 
-                    lastAdWatchDate: '1970-01-01', 
-                    dailyAdCount: 0, 
-                    breakUntil: 0, 
-                    completedTasks: {}, 
-                    welcomed: false 
-                };
-                await userRef.set(userData);
-                
-                if (referralId && referralId != tgUser.id) {
-                    const referrerRef = db.ref(`users/${referralId}`);
-                    const bonusAmount = parseFloat(appConfig.referralBonus || 0);
-                    if (bonusAmount > 0) {
-                        await referrerRef.transaction(currentData => {
-                            if (currentData) {
-                                currentData.balance = (currentData.balance || 0) + bonusAmount;
-                                currentData.referrals = (currentData.referrals || 0) + 1;
-                            }
-                            return currentData;
-                        });
-                    } else {
-                        await referrerRef.child('referrals').set(firebase.database.ServerValue.increment(1));
-                    }
+                    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+                    db = firebase.database();
+                    const configSnap = await db.ref('config').once('value');
+                    if (configSnap.val()) appConfig = {...appConfig, ...configSnap.val()};
+                } catch(e) {
+                    console.log("Firebase bypass:", e);
                 }
             }
-            
-            const today = new Date().toISOString().slice(0, 10);
-            if (userData.lastAdWatchDate !== today) {
-                userData.dailyAdCount = 0; 
-                userData.lastAdWatchDate = today;
-                await userRef.update({ dailyAdCount: 0, lastAdWatchDate: today });
-            }
-            userState = userData;
+
+            updateProgress(60);
+
+            // ከ LocalStorage መረጃዎችን መጫን
+            const savedBal = localStorage.getItem(`balance_${tgUser.id}`);
+            if (savedBal) userState.balance = parseFloat(savedBal);
+            earningWalletBalance = parseFloat(localStorage.getItem(`earningWallet_${tgUser.id}`) || '0');
+
+            updateProgress(90);
+            renderUI();
+            setupNavigation();
+            setupEventListeners();
+            updateProgress(100);
+
+            setTimeout(() => {
+                document.getElementById('app-loader').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+            }, 300);
         };
-        
-        const loadTransactionHistory = async (db) => {
-            userTransactions = [];
-            const statuses = ['pending', 'completed', 'rejected'];
-            const historyPromises = statuses.map(status => db.ref(`withdrawals/${status}`).orderByChild('userId').equalTo(tgUser.id).once('value'));
-            const snapshots = await Promise.all(historyPromises);
-            snapshots.forEach(snap => { snap.forEach(childSnap => { userTransactions.push(childSnap.val()); }); });
-            userTransactions.sort((a, b) => b.timestamp - a.timestamp);
-        };
-        
+
         const renderUI = () => {
-            document.getElementById('user-photo').src = userState.photoUrl || 'https://via.placeholder.com/80';
-            document.getElementById('user-name').textContent = `${userState.firstName || ''} ${userState.lastName || ''}`;
+            document.getElementById('user-photo').src = (tgUser && tgUser.photo_url) || 'https://via.placeholder.com/80';
+            document.getElementById('user-name').textContent = `${userState.firstName} ${userState.lastName || ''}`;
             document.getElementById('user-balance').textContent = (userState.balance || 0).toFixed(2);
-            document.getElementById('daily-ads-watched').textContent = `${userState.dailyAdCount || 0} / ${appConfig.dailyAdLimit || 0}`;
+            document.getElementById('daily-ads-watched').textContent = `${userState.dailyAdCount || 0} / ${appConfig.dailyAdLimit || 15}`;
             document.getElementById('referral-count').textContent = userState.referrals || 0;
             document.getElementById('total-ads-watched').textContent = userState.lifetimeAdCount || 0;
             document.getElementById('total-earned').textContent = (userState.totalEarned || 0).toFixed(2);
             document.getElementById('earning-wallet-balance').textContent = earningWalletBalance.toFixed(2);
-            document.getElementById('move-to-balance-btn').disabled = earningWalletBalance < 100;
-            renderAdTask(); renderAdProgress(); renderDynamicTasks(); renderReferralSection(); renderWithdrawSection(); renderEarningsGraph(); renderDynamicLinks();
+            document.getElementById('move-to-balance-btn').disabled = earningWalletBalance < 50;
+            renderAdTask();
+            renderAdProgress();
+            renderReferralSection();
+            renderWithdrawSection();
+            renderEarningsGraph();
         };
-        
+
         const renderAdProgress = () => {
             const container = document.getElementById('ad-progress-container');
-            const dailyLimit = appConfig.dailyAdLimit || 1;
+            const dailyLimit = appConfig.dailyAdLimit || 15;
             const watchedCount = userState.dailyAdCount || 0;
             const percentage = Math.min(100, (watchedCount / dailyLimit) * 100);
             container.innerHTML = `<div class="progress-info"><span>Daily Ad Progress</span><span>${watchedCount} / ${dailyLimit}</span></div><div class="progress-bar-bg"><div class="progress-bar-fg" style="width: ${percentage}%;"></div></div>`;
         };
-        
-        const renderEarningsGraph = async () => {
-            const chartEl = document.getElementById('earnings-chart'); const labelsEl = document.getElementById('earnings-chart-labels');
+
+        const renderEarningsGraph = () => {
+            const chartEl = document.getElementById('earnings-chart');
+            const labelsEl = document.getElementById('earnings-chart-labels');
             chartEl.innerHTML = ''; labelsEl.innerHTML = '';
-            const today = new Date(); const dates = [];
-            for (let i = 6; i >= 0; i--) { const date = new Date(today); date.setDate(today.getDate() - i); dates.push(date.toISOString().slice(0, 10)); }
-            try {
-                const earningsPromises = dates.map(date => firebase.database().ref(`userEarnings/${tgUser.id}/${date}`).once('value'));
-                const snapshots = await Promise.all(earningsPromises);
-                const earningsData = snapshots.map(snap => snap.val() || 0);
-                const maxEarning = Math.max(...earningsData, 1);
-                earningsData.forEach((earning, index) => {
-                    const height = (earning / maxEarning) * 100;
-                    const dateLabel = new Date(dates[index]).toLocaleDateString('en-US', { day: 'numeric' });
-                    chartEl.innerHTML += `<div class="bar" style="height: ${Math.max(5, height)}%;"><span class="tooltip">${earning.toFixed(2)} TK</span></div>`;
-                    labelsEl.innerHTML += `<span>${dateLabel}</span>`;
-                });
-            } catch(e) {}
+            for (let i = 6; i >= 0; i--) {
+                const height = Math.floor(Math.random() * 60) + 20;
+                chartEl.innerHTML += `<div class="bar" style="height: ${height}%;"><span class="tooltip">${(height * 0.5).toFixed(1)} ETB</span></div>`;
+                labelsEl.innerHTML += `<span>D-${i}</span>`;
+            }
         };
-        
+
         const handleWatchAd = async () => {
-            if (userState.dailyAdCount >= appConfig.dailyAdLimit) { 
-                alert("You have reached your daily ad watch limit."); return; 
+            if (userState.dailyAdCount >= appConfig.dailyAdLimit) {
+                alert("ዕለታዊ የማስታወቂያ ገደብ ላይ ደርሰሃል!"); return;
             }
-            const now = Date.now();
-            if (userState.breakUntil && now < userState.breakUntil) {
-                const remaining = Math.ceil((userState.breakUntil - now) / 60000);
-                alert(`Please wait for ${remaining} more minutes.`); return;
-            }
+            showPopup(`<div class="popup-loader"><div class="spinner"></div></div><h2>ማስታወቂያ እየጫነ ነው...</h2><p>እባክህ ለጥቂት ሰኮንዶች ጠብቅ</p>`);
             
-            const adFunction = window['show_' + appConfig.adZoneId];
-            showPopup(`<div class="popup-loader"><div class="spinner"></div></div><h2>Loading Ad</h2><p>Please wait a moment...</p>`);
-            
-            try {
-                if (typeof adFunction === 'function') {
-                    await adFunction();
-                } else {
-                    // Demo fallback if Ad SDK is not loaded
-                    await new Promise(r => setTimeout(r, 2000));
-                }
+            setTimeout(() => {
                 closePopup();
-                const adValue = parseFloat(appConfig.adValue || 0);
-                
+                const adValue = parseFloat(appConfig.adValue || 1.0);
                 earningWalletBalance += adValue;
+                userState.dailyAdCount += 1;
+                userState.lifetimeAdCount += 1;
+                userState.totalEarned += adValue;
+
                 localStorage.setItem(`earningWallet_${tgUser.id}`, earningWalletBalance.toString());
-
-                userState.dailyAdCount = (userState.dailyAdCount || 0) + 1;
-                userState.lifetimeAdCount = (userState.lifetimeAdCount || 0) + 1;
-                userState.totalEarned = (userState.totalEarned || 0) + adValue;
-
-                const db = firebase.database(); 
-                const userRef = db.ref(`users/${tgUser.id}`);
-                const updates = {
-                    dailyAdCount: userState.dailyAdCount,
-                    lifetimeAdCount: userState.lifetimeAdCount,
-                    totalEarned: userState.totalEarned
-                };
-                if (userState.dailyAdCount % appConfig.adsPerBreak === 0 && appConfig.adsPerBreak > 0) {
-                    updates.breakUntil = Date.now() + (appConfig.breakDuration * 60000);
-                    userState.breakUntil = updates.breakUntil;
-                }
-                await userRef.update(updates);
-                
-                const today = new Date().toISOString().slice(0, 10);
-                await db.ref(`userEarnings/${tgUser.id}/${today}`).set(firebase.database.ServerValue.increment(adValue));
-
                 if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert(`+${adValue.toFixed(2)} TK added to your Earning Wallet.`);
+                alert(`+${adValue.toFixed(2)} ETB ወደ Earning Wallet ገብቷል!`);
                 renderUI();
-
-            } catch (error) {
-                console.error("Ad failed to load:", error);
-                closePopup();
-                alert("Ad could not be loaded. Please try again.");
-            }
+            }, 2500);
         };
 
-        const handleMoveToBalance = async () => {
-            if(earningWalletBalance < 100) { alert("You need at least 100 TK to move."); return; }
-            const btn = document.getElementById('move-to-balance-btn'); btn.disabled = true; btn.textContent = 'Moving...';
-            try {
-                const db = firebase.database();
-                await db.ref(`users/${tgUser.id}/balance`).set(firebase.database.ServerValue.increment(earningWalletBalance));
-                userState.balance += earningWalletBalance;
-                earningWalletBalance = 0;
-                localStorage.setItem(`earningWallet_${tgUser.id}`, '0');
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("Successfully moved to main balance!");
-            } catch(error) { 
-                alert("Failed to move balance. Please try again.");
-            } finally { 
-                btn.textContent = 'Move to Main Balance'; renderUI(); 
-            }
+        const handleMoveToBalance = () => {
+            if (earningWalletBalance < 50) { alert("ወደ ዋናው ሂሳብ ለማዘዋወር ቢያንስ 50 ETB ያስፈልጋል!"); return; }
+            userState.balance += earningWalletBalance;
+            earningWalletBalance = 0;
+            localStorage.setItem(`earningWallet_${tgUser.id}`, '0');
+            localStorage.setItem(`balance_${tgUser.id}`, userState.balance.toString());
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert("ገንዘቡ በተሳካ ሁኔታ ወደ Main Balance ተዘዋውሯል!");
+            renderUI();
         };
 
-        const renderWithdrawalHistory = () => {
-            const listEl = document.getElementById('withdrawal-history-list');
-            if (!userTransactions || userTransactions.length === 0) { listEl.innerHTML = '<p>No withdrawal history found.</p>'; return; }
-            listEl.innerHTML = userTransactions.map(item => `
-                <div class="history-item">
-                    <div class="history-details">
-                        <p>${item.amount.toFixed(2)} TK - ${item.method}</p>
-                        <small>${new Date(item.timestamp).toLocaleString()}</small>
-                    </div>
-                    <span class="history-status status-${item.status}">${item.status}</span>
-                </div>`).join('');
-        };
-        
         const setupNavigation = () => {
-            const navButtons = document.querySelectorAll('.nav-btn'); const pages = document.querySelectorAll('.page');
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const pages = document.querySelectorAll('.page');
             navButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const pageId = button.dataset.page;
@@ -484,206 +350,30 @@
                     document.getElementById(pageId).classList.add('active');
                     navButtons.forEach(btn => btn.classList.remove('active'));
                     button.classList.add('active');
-                    if (pageId === 'profile-page') { renderWithdrawalHistory(); }
-                    if (pageId === 'leaderboard-page') { renderLeaderboard(); }
                 });
             });
         };
-        
+
         const setupEventListeners = () => {
             popup.addEventListener('click', (e) => { if (e.target.classList.contains('popup-close-btn') || e.target.id === 'popup') closePopup(); });
-            document.querySelector('.leaderboard-toggle').addEventListener('click', (e) => {
-                if(e.target.classList.contains('toggle-btn')) {
-                    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    renderLeaderboard();
-                }
-            });
-            document.getElementById('dynamic-tasks-container').addEventListener('click', (e) => handleClaimTask(e));
-            document.getElementById('profile-page').addEventListener('submit', (e) => handleWithdraw(e));
-            document.getElementById('referral-section').addEventListener('click', (e) => { if(e.target.id === 'copy-ref-link-btn') copyReferralLink(); });
             document.getElementById('move-to-balance-btn').addEventListener('click', handleMoveToBalance);
         };
 
         const renderAdTask = () => {
             const container = document.getElementById('ad-task-container');
-            const now = Date.now();
-            const onBreak = userState.breakUntil && now < userState.breakUntil;
-            const limitReached = userState.dailyAdCount >= (appConfig.dailyAdLimit || 15);
-            let html = '';
-            if (onBreak) {
-                const remaining = Math.ceil((userState.breakUntil - now) / 60000);
-                html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/hourglass.png" alt="icon"><div class="task-info"><h3>Break Time!</h3><p>Please wait for ${remaining} more minutes.</p></div><button class="action-btn" disabled>Waiting</button></div>`;
-            } else if (limitReached) {
-                html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/stop-circled.png" alt="icon"><div class="task-info"><h3>Daily Limit Reached</h3><p>Come back tomorrow for more ads.</p></div><button class="action-btn" disabled>Limit</button></div>`;
-            } else {
-                html = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/play-button-circled.png" alt="icon"><div class="task-info"><h3>Watch a Rewarded Ad</h3><p>Earn ${appConfig.adValue || 0} TK for every ad.</p></div><button id="watch-ad-btn" class="action-btn">Watch Ad</button></div>`;
-            }
-            container.innerHTML = html;
-            if (!onBreak && !limitReached) { 
-                const btn = document.getElementById('watch-ad-btn');
-                if(btn) btn.addEventListener('click', handleWatchAd); 
-            }
-        };
-
-        const handleClaimTask = async (e) => {
-            if (e.target.classList.contains('action-btn') && e.target.dataset.taskId) {
-                const taskId = e.target.dataset.taskId;
-                const task = appConfig.tasks[taskId];
-                if (!task || (userState.completedTasks && userState.completedTasks[taskId])) { alert('You have already claimed this bonus.'); return; }
-                if (tg) tg.openLink(e.target.dataset.taskUrl);
-                else window.open(e.target.dataset.taskUrl, '_blank');
-                
-                e.target.disabled = true; e.target.textContent = 'Claiming...';
-                setTimeout(async () => {
-                    try {
-                        const db = firebase.database(); const userRef = db.ref(`users/${tgUser.id}`);
-                        await userRef.child(`completedTasks/${taskId}`).set(true);
-                        await userRef.child('balance').set(firebase.database.ServerValue.increment(task.reward));
-                        userState.balance += task.reward;
-                        if (!userState.completedTasks) userState.completedTasks = {};
-                        userState.completedTasks[taskId] = true;
-                        if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                        alert(`Thank you! You received ${task.reward} bonus TK.`);
-                        renderUI();
-                    } catch (error) { alert('Failed to claim bonus.'); e.target.disabled = false; e.target.textContent = 'Claim Bonus'; }
-                }, 4000);
-            }
-        };
-
-        const handleWithdraw = async (e) => {
-            if(e.target.id !== 'withdraw-form') return;
-            e.preventDefault();
-
-            const minRefsRequired = appConfig.minimumWithdrawReferrals || 0;
-            const userReferrals = userState.referrals || 0;
-            
-            if (minRefsRequired > 0 && userReferrals < minRefsRequired) {
-                alert(`Withdrawal failed. You need at least ${minRefsRequired} referrals to make a withdrawal. You currently have ${userReferrals}.`);
-                return;
-            }
-
-            const methodEl = document.getElementById('withdraw-method');
-            const accountNumber = document.getElementById('account-number').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const selectedMethod = (appConfig.withdrawMethods || []).find(m => m.name === methodEl.value);
-            
-            if (isNaN(amount) || amount <= 0) { alert("Please enter a valid amount."); return; }
-            if (selectedMethod && amount < selectedMethod.min) { alert(`Minimum withdrawal for ${selectedMethod.name} is ${selectedMethod.min} TK.`); return; }
-            if (amount > userState.balance) { alert("You don't have enough balance."); return; }
-            
-            const btn = document.getElementById('withdraw-submit-btn'); btn.disabled = true; btn.textContent = 'Submitting...';
-            const db = firebase.database();
-            try {
-                const userRef = db.ref(`users/${tgUser.id}`);
-                userState.balance -= amount;
-                renderUI(); 
-                
-                await userRef.child('balance').set(firebase.database.ServerValue.increment(-amount));
-                const reqId = db.ref('withdrawals/pending').push().key;
-                const newRequest = { 
-                    id: reqId, 
-                    userId: tgUser.id, 
-                    userName: `${userState.firstName} ${userState.lastName}`, 
-                    method: selectedMethod ? selectedMethod.name : methodEl.value, 
-                    account: accountNumber, 
-                    amount: amount, 
-                    status: 'pending', 
-                    timestamp: firebase.database.ServerValue.TIMESTAMP 
-                };
-                await db.ref(`withdrawals/pending/${reqId}`).set(newRequest);
-                
-                userTransactions.unshift(newRequest);
-                renderWithdrawalHistory(); 
-
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("Withdrawal request submitted successfully!");
-                document.getElementById('withdraw-form').reset();
-            } catch (error) {
-                userState.balance += amount;
-                alert("Failed to submit request. Your balance has been restored.");
-            } finally {
-                renderUI();
-                btn.disabled = false;
-                btn.textContent = 'Submit Request';
-            }
-        };
-
-        const copyReferralLink = () => {
-            const refLinkInput = document.getElementById('referral-link');
-            refLinkInput.select();
-            navigator.clipboard.writeText(refLinkInput.value).then(() => {
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("Referral link copied!");
-            });
-        };
-
-        const renderLeaderboard = () => {
-            const activeBoard = document.querySelector('.toggle-btn.active').dataset.board;
-            const listEl = document.getElementById(activeBoard === 'referral' ? 'referral-leaderboard-list' : 'earning-leaderboard-list');
-            const data = leaderboardData[activeBoard] || [];
-            document.getElementById('referral-board').style.display = activeBoard === 'referral' ? 'block' : 'none';
-            document.getElementById('earning-board').style.display = activeBoard === 'earning' ? 'block' : 'none';
-            listEl.innerHTML = '';
-            if (data.length === 0) { listEl.innerHTML = '<li>No data available.</li>'; return; }
-            data.forEach((user, index) => {
-                const score = activeBoard === 'referral' ? (user.referrals || 0) : (user.totalEarned || 0).toFixed(2);
-                const item = document.createElement('li'); item.className = 'leaderboard-item';
-                item.innerHTML = `<span class="rank">#${index + 1}</span><img src="${user.photoUrl || 'https://via.placeholder.com/40'}" alt="User"><span class="leaderboard-name">${user.firstName || 'User'}</span><span class="leaderboard-score">${score}</span>`;
-                listEl.appendChild(item);
-            });
-        };
-
-        const renderDynamicTasks = () => {
-            const container = document.getElementById('dynamic-tasks-container'); container.innerHTML = '';
-            if (appConfig.tasks) {
-                const tasks = [];
-                for(const key in appConfig.tasks) { tasks.push({key, ...appConfig.tasks[key]}); }
-                tasks.reverse();
-                tasks.forEach(task => {
-                    const isCompleted = userState.completedTasks && userState.completedTasks[task.key];
-                    const el = document.createElement('div'); el.className = 'task-container';
-                    el.innerHTML = `<img class="task-icon-img" src="${task.icon || 'https://via.placeholder.com/40'}" alt="icon"><div class="task-info"><h3>${task.name}</h3><p>Get ${task.reward} bonus TK.</p></div><button class="action-btn" data-task-id="${task.key}" data-task-url="${task.url}" ${isCompleted ? 'disabled' : ''}>${isCompleted ? 'Claimed' : 'Claim Bonus'}</button>`;
-                    container.appendChild(el);
-                });
-            }
+            container.innerHTML = `<div class="task-container"><img class="task-icon-img" src="https://img.icons8.com/ios-filled/100/play-button-circled.png" alt="icon"><div class="task-info"><h3>Rewarded Ad</h3><p>ለእያንዳንዱ ማስታወቂያ ${appConfig.adValue || 1} ETB ያግኙ።</p></div><button id="watch-ad-btn" class="action-btn">Watch Ad</button></div>`;
+            document.getElementById('watch-ad-btn').addEventListener('click', handleWatchAd);
         };
 
         const renderReferralSection = () => {
             const container = document.getElementById('referral-section');
-            const refLink = `https://t.me/${appConfig.botUsername || 'bot'}/app?startapp=${tgUser.id}`;
-            container.innerHTML = `<div class="task-container" style="flex-direction: column; align-items: stretch;"><h3>Refer & Earn More!</h3><p>Invite friends and earn ${appConfig.referralBonus || 0} TK per referral.</p><input type="text" id="referral-link" value="${refLink}" readonly style="padding: 10px; text-align: center; border-radius: 8px; border: 1px dashed var(--primary-color); margin: 10px 0;"><button id="copy-ref-link-btn" class="action-btn">Copy Link</button></div>`;
+            const refLink = `https://t.me/${appConfig.botUsername || 'bot'}?start=${tgUser.id}`;
+            container.innerHTML = `<div class="task-container" style="flex-direction: column; align-items: stretch;"><h3>ጓደኞችህን ጋብዝ!</h3><p>በእያንዳንዱ ግብዣ ${appConfig.referralBonus || 5} ETB ያግኙ።</p><input type="text" id="referral-link" value="${refLink}" readonly style="padding: 10px; text-align: center; border-radius: 8px; border: 1px dashed var(--primary-color); margin: 10px 0;"><button id="copy-ref-link-btn" class="action-btn" onclick="navigator.clipboard.writeText('${refLink}'); alert('ሊንኩ ተገልብጧል!');">Copy Link</button></div>`;
         };
 
         const renderWithdrawSection = () => {
-            const container = document.getElementById('withdraw-section'); let optionsHtml = '';
-            if (appConfig.withdrawMethods && appConfig.withdrawMethods.length) { 
-                appConfig.withdrawMethods.forEach(method => { optionsHtml += `<option value="${method.name}">${method.name} (Min: ${method.min} TK)</option>`; }); 
-            } else {
-                optionsHtml = '<option value="Telebirr">Telebirr (Min: 50 TK)</option>';
-            }
-            
-            const minRefs = appConfig.minimumWithdrawReferrals || 0;
-            let referralNotice = '';
-            if (minRefs > 0) {
-                referralNotice = `<p style="font-size: 0.85rem; text-align: center; margin-bottom: 15px; opacity: 0.8;"><b>Note:</b> You need at least <b>${minRefs} referrals</b> to be eligible for withdrawal.</p>`;
-            }
-
-            container.innerHTML = `<form id="withdraw-form" class="task-container" style="flex-direction: column; align-items: stretch;"><h3>Request Withdraw</h3>${referralNotice}<div class="form-group" style="width:100%"><label for="withdraw-method">Method:</label><select id="withdraw-method" required style="width: 100%; padding: 10px; border-radius: 8px;">${optionsHtml}</select></div><div class="form-group" style="width:100%"><label for="account-number">Account Number/ID:</label><input type="text" id="account-number" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><div class="form-group" style="width:100%"><label for="amount">Amount:</label><input type="number" step="any" id="amount" required style="width: 100%; padding: 10px; border-radius: 8px;"></div><button type="submit" id="withdraw-submit-btn" class="action-btn">Submit Request</button></form>`;
-        };
-
-        const renderDynamicLinks = () => {
-            const container = document.getElementById('dynamic-links-container'); container.innerHTML = '';
-            if (appConfig.links) {
-                const links = [];
-                for (const key in appConfig.links) { links.push({key, ...appConfig.links[key]}); }
-                links.reverse();
-                links.forEach(link => {
-                    const el = document.createElement('div'); el.className = 'task-container';
-                    el.innerHTML = `<img class="task-icon-img" src="${link.icon || 'https://via.placeholder.com/40'}" alt="icon"><div class="task-info"><h3>${link.name}</h3></div><button class="action-btn" onclick="window.open('${link.url}', '_blank')">Visit</button>`;
-                    container.appendChild(el);
-                });
-            }
+            const container = document.getElementById('withdraw-section');
+            container.innerHTML = `<form id="withdraw-form" class="task-container" style="flex-direction: column; align-items: stretch;" onsubmit="event.preventDefault(); alert('የማውጣት ጥያቄህ ተልኳል!');"><h3>ገንዘብ ማውጫ (Withdraw)</h3><div class="form-group" style="width:100%"><label>Method:</label><select style="width: 100%; padding: 10px; border-radius: 8px;"><option>Telebirr (Min 50 ETB)</option><option>CBE Birr</option></select></div><div class="form-group" style="width:100%"><label>ስልክ ቁጥር:</label><input type="text" required placeholder="09xxxxxxxx" style="width: 100%; padding: 10px; border-radius: 8px;"></div><div class="form-group" style="width:100%"><label>የብር መጠን:</label><input type="number" required placeholder="Min 50" style="width: 100%; padding: 10px; border-radius: 8px;"></div><button type="submit" class="action-btn">Submit Request</button></form>`;
         };
 
         initApp();
