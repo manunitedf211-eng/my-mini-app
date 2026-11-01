@@ -934,7 +934,7 @@
 
             let reqs = JSON.parse(localStorage.getItem('lucy_withdraw_requests') || '[]');
             reqs.push({ user: currentUsername, tgId: currentUserId, method, acc, amt, date: new Date().toLocaleDateString() });
-            localStorage.setItem('lucy_withdraw_requests', JSON.stringify(reqs));
+            localStorage.setItem('lucy_withdraw_requests', JSON.stringify(requests));
 
             document.getElementById('withdraw-account').value = "";
             document.getElementById('withdraw-amount').value = "";
