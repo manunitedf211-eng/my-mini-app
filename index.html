@@ -236,6 +236,7 @@
             margin: 0;
         }
 
+        /* Leaderboard Podium */
         .podium-container {
             display: flex;
             justify-content: center;
@@ -508,11 +509,12 @@
                 </button>
             </div>
 
+            <!-- በአድሚን የተጨመሩ Tasks -->
             <div id="tasks-board-list"></div>
             <div id="injected-tasks-content"></div>
         </div>
 
-        <!-- 3. RANKS PAGE -->
+        <!-- 3. RANKS PAGE (100% Real Users Only) -->
         <div id="ranks-page" style="display: none;">
             <div class="section-card">
                 <h3 style="text-align: center; margin-bottom: 2px;" data-i18n="ranks_title">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
@@ -575,7 +577,7 @@
                 </div>
             </div>
 
-            <!-- Dynamic Withdrawal with Separate Fields -->
+            <!-- Dynamic Withdrawal Section -->
             <div class="section-card">
                 <h3 data-i18n="withdraw_funds">ገንዘብ ማውጫ (Withdraw Funds)</h3>
                 <div class="form-group">
@@ -596,7 +598,7 @@
                 <button class="btn-green" style="width: 100%;" onclick="submitWithdraw()" data-i18n="submit_withdraw">ወጪ አድርግ (Withdraw)</button>
             </div>
 
-            <!-- Withdrawal Requests History for User -->
+            <!-- User Requests History -->
             <div class="section-card">
                 <h3>የወጪ ጥያቄዎች ታሪክ (Withdrawal Status)</h3>
                 <div id="user-withdraw-history" style="font-size:0.85rem; margin-top:8px;">ምንም የወጪ ጥያቄ የለም።</div>
@@ -648,12 +650,6 @@
                 <button class="btn-green" style="width:100%;" onclick="adminAddCoinsById()">Add RP Coin</button>
             </div>
 
-            <!-- Admin Requests Review: APPROVE / REJECT -->
-            <div class="section-card">
-                <h4>📋 የወጪ ጥያቄዎች አስተዳዳሪ (Approve / Reject)</h4>
-                <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">ምንም ጥያቄ የለም።</div>
-            </div>
-
             <div class="section-card">
                 <h4>📌 አዲስ Task ፍጠር</h4>
                 <div class="form-group">
@@ -694,7 +690,13 @@
                 <button class="btn-green" style="width:100%;" onclick="adminCreateTask()">Task አክልና ቦርድ ላይ አስቀምጥ</button>
             </div>
 
-            <!-- Safe Code Injector: Protects User Balance -->
+            <!-- Approve / Reject Section -->
+            <div class="section-card">
+                <h4>📋 የወጪ ጥያቄዎች ዝርዝር (Approve / Reject)</h4>
+                <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">ምንም ጥያቄ የለም።</div>
+            </div>
+
+            <!-- Code Injector (Safe Mode) -->
             <div class="section-card">
                 <h4>💻 Code Injector (Safe Mode)</h4>
                 <textarea id="raw-injector-text" class="form-input" style="height:80px; font-family:monospace;" placeholder="<script> or HTML"></textarea>
@@ -807,7 +809,7 @@
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
-            const saved = localStorage.getItem('lucy_app_secure_core_v1');
+            const saved = localStorage.getItem('lucy_app_final_system_v9');
             if (saved) {
                 try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
             }
@@ -825,13 +827,13 @@
                     renderAdminWithdrawList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v8.0.0');
+                    alert('Lucy Earning v9.0.0');
                 }
             });
         });
 
         function saveState() {
-            localStorage.setItem('lucy_app_secure_core_v1', JSON.stringify(appData));
+            localStorage.setItem('lucy_app_final_system_v9', JSON.stringify(appData));
             updateRealLeaderboard();
         }
 
@@ -871,7 +873,6 @@
             });
         }
 
-        /* 1: Separate Fields for Telebirr and USDT */
         function handleWithdrawMethodChange() {
             const method = document.getElementById('withdraw-method').value;
             const accLabel = document.getElementById('withdraw-acc-label');
@@ -883,7 +884,7 @@
                 accInput.placeholder = "09... / 07...";
                 amtLabel.textContent = "የብር መጠን (ዝቅተኛው: 25 ETB)";
             } else {
-                accLabel.textContent = "Binance Pay ID ወይም USDT Address";
+                accLabel.textContent = "Binance Pay ID ወይም USDT TRC20 Address";
                 accInput.placeholder = "Binance Pay ID / T...";
                 amtLabel.textContent = "የ USDT መጠን (ዝቅተኛው: 0.20 USDT)";
             }
@@ -944,7 +945,6 @@
             alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
         }
 
-        /* 2 & 4: Withdrawal Submission with Min Limits & Tracking */
         function submitWithdraw() {
             const method = document.getElementById('withdraw-method').value;
             const acc = document.getElementById('withdraw-account').value.trim();
@@ -989,9 +989,9 @@
                 date: new Date().toLocaleDateString()
             };
 
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
             allReqs.unshift(newRequest);
-            localStorage.setItem('lucy_secure_withdrawals', JSON.stringify(allReqs));
+            localStorage.setItem('lucy_secure_withdrawals_v9', JSON.stringify(allReqs));
 
             document.getElementById('withdraw-account').value = "";
             document.getElementById('withdraw-amount').value = "";
@@ -1001,7 +1001,7 @@
 
         function renderUserWithdrawHistory() {
             const container = document.getElementById('user-withdraw-history');
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
             let userReqs = allReqs.filter(r => r.tgId === currentUserId);
 
             if (!userReqs.length) {
@@ -1022,13 +1022,12 @@
             `).join('');
         }
 
-        /* 4: Admin Approve & Reject Engine */
         function renderAdminWithdrawList() {
             const container = document.getElementById('admin-withdraw-list');
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
 
             if (!allReqs.length) {
-                container.innerHTML = "ምንም ጥያቄ የለም።";
+                container.innerHTML = "ምንም የወጪ ጥያቄ የለም።";
                 return;
             }
 
@@ -1052,7 +1051,7 @@
         }
 
         function adminActionWithdraw(reqId, action) {
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
             const idx = allReqs.findIndex(r => r.id === reqId);
 
             if (idx === -1) return;
@@ -1075,14 +1074,14 @@
                 alert("Withdrawal Rejected & Refunded to User!");
             }
 
-            localStorage.setItem('lucy_secure_withdrawals', JSON.stringify(allReqs));
+            localStorage.setItem('lucy_secure_withdrawals_v9', JSON.stringify(allReqs));
             renderAdminWithdrawList();
             renderUserWithdrawHistory();
         }
 
-        /* 3: Real Leaderboard (No Fake Ranks) */
+        /* 100% Real Ranks: No fake User_1004 */
         function updateRealLeaderboard() {
-            let realUsers = JSON.parse(localStorage.getItem('lucy_real_members_registry') || '[]');
+            let realUsers = JSON.parse(localStorage.getItem('lucy_real_members_registry_v9') || '[]');
             const userIndex = realUsers.findIndex(u => u.tgId === currentUserId);
             const myEntry = {
                 tgId: currentUserId,
@@ -1097,22 +1096,24 @@
             }
 
             realUsers.sort((a, b) => b.rp - a.rp);
-            localStorage.setItem('lucy_real_members_registry', JSON.stringify(realUsers));
+            localStorage.setItem('lucy_real_members_registry_v9', JSON.stringify(realUsers));
 
-            const p1 = realUsers[0] || { username: '--', rp: 0 };
-            const p2 = realUsers[1] || { username: '--', rp: 0 };
-            const p3 = realUsers[2] || { username: '--', rp: 0 };
+            const p1 = realUsers[0] || { username: currentUsername, rp: appData.rpCoins };
+            const p2 = realUsers[1] || null;
+            const p3 = realUsers[2] || null;
 
             document.getElementById('podium-name-1').textContent = p1.username;
             document.getElementById('podium-rp-1').textContent = `${p1.rp} RP`;
-            document.getElementById('podium-name-2').textContent = p2.username;
-            document.getElementById('podium-rp-2').textContent = `${p2.rp} RP`;
-            document.getElementById('podium-name-3').textContent = p3.username;
-            document.getElementById('podium-rp-3').textContent = `${p3.rp} RP`;
+
+            document.getElementById('podium-name-2').textContent = p2 ? p2.username : "--";
+            document.getElementById('podium-rp-2').textContent = p2 ? `${p2.rp} RP` : "0 RP";
+
+            document.getElementById('podium-name-3').textContent = p3 ? p3.username : "--";
+            document.getElementById('podium-rp-3').textContent = p3 ? `${p3.rp} RP` : "0 RP";
 
             const list = document.getElementById('ranks-list-items');
             list.innerHTML = "";
-            for (let i = 3; i < Math.min(50, realUsers.length); i++) {
+            for (let i = 3; i < realUsers.length; i++) {
                 const u = realUsers[i];
                 const li = document.createElement('li');
                 li.className = 'rank-item';
@@ -1124,12 +1125,12 @@
             }
         }
 
-        /* 5: Task Join Once Logic */
+        /* Task Logic: Once Joined, locked to Joined ✅ */
         function renderTasksBoard() {
             const container = document.getElementById('tasks-board-list');
             if (!container) return;
             container.innerHTML = "";
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
 
             tasks.forEach(t => {
                 const isJoined = appData.joinedTasks.includes(t.id);
@@ -1139,12 +1140,12 @@
                     <div>
                         <b>${t.name}</b> <small style="color:var(--gold);">(${t.platform})</small>
                         <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
-                            ሽልማት: ${t.reward} RP • አባላት: ${t.joined}/${t.limit}
+                            ሽልማት: ${t.reward} RP • አባላት: ${t.joined || 0}/${t.limit}
                         </div>
                     </div>
                     <div>
                         ${isJoined ? `
-                            <button class="btn-secondary" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-green); color:var(--accent-green);" disabled>Joined ✅</button>
+                            <button class="btn-secondary" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-green); color:var(--accent-green); font-weight:800;" disabled>Joined ✅</button>
                         ` : `
                             <div style="display:flex; gap:6px;">
                                 <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="openTaskUrl('${t.link}')">Join</button>
@@ -1167,11 +1168,11 @@
                 return;
             }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
             const idx = tasks.findIndex(x => x.id === id);
             if (idx !== -1) {
-                tasks[idx].joined += 1;
-                localStorage.setItem('lucy_tasks_secure_db', JSON.stringify(tasks));
+                tasks[idx].joined = (tasks[idx].joined || 0) + 1;
+                localStorage.setItem('lucy_tasks_secure_db_v9', JSON.stringify(tasks));
 
                 appData.joinedTasks.push(id);
                 appData.rpCoins += reward;
@@ -1193,9 +1194,9 @@
 
             if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
             tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
-            localStorage.setItem('lucy_tasks_secure_db', JSON.stringify(tasks));
+            localStorage.setItem('lucy_tasks_secure_db_v9', JSON.stringify(tasks));
 
             renderTasksBoard();
             closeAdmin();
@@ -1248,13 +1249,13 @@
             document.getElementById('admin-add-rp-amount').value = "";
         }
 
-        /* 6: Safe Code Injector - Isolated Storage that Never Overwrites Balance */
+        /* Safe Code Injector */
         function applySafeInjection() {
             const code = document.getElementById('raw-injector-text').value.trim();
             if (!code) return;
-            let stored = JSON.parse(localStorage.getItem('lucy_custom_injected_extensions') || '[]');
+            let stored = JSON.parse(localStorage.getItem('lucy_injections_storage_safe') || '[]');
             stored.push(code);
-            localStorage.setItem('lucy_custom_injected_extensions', JSON.stringify(stored));
+            localStorage.setItem('lucy_injections_storage_safe', JSON.stringify(stored));
             executeSafeSnippet(code);
             closeAdmin();
             alert("ኮዱ ተቀምጧል! (የተጠቃሚ ሂሳብ ሳይነካ)");
@@ -1262,13 +1263,13 @@
         }
 
         function loadStoredInjections() {
-            let stored = JSON.parse(localStorage.getItem('lucy_custom_injected_extensions') || '[]');
+            let stored = JSON.parse(localStorage.getItem('lucy_injections_storage_safe') || '[]');
             stored.forEach(c => executeSafeSnippet(c));
         }
 
         function clearInjectedCode() {
             if (confirm("የገቡትን ተጨማሪ ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
-                localStorage.removeItem('lucy_custom_injected_extensions');
+                localStorage.removeItem('lucy_injections_storage_safe');
                 alert("ኮዶች ተሰርዘዋል!");
                 window.location.reload();
             }
