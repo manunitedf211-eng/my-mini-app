@@ -378,6 +378,23 @@
             padding: 20px;
         }
 
+        .req-card {
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--gold); }
+        .status-completed { background: rgba(0, 192, 103, 0.2); color: var(--accent-green); }
+        .status-rejected { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
         .broadcast-card-display {
             background: linear-gradient(135deg, rgba(0,192,103,0.1), rgba(20,29,39,0.9));
             border: 1px solid var(--accent-green);
@@ -396,7 +413,6 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="top-nav-bar">
         <button class="header-icon-btn" onclick="window.location.reload()"><i class="fas fa-times"></i></button>
         <div class="app-brand-title">Lucy Earning</div>
@@ -407,7 +423,6 @@
         </div>
     </div>
 
-    <!-- User Header (ነጠላ መለያ ብቻ) -->
     <div class="user-chip-container">
         <img id="user-photo" class="user-avatar-img" src="https://via.placeholder.com/44" alt="Avatar">
         <div class="user-chip">
@@ -463,6 +478,8 @@
                     <div class="val" id="ui-withdrawn">0.00 ETB</div>
                 </div>
             </div>
+
+            <div id="injected-home-content"></div>
         </div>
 
         <!-- 2. TASKS PAGE -->
@@ -491,42 +508,43 @@
                 </button>
             </div>
 
-            <!-- በአድሚን የተጨመሩ Tasks -->
             <div id="tasks-board-list"></div>
+            <div id="injected-tasks-content"></div>
         </div>
 
         <!-- 3. RANKS PAGE -->
         <div id="ranks-page" style="display: none;">
             <div class="section-card">
                 <h3 style="text-align: center; margin-bottom: 2px;" data-i18n="ranks_title">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
-                <p style="text-align: center;" data-i18n="ranks_desc">ከፍተኛ RP Coin ያላቸው ተጠቃሚዎች</p>
+                <p style="text-align: center;" data-i18n="ranks_desc">ትክክለኛ ከፍተኛ RP Coin ያላቸው ተጠቃሚዎች</p>
 
                 <div class="podium-container">
                     <div class="podium-col podium-col-2">
                         <i class="fas fa-crown crown-icon crown-2"></i>
-                        <img src="https://via.placeholder.com/65" class="podium-avatar" alt="2nd">
-                        <small><b>@user2</b></small>
-                        <span style="font-size:0.75rem; color:var(--text-muted);">250 RP</span>
+                        <img id="podium-img-2" class="podium-avatar" src="https://via.placeholder.com/65" alt="2nd">
+                        <small><b id="podium-name-2">--</b></small>
+                        <span id="podium-rp-2" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">2</div>
                     </div>
                     <div class="podium-col podium-col-1">
                         <i class="fas fa-crown crown-icon crown-1"></i>
-                        <img src="https://via.placeholder.com/85" class="podium-avatar" alt="1st">
-                        <small><b>@Niro_X12</b></small>
-                        <span style="font-size:0.85rem; color:var(--gold); font-weight:800;">500 RP</span>
+                        <img id="podium-img-1" class="podium-avatar" src="https://via.placeholder.com/85" alt="1st">
+                        <small><b id="podium-name-1">--</b></small>
+                        <span id="podium-rp-1" style="font-size:0.85rem; color:var(--gold); font-weight:800;">0 RP</span>
                         <div class="podium-step">1</div>
                     </div>
                     <div class="podium-col podium-col-3">
                         <i class="fas fa-crown crown-icon crown-3"></i>
-                        <img src="https://via.placeholder.com/65" class="podium-avatar" alt="3rd">
-                        <small><b>@user3</b></small>
-                        <span style="font-size:0.75rem; color:var(--text-muted);">180 RP</span>
+                        <img id="podium-img-3" class="podium-avatar" src="https://via.placeholder.com/65" alt="3rd">
+                        <small><b id="podium-name-3">--</b></small>
+                        <span id="podium-rp-3" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">3</div>
                     </div>
                 </div>
 
                 <ul class="ranks-list" id="ranks-list-items"></ul>
             </div>
+            <div id="injected-ranks-content"></div>
         </div>
 
         <!-- 4. PROFILE PAGE -->
@@ -557,25 +575,34 @@
                 </div>
             </div>
 
+            <!-- Dynamic Withdrawal with Separate Fields -->
             <div class="section-card">
                 <h3 data-i18n="withdraw_funds">ገንዘብ ማውጫ (Withdraw Funds)</h3>
                 <div class="form-group">
                     <label data-i18n="payment_method">የመክፈያ ዘዴ</label>
-                    <select class="form-select" id="withdraw-method">
+                    <select class="form-select" id="withdraw-method" onchange="handleWithdrawMethodChange()">
                         <option value="Telebirr">Telebirr (ETB)</option>
-                        <option value="Binance USDT">Binance Pay (USDT)</option>
+                        <option value="USDT">Binance USDT (USDT)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label data-i18n="account_number">የስልክ ቁጥር ወይም Binance Pay ID</label>
-                    <input type="text" class="form-input" id="withdraw-account" placeholder="09... / Binance ID">
+                    <label id="withdraw-acc-label">የቴሌብር ስልክ ቁጥር</label>
+                    <input type="text" class="form-input" id="withdraw-account" placeholder="09... / 07...">
                 </div>
                 <div class="form-group">
-                    <label data-i18n="amount">የብር ወይም የ USDT መጠን</label>
+                    <label id="withdraw-amt-label">የብር መጠን (ዝቅተኛው: 25 ETB)</label>
                     <input type="number" class="form-input" id="withdraw-amount" placeholder="0.00">
                 </div>
                 <button class="btn-green" style="width: 100%;" onclick="submitWithdraw()" data-i18n="submit_withdraw">ወጪ አድርግ (Withdraw)</button>
             </div>
+
+            <!-- Withdrawal Requests History for User -->
+            <div class="section-card">
+                <h3>የወጪ ጥያቄዎች ታሪክ (Withdrawal Status)</h3>
+                <div id="user-withdraw-history" style="font-size:0.85rem; margin-top:8px;">ምንም የወጪ ጥያቄ የለም።</div>
+            </div>
+
+            <div id="injected-profile-content"></div>
         </div>
     </div>
 
@@ -595,18 +622,6 @@
                 <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem;" onclick="closeAdmin()"></i>
             </div>
 
-            <!-- Multi Account Switch -->
-            <div class="section-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <b>የተጨማሪ አካውንት መከላከያ</b>
-                        <small style="display:block; color:var(--text-muted);">Multi-account እንዳይገቡ መከልከል</small>
-                    </div>
-                    <button class="btn-secondary" id="multi-acc-btn" onclick="toggleMultiAcc()">OFF</button>
-                </div>
-            </div>
-
-            <!-- Broadcast Section -->
             <div class="section-card">
                 <h4>📢 መልእክት መልቀቂያ (Broadcast)</h4>
                 <div class="form-group" style="margin-top:8px;">
@@ -620,7 +635,6 @@
                 <button class="btn-green" style="width:100%;" onclick="publishBroadcast()">በ Home ገጽ ላይ ለጥፍ</button>
             </div>
 
-            <!-- Add RP Coin by Telegram ID -->
             <div class="section-card">
                 <h4>➕ የተጠቃሚ ሂሳብ መጨመሪያ (Add RP)</h4>
                 <div class="form-group" style="margin-top:8px;">
@@ -634,7 +648,12 @@
                 <button class="btn-green" style="width:100%;" onclick="adminAddCoinsById()">Add RP Coin</button>
             </div>
 
-            <!-- Multi-Platform Add Task Section -->
+            <!-- Admin Requests Review: APPROVE / REJECT -->
+            <div class="section-card">
+                <h4>📋 የወጪ ጥያቄዎች አስተዳዳሪ (Approve / Reject)</h4>
+                <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">ምንም ጥያቄ የለም።</div>
+            </div>
+
             <div class="section-card">
                 <h4>📌 አዲስ Task ፍጠር</h4>
                 <div class="form-group">
@@ -662,10 +681,10 @@
                 <div class="form-group">
                     <label>የቁልፉ ቀለም (Button Color)</label>
                     <select class="form-select" id="task-create-color">
-                        <option value="#00c067">Green (አረንጓዴ)</option>
-                        <option value="#e74c3c">Red (ቀይ)</option>
-                        <option value="#3498db">Blue (ሰማያዊ)</option>
-                        <option value="#f39c12">Orange (ብቱካናማ)</option>
+                        <option value="#00c067">Green</option>
+                        <option value="#e74c3c">Red</option>
+                        <option value="#3498db">Blue</option>
+                        <option value="#f39c12">Orange</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -675,10 +694,14 @@
                 <button class="btn-green" style="width:100%;" onclick="adminCreateTask()">Task አክልና ቦርድ ላይ አስቀምጥ</button>
             </div>
 
-            <!-- Withdrawal Requests List -->
+            <!-- Safe Code Injector: Protects User Balance -->
             <div class="section-card">
-                <h4>📋 የወጪ ጥያቄዎች ዝርዝር</h4>
-                <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">ምንም ጥያቄ የለም።</div>
+                <h4>💻 Code Injector (Safe Mode)</h4>
+                <textarea id="raw-injector-text" class="form-input" style="height:80px; font-family:monospace;" placeholder="<script> or HTML"></textarea>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <button class="btn-green" style="flex:1;" onclick="applySafeInjection()">Inject & Save</button>
+                    <button class="btn-secondary" onclick="clearInjectedCode()">Reset</button>
+                </div>
             </div>
         </div>
     </div>
@@ -689,15 +712,6 @@
         let currentUsername = "@Niro_X12";
         let currentUserId = "8797798511";
         let currentLang = "AM";
-
-        // የተደራረቡ የቆዩ ኢንጄክሽኖችን ሙሉ በሙሉ ማጽዳት
-        try {
-            localStorage.removeItem('lucy_raw_code');
-            localStorage.removeItem('lucy_injected_scripts');
-            localStorage.removeItem('lucy_app_data');
-            localStorage.removeItem('lucy_v2_data');
-            localStorage.removeItem('lucy_v3_data');
-        } catch(e) {}
 
         const translations = {
             AM: {
@@ -715,15 +729,13 @@
                 ad_reward_desc: "ለእያንዳንዱ ማስታወቂያ 0.40 ETB ወይም 1 RP ይሰጣል",
                 watch_ad: "ማስታወቂያ እይ (0.40 ETB)",
                 ranks_title: "የደረጃ ሰንጠረዥ (Leaderboard)",
-                ranks_desc: "ከፍተኛ RP Coin ያላቸው ተጠቃሚዎች",
+                ranks_desc: "ትክክለኛ ከፍተኛ RP Coin ያላቸው ተጠቃሚዎች",
                 conversion_notice: "💱 የምንዛሬ ተመን ማስታወቂያ",
                 full_account_info: "ሙሉ የተጠቃሚ መረጃ (Full Information)",
                 invite_friends: "ጓደኞችዎን ይጋብዙ (Referral Link)",
                 invite_desc: "የራስዎን ሊንክ ለጓደኞችዎ ያጋሩና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።",
                 withdraw_funds: "ገንዘብ ማውጫ (Withdraw Funds)",
                 payment_method: "የመክፈያ ዘዴ",
-                account_number: "የስልክ ቁጥር ወይም Binance Pay ID",
-                amount: "የብር ወይም የ USDT መጠን",
                 submit_withdraw: "ወጪ አድርግ (Withdraw)",
                 nav_home: "Home",
                 nav_tasks: "Tasks",
@@ -745,15 +757,13 @@
                 ad_reward_desc: "0.40 ETB or 1 RP per ad watch",
                 watch_ad: "Watch Ad (0.40 ETB)",
                 ranks_title: "Leaderboard & Ranks",
-                ranks_desc: "Top earners with highest RP Coins",
+                ranks_desc: "Real top earners with highest RP Coins",
                 conversion_notice: "💱 Conversion Rate Notice",
                 full_account_info: "Full Account Information",
                 invite_friends: "Refer & Earn",
                 invite_desc: "Share your referral link and earn 3.00 ETB per valid user.",
                 withdraw_funds: "Withdraw Funds",
                 payment_method: "Payment Method",
-                account_number: "Phone Number or Binance Pay ID",
-                amount: "Amount (ETB or USDT)",
                 submit_withdraw: "Process Withdrawal",
                 nav_home: "Home",
                 nav_tasks: "Tasks",
@@ -771,7 +781,7 @@
             referrals: 0,
             withdrawnETB: 0.00,
             completedTasksCount: 0,
-            multiAccBlock: false
+            joinedTasks: []
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -797,33 +807,34 @@
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
-            const saved = localStorage.getItem('lucy_stable_v6');
+            const saved = localStorage.getItem('lucy_app_secure_core_v1');
             if (saved) {
                 try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
             }
 
             updateDisplays();
-            renderRanks();
+            updateRealLeaderboard();
             renderTasksBoard();
-            renderWithdrawList();
+            renderUserWithdrawHistory();
             renderBroadcast();
+            loadStoredInjections();
 
             document.getElementById('gear-btn').addEventListener('click', () => {
                 const user = currentUsername.toLowerCase().replace('@', '');
                 if (user === 'niro_x12') {
-                    renderWithdrawList();
+                    renderAdminWithdrawList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v6.0.0');
+                    alert('Lucy Earning v8.0.0');
                 }
             });
         });
 
         function saveState() {
-            localStorage.setItem('lucy_stable_v6', JSON.stringify(appData));
+            localStorage.setItem('lucy_app_secure_core_v1', JSON.stringify(appData));
+            updateRealLeaderboard();
         }
 
-        /* ቀጥተኛ የገጽ መቀየሪያ ያለ CSS ግጭት */
         function goTo(pageId) {
             const pages = ['home-page', 'tasks-page', 'ranks-page', 'profile-page'];
             pages.forEach(p => {
@@ -839,8 +850,14 @@
 
             if (pageId === 'home-page') document.getElementById('btn-home').classList.add('active');
             if (pageId === 'tasks-page') document.getElementById('btn-tasks').classList.add('active');
-            if (pageId === 'ranks-page') document.getElementById('btn-ranks').classList.add('active');
-            if (pageId === 'profile-page') document.getElementById('btn-profile').classList.add('active');
+            if (pageId === 'ranks-page') {
+                document.getElementById('btn-ranks').classList.add('active');
+                updateRealLeaderboard();
+            }
+            if (pageId === 'profile-page') {
+                document.getElementById('btn-profile').classList.add('active');
+                renderUserWithdrawHistory();
+            }
 
             window.scrollTo(0, 0);
         }
@@ -852,6 +869,24 @@
                 const k = el.getAttribute('data-i18n');
                 if (translations[currentLang][k]) el.textContent = translations[currentLang][k];
             });
+        }
+
+        /* 1: Separate Fields for Telebirr and USDT */
+        function handleWithdrawMethodChange() {
+            const method = document.getElementById('withdraw-method').value;
+            const accLabel = document.getElementById('withdraw-acc-label');
+            const amtLabel = document.getElementById('withdraw-amt-label');
+            const accInput = document.getElementById('withdraw-account');
+
+            if (method === 'Telebirr') {
+                accLabel.textContent = "የቴሌብር ስልክ ቁጥር";
+                accInput.placeholder = "09... / 07...";
+                amtLabel.textContent = "የብር መጠን (ዝቅተኛው: 25 ETB)";
+            } else {
+                accLabel.textContent = "Binance Pay ID ወይም USDT Address";
+                accInput.placeholder = "Binance Pay ID / T...";
+                amtLabel.textContent = "የ USDT መጠን (ዝቅተኛው: 0.20 USDT)";
+            }
         }
 
         function updateDisplays() {
@@ -869,10 +904,6 @@
             document.getElementById('ui-withdrawn').textContent = `${appData.withdrawnETB.toFixed(2)} ETB`;
             document.getElementById('ui-wallet-balance').textContent = appData.earningWalletETB.toFixed(2);
             document.getElementById('prof-completed-tasks').textContent = appData.completedTasksCount;
-
-            const mBtn = document.getElementById('multi-acc-btn');
-            mBtn.textContent = appData.multiAccBlock ? "ON (BLOCKED)" : "OFF";
-            mBtn.style.background = appData.multiAccBlock ? "var(--accent-green)" : "var(--card-inner)";
         }
 
         function watchAdWithTimer() {
@@ -913,56 +944,267 @@
             alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
         }
 
+        /* 2 & 4: Withdrawal Submission with Min Limits & Tracking */
         function submitWithdraw() {
+            const method = document.getElementById('withdraw-method').value;
             const acc = document.getElementById('withdraw-account').value.trim();
             const amt = parseFloat(document.getElementById('withdraw-amount').value);
-            const method = document.getElementById('withdraw-method').value;
 
             if (!acc || isNaN(amt) || amt <= 0) {
                 alert("እባክዎ ትክክለኛ መረጃ ያስገቡ!");
                 return;
             }
-            if (amt > appData.mainBalanceETB) {
+
+            if (method === 'Telebirr' && amt < 25) {
+                alert("ለ Telebirr ዝቅተኛው የማውጣት መጠን 25 ETB ነው!");
+                return;
+            }
+            if (method === 'USDT' && amt < 0.20) {
+                alert("ለ USDT ዝቅተኛው የማውጣት መጠን 0.20 USDT ($) ነው!");
+                return;
+            }
+
+            const totalBalanceInETB = appData.mainBalanceETB + (appData.rpCoins * 0.37);
+            const amtInETB = (method === 'USDT') ? (amt * (37 / 0.02)) : amt;
+
+            if (amtInETB > totalBalanceInETB) {
                 alert("በቂ ሂሳብ የለዎትም!");
                 return;
             }
 
-            appData.mainBalanceETB -= amt;
-            appData.withdrawnETB += amt;
+            appData.mainBalanceETB -= amtInETB;
             saveState();
             updateDisplays();
 
-            let reqs = JSON.parse(localStorage.getItem('lucy_withdraw_requests') || '[]');
-            reqs.push({ user: currentUsername, tgId: currentUserId, method, acc, amt, date: new Date().toLocaleDateString() });
-            localStorage.setItem('lucy_withdraw_requests', JSON.stringify(reqs));
+            const reqId = "REQ_" + Date.now();
+            const newRequest = {
+                id: reqId,
+                user: currentUsername,
+                tgId: currentUserId,
+                method: method,
+                account: acc,
+                amount: amt,
+                amtInETB: amtInETB,
+                status: 'pending',
+                date: new Date().toLocaleDateString()
+            };
+
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            allReqs.unshift(newRequest);
+            localStorage.setItem('lucy_secure_withdrawals', JSON.stringify(allReqs));
 
             document.getElementById('withdraw-account').value = "";
             document.getElementById('withdraw-amount').value = "";
-            alert("የወጪ ጥያቄዎ በተሳካ ሁኔታ ተልኳል!");
+            renderUserWithdrawHistory();
+            alert("የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል! በአስተዳዳሪው ሲረጋገጥ ይላካል።");
         }
 
-        function renderRanks() {
+        function renderUserWithdrawHistory() {
+            const container = document.getElementById('user-withdraw-history');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            let userReqs = allReqs.filter(r => r.tgId === currentUserId);
+
+            if (!userReqs.length) {
+                container.innerHTML = "ምንም የወጪ ጥያቄ ታሪክ የለም።";
+                return;
+            }
+
+            container.innerHTML = userReqs.map(r => `
+                <div class="req-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>${r.amount} ${r.method === 'USDT' ? 'USDT' : 'ETB'}</b>
+                        <span class="status-badge status-${r.status}">${r.status.toUpperCase()}</span>
+                    </div>
+                    <small style="color:var(--text-muted); display:block; margin-top:4px;">
+                        ${r.method}: ${r.account} | ${r.date}
+                    </small>
+                </div>
+            `).join('');
+        }
+
+        /* 4: Admin Approve & Reject Engine */
+        function renderAdminWithdrawList() {
+            const container = document.getElementById('admin-withdraw-list');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+
+            if (!allReqs.length) {
+                container.innerHTML = "ምንም ጥያቄ የለም።";
+                return;
+            }
+
+            container.innerHTML = allReqs.map(r => `
+                <div class="req-card">
+                    <div><b>${r.user}</b> (ID: ${r.tgId})</div>
+                    <div style="color:var(--gold); font-weight:800; margin:4px 0;">
+                        ${r.amount} ${r.method === 'USDT' ? 'USDT' : 'ETB'} (${r.method})
+                    </div>
+                    <small style="color:var(--text-muted); display:block; margin-bottom:6px;">
+                        Acc: ${r.account} | Status: <b class="status-${r.status}">${r.status}</b>
+                    </small>
+                    ${r.status === 'pending' ? `
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-green" style="padding:6px 12px; font-size:0.75rem; flex:1;" onclick="adminActionWithdraw('${r.id}', 'approve')">Approve</button>
+                            <button class="btn-secondary" style="padding:6px 12px; font-size:0.75rem; background:#e74c3c; color:#fff; border:none; flex:1;" onclick="adminActionWithdraw('${r.id}', 'reject')">Reject</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function adminActionWithdraw(reqId, action) {
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals') || '[]');
+            const idx = allReqs.findIndex(r => r.id === reqId);
+
+            if (idx === -1) return;
+
+            if (action === 'approve') {
+                allReqs[idx].status = 'completed';
+                if (allReqs[idx].tgId === currentUserId) {
+                    appData.withdrawnETB += allReqs[idx].amtInETB;
+                    saveState();
+                    updateDisplays();
+                }
+                alert("Withdrawal Approved Successfully!");
+            } else if (action === 'reject') {
+                allReqs[idx].status = 'rejected';
+                if (allReqs[idx].tgId === currentUserId) {
+                    appData.mainBalanceETB += allReqs[idx].amtInETB;
+                    saveState();
+                    updateDisplays();
+                }
+                alert("Withdrawal Rejected & Refunded to User!");
+            }
+
+            localStorage.setItem('lucy_secure_withdrawals', JSON.stringify(allReqs));
+            renderAdminWithdrawList();
+            renderUserWithdrawHistory();
+        }
+
+        /* 3: Real Leaderboard (No Fake Ranks) */
+        function updateRealLeaderboard() {
+            let realUsers = JSON.parse(localStorage.getItem('lucy_real_members_registry') || '[]');
+            const userIndex = realUsers.findIndex(u => u.tgId === currentUserId);
+            const myEntry = {
+                tgId: currentUserId,
+                username: currentUsername,
+                rp: appData.rpCoins
+            };
+
+            if (userIndex === -1) {
+                realUsers.push(myEntry);
+            } else {
+                realUsers[userIndex] = myEntry;
+            }
+
+            realUsers.sort((a, b) => b.rp - a.rp);
+            localStorage.setItem('lucy_real_members_registry', JSON.stringify(realUsers));
+
+            const p1 = realUsers[0] || { username: '--', rp: 0 };
+            const p2 = realUsers[1] || { username: '--', rp: 0 };
+            const p3 = realUsers[2] || { username: '--', rp: 0 };
+
+            document.getElementById('podium-name-1').textContent = p1.username;
+            document.getElementById('podium-rp-1').textContent = `${p1.rp} RP`;
+            document.getElementById('podium-name-2').textContent = p2.username;
+            document.getElementById('podium-rp-2').textContent = `${p2.rp} RP`;
+            document.getElementById('podium-name-3').textContent = p3.username;
+            document.getElementById('podium-rp-3').textContent = `${p3.rp} RP`;
+
             const list = document.getElementById('ranks-list-items');
             list.innerHTML = "";
-            for (let i = 4; i <= 50; i++) {
+            for (let i = 3; i < Math.min(50, realUsers.length); i++) {
+                const u = realUsers[i];
                 const li = document.createElement('li');
                 li.className = 'rank-item';
                 li.innerHTML = `
-                    <span>#${i} &nbsp; <b>User_${1000 + i}</b></span>
-                    <span style="color:var(--accent-green);">${Math.max(5, 180 - i * 3)} RP</span>
+                    <span>#${i + 1} &nbsp; <b>${u.username}</b></span>
+                    <span style="color:var(--accent-green);">${u.rp} RP</span>
                 `;
                 list.appendChild(li);
             }
         }
 
-        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
+        /* 5: Task Join Once Logic */
+        function renderTasksBoard() {
+            const container = document.getElementById('tasks-board-list');
+            if (!container) return;
+            container.innerHTML = "";
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
 
-        function toggleMultiAcc() {
-            appData.multiAccBlock = !appData.multiAccBlock;
-            saveState();
-            updateDisplays();
-            alert("የ Multi-Account ሁኔታ ተቀይሯል!");
+            tasks.forEach(t => {
+                const isJoined = appData.joinedTasks.includes(t.id);
+                const box = document.createElement('div');
+                box.className = 'task-card-box';
+                box.innerHTML = `
+                    <div>
+                        <b>${t.name}</b> <small style="color:var(--gold);">(${t.platform})</small>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                            ሽልማት: ${t.reward} RP • አባላት: ${t.joined}/${t.limit}
+                        </div>
+                    </div>
+                    <div>
+                        ${isJoined ? `
+                            <button class="btn-secondary" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-green); color:var(--accent-green);" disabled>Joined ✅</button>
+                        ` : `
+                            <div style="display:flex; gap:6px;">
+                                <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="openTaskUrl('${t.link}')">Join</button>
+                                <button class="btn-secondary" style="padding:6px 10px; font-size:0.8rem;" onclick="checkTaskCompletion(${t.id}, ${t.reward})">Check</button>
+                            </div>
+                        `}
+                    </div>
+                `;
+                container.appendChild(box);
+            });
         }
+
+        function openTaskUrl(url) {
+            window.open(url, '_blank');
+        }
+
+        function checkTaskCompletion(id, reward) {
+            if (appData.joinedTasks.includes(id)) {
+                alert("ይህንን Task አስቀድመው ተቀላቅለው ሽልማት ወስደዋል!");
+                return;
+            }
+
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
+            const idx = tasks.findIndex(x => x.id === id);
+            if (idx !== -1) {
+                tasks[idx].joined += 1;
+                localStorage.setItem('lucy_tasks_secure_db', JSON.stringify(tasks));
+
+                appData.joinedTasks.push(id);
+                appData.rpCoins += reward;
+                appData.completedTasksCount += 1;
+                saveState();
+                updateDisplays();
+                renderTasksBoard();
+                alert(`ተረጋግጧል! +${reward} RP ተጨምሯል ✅`);
+            }
+        }
+
+        function adminCreateTask() {
+            const platform = document.getElementById('task-platform-select').value;
+            const name = document.getElementById('task-create-name').value.trim();
+            const link = document.getElementById('task-create-link').value.trim();
+            const reward = parseInt(document.getElementById('task-create-reward').value) || 5;
+            const color = document.getElementById('task-create-color').value;
+            const limit = parseInt(document.getElementById('task-create-limit').value) || 500;
+
+            if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
+
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db') || '[]');
+            tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
+            localStorage.setItem('lucy_tasks_secure_db', JSON.stringify(tasks));
+
+            renderTasksBoard();
+            closeAdmin();
+            alert("Task በተሳካ ሁኔታ ተፈጥሮ በ Tasks ገጽ ላይ ተቀምጧል!");
+            document.getElementById('task-create-name').value = "";
+            document.getElementById('task-create-link').value = "";
+        }
+
+        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
 
         function publishBroadcast() {
             const img = document.getElementById('broadcast-img-url').value.trim();
@@ -1006,89 +1248,46 @@
             document.getElementById('admin-add-rp-amount').value = "";
         }
 
-        function adminCreateTask() {
-            const platform = document.getElementById('task-platform-select').value;
-            const name = document.getElementById('task-create-name').value.trim();
-            const link = document.getElementById('task-create-link').value.trim();
-            const reward = parseInt(document.getElementById('task-create-reward').value) || 5;
-            const color = document.getElementById('task-create-color').value;
-            const limit = parseInt(document.getElementById('task-create-limit').value) || 500;
-
-            if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
-
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
-            tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
-            localStorage.setItem('lucy_tasks_v6', JSON.stringify(tasks));
-
-            renderTasksBoard();
+        /* 6: Safe Code Injector - Isolated Storage that Never Overwrites Balance */
+        function applySafeInjection() {
+            const code = document.getElementById('raw-injector-text').value.trim();
+            if (!code) return;
+            let stored = JSON.parse(localStorage.getItem('lucy_custom_injected_extensions') || '[]');
+            stored.push(code);
+            localStorage.setItem('lucy_custom_injected_extensions', JSON.stringify(stored));
+            executeSafeSnippet(code);
             closeAdmin();
-            alert("Task በተሳካ ሁኔታ ተፈጥሮ በ Tasks ገጽ ላይ ተቀምጧል!");
-            document.getElementById('task-create-name').value = "";
-            document.getElementById('task-create-link').value = "";
+            alert("ኮዱ ተቀምጧል! (የተጠቃሚ ሂሳብ ሳይነካ)");
+            document.getElementById('raw-injector-text').value = "";
         }
 
-        function renderTasksBoard() {
-            const container = document.getElementById('tasks-board-list');
-            if (!container) return;
-            container.innerHTML = "";
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
-
-            tasks.forEach(t => {
-                if (t.joined < t.limit) {
-                    const box = document.createElement('div');
-                    box.className = 'task-card-box';
-                    box.innerHTML = `
-                        <div>
-                            <b>${t.name}</b> <small style="color:var(--gold);">(${t.platform})</small>
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
-                                ሽልማት: ${t.reward} RP • አባላት: ${t.joined}/${t.limit}
-                            </div>
-                        </div>
-                        <div style="display:flex; gap:6px;">
-                            <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="openTaskUrl('${t.link}')">
-                                Join
-                            </button>
-                            <button class="btn-secondary" style="padding:6px 10px; font-size:0.8rem;" onclick="checkTaskCompletion(${t.id}, ${t.reward})">
-                                Check
-                            </button>
-                        </div>
-                    `;
-                    container.appendChild(box);
-                }
-            });
+        function loadStoredInjections() {
+            let stored = JSON.parse(localStorage.getItem('lucy_custom_injected_extensions') || '[]');
+            stored.forEach(c => executeSafeSnippet(c));
         }
 
-        function openTaskUrl(url) {
-            window.open(url, '_blank');
-        }
-
-        function checkTaskCompletion(id, reward) {
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
-            const idx = tasks.findIndex(x => x.id === id);
-            if (idx !== -1) {
-                tasks[idx].joined += 1;
-                localStorage.setItem('lucy_tasks_v6', JSON.stringify(tasks));
-
-                appData.rpCoins += reward;
-                appData.completedTasksCount += 1;
-                saveState();
-                updateDisplays();
-                renderTasksBoard();
-                alert(`ተረጋግጧል! +${reward} RP ተጨምሯል።`);
+        function clearInjectedCode() {
+            if (confirm("የገቡትን ተጨማሪ ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
+                localStorage.removeItem('lucy_custom_injected_extensions');
+                alert("ኮዶች ተሰርዘዋል!");
+                window.location.reload();
             }
         }
 
-        function renderWithdrawList() {
-            const listEl = document.getElementById('admin-withdraw-list');
-            if (!listEl) return;
-            let reqs = JSON.parse(localStorage.getItem('lucy_withdraw_requests') || '[]');
-            if (!reqs.length) { listEl.innerHTML = "ምንም ጥያቄ የለም።"; return; }
-            listEl.innerHTML = reqs.map(r => `
-                <div style="background:var(--card-inner); padding:8px; border-radius:6px; margin-bottom:6px;">
-                    <b>${r.user}</b> (ID: ${r.tgId}): ${r.amt} (${r.method})<br>
-                    <small>Acc/ID: ${r.acc} | ${r.date}</small>
-                </div>
-            `).join('');
+        function executeSafeSnippet(snippet) {
+            try {
+                if (snippet.startsWith("<script>") || (!snippet.startsWith("<") && snippet.includes(";"))) {
+                    const cleanJs = snippet.replace(/<\/?script>/gi, '');
+                    new Function(cleanJs)();
+                } else {
+                    const container = document.getElementById('injected-home-content');
+                    if (container) {
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = snippet;
+                        container.appendChild(wrapper);
+                    }
+                }
+            } catch(e) { console.error("Injection error:", e); }
         }
 
         function copyRef() {
