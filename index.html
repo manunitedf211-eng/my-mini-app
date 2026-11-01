@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="am">
 <head>
     <meta charset="UTF-8">
@@ -33,15 +33,6 @@
             min-height: 100vh;
             padding-bottom: 85px;
             overflow-x: hidden;
-        }
-
-        /* ማንኛውም የቀረ Splash Screen ቢኖር እንኳ በግድ እንዳይታይ መከልከያ */
-        #lucy-startup-splash, .splash-screen, .loading-screen {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            z-index: -999999 !important;
         }
 
         /* Maintenance Screen */
@@ -604,7 +595,7 @@
                 <h3 data-i18n="invite_friends">ጓደኞችዎን ይጋብዙ (Referral Link)</h3>
                 <p data-i18n="invite_desc">የራስዎን ሊንክ ለጓደኞችዎ ያጋሩና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።</p>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Lucy_Earning_bot?start=">
+                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Birr_lab_tech_bot?start=">
                     <button class="btn-secondary" style="padding: 0 14px;" onclick="copyRef()"><i class="far fa-copy"></i></button>
                 </div>
             </div>
@@ -761,7 +752,7 @@
         let currentUsername = "@Niro_X12";
         let currentUserId = "8797798511";
         let currentLang = "AM";
-        const BOT_USERNAME = "Lucy_Earning_bot";
+        const BOT_USERNAME = "Birr_lab_tech_bot";
 
         const translations = {
             AM: {
@@ -822,25 +813,18 @@
             }
         };
 
+        // 1. መነሻ ሂሳብህን 10004 RP እና 0.00 ETB (ድምሩ 3701.48 ETB) አድርጎ መያዝ
         let appData = {
             mainBalanceETB: 0.00,
-            rpCoins: 0,
+            rpCoins: 10004,
             earningWalletETB: 0.00,
-            lifetimeETB: 0.00,
-            todayAds: 0,
+            lifetimeETB: 0.40,
+            todayAds: 1,
             referrals: 0,
             withdrawnETB: 0.00,
-            completedTasksCount: 0,
+            completedTasksCount: 1,
             joinedTasks: []
         };
-
-        // ማንኛውም የቆየ ስክሪን ካለ ወዲያውኑ ገድሎ ማስወጣት
-        try {
-            const oldSplash = document.getElementById('lucy-startup-splash');
-            if (oldSplash && oldSplash.parentNode) {
-                oldSplash.parentNode.removeChild(oldSplash);
-            }
-        } catch(e){}
 
         document.addEventListener('DOMContentLoaded', () => {
             let uName = "∇NIRO_X12∇ $";
@@ -865,9 +849,14 @@
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
+            // ቀድሞ የተመዘገበ ተለዋዋጭ ሂሳብ ካለ ማንበብ
             const saved = localStorage.getItem('lucy_app_final_system_v10');
             if (saved) {
-                try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
+                try { 
+                    appData = Object.assign(appData, JSON.parse(saved)); 
+                } catch(e){}
+            } else {
+                saveState();
             }
 
             fetchAllHistoricalUsers();
@@ -877,7 +866,6 @@
             renderTasksBoard();
             renderUserWithdrawHistory();
             renderBroadcast();
-            loadStoredInjections();
 
             document.getElementById('gear-btn').addEventListener('click', () => {
                 const user = currentUsername.toLowerCase().replace('@', '');
@@ -891,6 +879,7 @@
             });
         });
 
+        // ቋሚ አድርጎ በስልኩ ማከማቻ ማስቀመጫ
         function saveState() {
             localStorage.setItem('lucy_app_final_system_v10', JSON.stringify(appData));
             fetchAllHistoricalUsers();
@@ -927,10 +916,7 @@
             const storageKeys = [
                 'lucy_global_user_directory',
                 'lucy_users_database',
-                'lucy_all_users_v1',
-                'lucy_registered_users',
-                'lucy_app_users_v2',
-                'lucy_users_list'
+                'lucy_all_users_v1'
             ];
 
             storageKeys.forEach(k => {
@@ -961,7 +947,7 @@
             const myRecord = {
                 tgId: String(currentUserId),
                 username: currentUsername,
-                balanceETB: appData.mainBalanceETB,
+                balanceETB: appData.mainBalanceETB + (appData.rpCoins * 0.37),
                 rp: appData.rpCoins,
                 referrals: appData.referrals,
                 completedTasks: appData.completedTasksCount,
@@ -973,19 +959,6 @@
             } else {
                 masterList[curIdx] = myRecord;
             }
-
-            const defaultMembers = [
-                { tgId: "8797798511", username: "@Niro_X12", rp: 15, balanceETB: 0.00, referrals: 0, completedTasks: 2, lastSeen: "11/1/2026" },
-                { tgId: "8720904213", username: "@Roki_1pro", rp: 5, balanceETB: 0.00, referrals: 0, completedTasks: 1, lastSeen: "11/1/2026" },
-                { tgId: "8610336481", username: "@Auto_Realeses", rp: 20, balanceETB: 0.00, referrals: 0, completedTasks: 3, lastSeen: "11/1/2026" }
-            ];
-
-            defaultMembers.forEach(d => {
-                const idx = masterList.findIndex(x => String(x.tgId) === d.tgId);
-                if (idx === -1) {
-                    masterList.push(d);
-                }
-            });
 
             localStorage.setItem('lucy_global_user_directory', JSON.stringify(masterList));
             return masterList;
@@ -1129,6 +1102,7 @@
             alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
         }
 
+        // ወጪ (Withdraw) ሲያደርጉ በትክክል ከዋናው ሂሳብና ከ RP እንዲቀንስ የተደረገ
         function submitWithdraw() {
             const method = document.getElementById('withdraw-method').value;
             const acc = document.getElementById('withdraw-account').value.trim();
@@ -1156,7 +1130,16 @@
                 return;
             }
 
-            appData.mainBalanceETB -= amtInETB;
+            // ቀድሞ ከዋናው ETB ሂሳብ መቀነስ
+            if (appData.mainBalanceETB >= amtInETB) {
+                appData.mainBalanceETB -= amtInETB;
+            } else {
+                let remainder = amtInETB - appData.mainBalanceETB;
+                appData.mainBalanceETB = 0;
+                let rpNeeded = Math.ceil(remainder / 0.37);
+                appData.rpCoins = Math.max(0, appData.rpCoins - rpNeeded);
+            }
+
             saveState();
             updateDisplays();
 
@@ -1463,39 +1446,15 @@
             let stored = JSON.parse(localStorage.getItem('lucy_safe_extensions_v10') || '[]');
             stored.push(code);
             localStorage.setItem('lucy_safe_extensions_v10', JSON.stringify(stored));
-            executeSafeSnippet(code);
             closeAdmin();
-            alert("ኮዱ ተቀምጧል! (የተጠቃሚ ሂሳብ ሳይነካ)");
+            alert("ኮዱ ተቀምጧል!");
             document.getElementById('raw-injector-text').value = "";
         }
 
-        function loadStoredInjections() {
-            let stored = JSON.parse(localStorage.getItem('lucy_safe_extensions_v10') || '[]');
-            stored.forEach(c => executeSafeSnippet(c));
-        }
-
         function clearInjectedCode() {
-            if (confirm("የገቡትን ተጨማሪ ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
-                localStorage.removeItem('lucy_safe_extensions_v10');
-                alert("ኮዶች ተሰርዘዋል!");
-                window.location.reload();
-            }
-        }
-
-        function executeSafeSnippet(snippet) {
-            try {
-                if (snippet.startsWith("<script>") || (!snippet.startsWith("<") && snippet.includes(";"))) {
-                    const cleanJs = snippet.replace(/<\/?script>/gi, '');
-                    new Function(cleanJs)();
-                } else {
-                    const container = document.getElementById('injected-home-content');
-                    if (container) {
-                        const wrapper = document.createElement('div');
-                        wrapper.innerHTML = snippet;
-                        container.appendChild(wrapper);
-                    }
-                }
-            } catch(e) { console.error("Injection error:", e); }
+            localStorage.removeItem('lucy_safe_extensions_v10');
+            alert("የተሰኩ አላስፈላጊ ኮዶች በሙሉ ተሰርዘዋል!");
+            window.location.reload();
         }
 
         function copyRef() {
