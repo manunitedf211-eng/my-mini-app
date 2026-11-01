@@ -35,49 +35,54 @@
             overflow-x: hidden;
         }
 
-        /* 1. ውብ እና ፈጣን የመግቢያ ገጽ (Splash Screen) */
+        /* ፈጣን Splash Screen - በጭራሽ ክሊክ አይዘጋም፣ በ 0.8s ውስጥ ተንኖ ይጠፋል */
         #lucy-startup-splash {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(11, 17, 24, 0.94);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(11, 17, 24, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 9999999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            pointer-events: none; /* እንዳያግድ */
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            animation: autoFadeSplash 0.4s ease 0.8s forwards;
         }
-        #lucy-startup-splash.splash-closed {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+
+        @keyframes autoFadeSplash {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                display: none;
+            }
         }
+
         .lucy-bold-title {
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 900;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #00c067 0%, #10b981 40%, #f59e0b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 25px rgba(0, 192, 103, 0.4), 0 0 50px rgba(245, 158, 11, 0.25);
-            animation: logoPulse 1.8s infinite ease-in-out;
         }
         .lucy-sub-title {
-            margin-top: 8px;
-            font-size: 0.9rem;
+            margin-top: 6px;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-muted);
             letter-spacing: 3px;
             text-transform: uppercase;
         }
         .lucy-loader-line {
-            width: 140px;
-            height: 4px;
+            width: 120px;
+            height: 3px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 999px;
-            margin-top: 24px;
+            margin-top: 20px;
             overflow: hidden;
             position: relative;
         }
@@ -89,11 +94,7 @@
             height: 100%;
             background: var(--accent-green);
             border-radius: 999px;
-            animation: loaderBarMove 1.2s infinite ease-in-out;
-        }
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(0.97); filter: drop-shadow(0 0 15px rgba(0, 192, 103, 0.5)); }
-            50% { transform: scale(1.03); filter: drop-shadow(0 0 35px rgba(245, 158, 11, 0.6)); }
+            animation: loaderBarMove 0.8s infinite ease-in-out;
         }
         @keyframes loaderBarMove {
             0% { left: -50%; }
@@ -496,7 +497,7 @@
 </head>
 <body>
 
-    <!-- 1. Splash Screen -->
+    <!-- Splash Screen -->
     <div id="lucy-startup-splash">
         <div class="lucy-bold-title">Lucy</div>
         <div class="lucy-sub-title">Earning App</div>
@@ -898,12 +899,20 @@
             joinedTasks: []
         };
 
-        // Splash screen 1.2 ሰከንድ ብቻ ቆይቶ እንዲጠፋ ማድረግ (ተጣብቆ እንዳይቀር)
+        // Splash Screen ከ 0.8 ሰከንድ በኋላ ከስሩ ነቅሎ ማጥፋት (ተጣብቆ እንዳይቀር)
         function closeSplashNow() {
             const splash = document.getElementById('lucy-startup-splash');
-            if (splash) splash.classList.add('splash-closed');
+            if (splash) {
+                splash.style.opacity = '0';
+                splash.style.pointerEvents = 'none';
+                setTimeout(() => {
+                    if (splash && splash.parentNode) {
+                        splash.parentNode.removeChild(splash);
+                    }
+                }, 300);
+            }
         }
-        setTimeout(closeSplashNow, 1200);
+        setTimeout(closeSplashNow, 800);
         window.addEventListener('load', closeSplashNow);
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -934,9 +943,7 @@
                 try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
             }
 
-            // ተጠቃሚዎችን ከሁሉም የቆዩ ማህደሮች አሰባስቦ ማደስ
             fetchAllHistoricalUsers();
-
             checkMaintenanceStatus();
             updateDisplays();
             updateRealLeaderboard();
@@ -988,7 +995,6 @@
             alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል (Under Maintenance)!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        // የቀደሙና አዳዲስ ተጠቃሚዎችን በሙሉ ከነባር ቁልፎች ሰብስቦ ማውጣት
         function fetchAllHistoricalUsers() {
             let masterList = [];
             const storageKeys = [
@@ -1024,7 +1030,6 @@
                 } catch(e) {}
             });
 
-            // አሁን ያለውን ተጠቃሚ መረጃ ማካተት
             const curIdx = masterList.findIndex(u => String(u.tgId) === String(currentUserId));
             const myRecord = {
                 tgId: String(currentUserId),
@@ -1042,7 +1047,6 @@
                 masterList[curIdx] = myRecord;
             }
 
-            // ነባር ዋና ተጠቃሚዎችን ማረጋገጥ
             const defaultMembers = [
                 { tgId: "8797798511", username: "@Niro_X12", rp: 15, balanceETB: 0.00, referrals: 0, completedTasks: 2, lastSeen: "11/1/2026" },
                 { tgId: "8720904213", username: "@Roki_1pro", rp: 5, balanceETB: 0.00, referrals: 0, completedTasks: 1, lastSeen: "11/1/2026" },
@@ -1363,7 +1367,6 @@
             }
         }
 
-        // የተስተካከለ የ Tasks ዝርዝር (Sponsor ቻናልን ጨምሮ)
         function getTasksList() {
             let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
             if (!tasks.length) {
@@ -1407,13 +1410,11 @@
             });
         }
 
-        // ተጠቃሚው Join መጫኑን መመዝገብ
         function trackJoinTaskClick(id, link) {
             sessionStorage.setItem('lucy_join_click_' + currentUserId + '_' + id, Date.now().toString());
             window.open(link, '_blank');
         }
 
-        // ጥብቅ ማረጋገጫ፦ Join ሳይነካ Check ከተነካ ሳንቲም እንዳይሰጥ ማገድ
         function checkTaskCompletionStrict(id, reward) {
             if (appData.joinedTasks.includes(id)) {
                 alert("ይህንን Task አስቀድመው ተቀላቅለው ሽልማት ወስደዋል!");
