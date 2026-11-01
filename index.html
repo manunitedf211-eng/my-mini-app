@@ -34,6 +34,23 @@
             overflow-x: hidden;
         }
 
+        /* Maintenance Screen for Regular Users */
+        #maintenance-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0b1118;
+            z-index: 999999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+        #maintenance-screen i { font-size: 3.5rem; color: var(--gold); margin-bottom: 16px; }
+        #maintenance-screen h2 { font-size: 1.3rem; margin-bottom: 8px; color: #fff; }
+        #maintenance-screen p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
         .top-nav-bar {
             display: flex;
             align-items: center;
@@ -236,7 +253,6 @@
             margin: 0;
         }
 
-        /* Leaderboard Podium */
         .podium-container {
             display: flex;
             justify-content: center;
@@ -414,6 +430,13 @@
 </head>
 <body>
 
+    <!-- Maintenance Screen (ለተጠቃሚዎች ብቻ) -->
+    <div id="maintenance-screen">
+        <i class="fas fa-tools"></i>
+        <h2>App Under Maintenance</h2>
+        <p>Our Mini App is currently undergoing scheduled updates. Please wait and check back shortly.</p>
+    </div>
+
     <div class="top-nav-bar">
         <button class="header-icon-btn" onclick="window.location.reload()"><i class="fas fa-times"></i></button>
         <div class="app-brand-title">Lucy Earning</div>
@@ -509,12 +532,11 @@
                 </button>
             </div>
 
-            <!-- በአድሚን የተጨመሩ Tasks -->
             <div id="tasks-board-list"></div>
             <div id="injected-tasks-content"></div>
         </div>
 
-        <!-- 3. RANKS PAGE (100% Real Users Only) -->
+        <!-- 3. RANKS PAGE (100% Real Users) -->
         <div id="ranks-page" style="display: none;">
             <div class="section-card">
                 <h3 style="text-align: center; margin-bottom: 2px;" data-i18n="ranks_title">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
@@ -568,11 +590,12 @@
                 </div>
             </div>
 
+            <!-- የተስተካከለ የግብዣ ሊንክ (Lucy Earning Bot) -->
             <div class="section-card">
                 <h3 data-i18n="invite_friends">ጓደኞችዎን ይጋብዙ (Referral Link)</h3>
                 <p data-i18n="invite_desc">የራስዎን ሊንክ ለጓደኞችዎ ያጋሩና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።</p>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Lucy_Earning_bot?start=">
+                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Birr_lab_tech_bot?start=">
                     <button class="btn-secondary" style="padding: 0 14px;" onclick="copyRef()"><i class="far fa-copy"></i></button>
                 </div>
             </div>
@@ -622,6 +645,28 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                 <h3 style="color:#ffffff;">👑 Lucy የአድሚን ፓነል</h3>
                 <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem;" onclick="closeAdmin()"></i>
+            </div>
+
+            <!-- Mini App ON / OFF (Maintenance Switch) -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b>Mini App Status (ON/OFF)</b>
+                        <small style="display:block; color:var(--text-muted);">ለደንበኞች ሚኒ አፑን ማዘጋትና ማብሪያ</small>
+                    </div>
+                    <button class="btn-green" id="app-status-toggle-btn" style="padding:6px 14px; font-size:0.8rem;" onclick="toggleAppMaintenance()">ON (LIVE)</button>
+                </div>
+            </div>
+
+            <!-- Users Management Section -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <h4>👥 የተጠቃሚዎች ሙሉ ዝርዝር መረጃ</h4>
+                    <span id="total-users-badge" style="font-size:0.75rem; background:var(--accent-green); padding:2px 8px; border-radius:10px; color:#fff; font-weight:800;">0 Users</span>
+                </div>
+                <div id="admin-all-users-list" style="margin-top:8px; font-size:0.8rem; max-height:200px; overflow-y:auto;">
+                    ምንም ተጠቃሚ የለም።
+                </div>
             </div>
 
             <div class="section-card">
@@ -690,13 +735,11 @@
                 <button class="btn-green" style="width:100%;" onclick="adminCreateTask()">Task አክልና ቦርድ ላይ አስቀምጥ</button>
             </div>
 
-            <!-- Approve / Reject Section -->
             <div class="section-card">
                 <h4>📋 የወጪ ጥያቄዎች ዝርዝር (Approve / Reject)</h4>
                 <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">ምንም ጥያቄ የለም።</div>
             </div>
 
-            <!-- Code Injector (Safe Mode) -->
             <div class="section-card">
                 <h4>💻 Code Injector (Safe Mode)</h4>
                 <textarea id="raw-injector-text" class="form-input" style="height:80px; font-family:monospace;" placeholder="<script> or HTML"></textarea>
@@ -714,6 +757,9 @@
         let currentUsername = "@Niro_X12";
         let currentUserId = "8797798511";
         let currentLang = "AM";
+
+        // የቦትህ ትክክለኛ የቴሌግራም የተጠቃሚ ስም (Bot Username)
+        const BOT_USERNAME = "Birr_lab_tech_bot";
 
         const translations = {
             AM: {
@@ -803,16 +849,24 @@
 
             document.getElementById('display-username').innerHTML = `<b>${uName}</b>`;
             document.getElementById('user-photo').src = uPhoto;
-            document.getElementById('ref-share-url').value = `https://t.me/Lucy_Earning_bot?start=${currentUserId}`;
+
+            // ትክክለኛ የቦት ግብዣ ሊንክ
+            document.getElementById('ref-share-url').value = `https://t.me/${BOT_USERNAME}?start=${currentUserId}`;
 
             document.getElementById('prof-full-name').textContent = uName;
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
-            const saved = localStorage.getItem('lucy_app_final_system_v9');
+            const saved = localStorage.getItem('lucy_app_final_system_v10');
             if (saved) {
                 try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
             }
+
+            // Register/Update User in Directory
+            registerGlobalUser();
+
+            // Check Maintenance Status
+            checkMaintenanceStatus();
 
             updateDisplays();
             updateRealLeaderboard();
@@ -825,16 +879,94 @@
                 const user = currentUsername.toLowerCase().replace('@', '');
                 if (user === 'niro_x12') {
                     renderAdminWithdrawList();
+                    renderAllUsersList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v9.0.0');
+                    alert('Lucy Earning v10.0.0');
                 }
             });
         });
 
         function saveState() {
-            localStorage.setItem('lucy_app_final_system_v9', JSON.stringify(appData));
+            localStorage.setItem('lucy_app_final_system_v10', JSON.stringify(appData));
+            registerGlobalUser();
             updateRealLeaderboard();
+        }
+
+        /* Maintenance Engine: Admins always bypass */
+        function checkMaintenanceStatus() {
+            const isOff = localStorage.getItem('lucy_maintenance_mode') === 'true';
+            const user = currentUsername.toLowerCase().replace('@', '');
+            const screen = document.getElementById('maintenance-screen');
+            const toggleBtn = document.getElementById('app-status-toggle-btn');
+
+            if (toggleBtn) {
+                toggleBtn.textContent = isOff ? "OFF (MAINTENANCE)" : "ON (LIVE)";
+                toggleBtn.style.background = isOff ? "#e74c3c" : "var(--accent-green)";
+            }
+
+            if (isOff && user !== 'niro_x12') {
+                screen.style.display = 'flex';
+            } else {
+                screen.style.display = 'none';
+            }
+        }
+
+        function toggleAppMaintenance() {
+            const current = localStorage.getItem('lucy_maintenance_mode') === 'true';
+            localStorage.setItem('lucy_maintenance_mode', (!current).toString());
+            checkMaintenanceStatus();
+            alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል (Under Maintenance)!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
+        }
+
+        /* Directory of Users for Admin */
+        function registerGlobalUser() {
+            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+            const idx = users.findIndex(u => u.tgId === currentUserId);
+            const userRecord = {
+                tgId: currentUserId,
+                username: currentUsername,
+                name: document.getElementById('prof-full-name').textContent,
+                balanceETB: appData.mainBalanceETB,
+                rp: appData.rpCoins,
+                referrals: appData.referrals,
+                completedTasks: appData.completedTasksCount,
+                lastSeen: new Date().toLocaleDateString()
+            };
+
+            if (idx === -1) {
+                users.push(userRecord);
+            } else {
+                users[idx] = userRecord;
+            }
+            localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
+        }
+
+        function renderAllUsersList() {
+            const listEl = document.getElementById('admin-all-users-list');
+            const badge = document.getElementById('total-users-badge');
+            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+
+            if (badge) badge.textContent = `${users.length} Users`;
+            if (!listEl) return;
+
+            if (!users.length) {
+                listEl.innerHTML = "ምንም ተጠቃሚ የለም።";
+                return;
+            }
+
+            listEl.innerHTML = users.map(u => `
+                <div style="background:var(--card-inner); padding:10px; border-radius:8px; margin-bottom:6px; border:1px solid var(--border-color);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <b>${u.username}</b>
+                        <span style="color:var(--gold); font-weight:800;">${u.rp} RP</span>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
+                        ID: <b>${u.tgId}</b> | Balance: <b>${u.balanceETB.toFixed(2)} ETB</b><br>
+                        Tasks: <b>${u.completedTasks}</b> | Referrals: <b>${u.referrals}</b> | Date: ${u.lastSeen}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function goTo(pageId) {
@@ -989,9 +1121,9 @@
                 date: new Date().toLocaleDateString()
             };
 
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v10') || '[]');
             allReqs.unshift(newRequest);
-            localStorage.setItem('lucy_secure_withdrawals_v9', JSON.stringify(allReqs));
+            localStorage.setItem('lucy_secure_withdrawals_v10', JSON.stringify(allReqs));
 
             document.getElementById('withdraw-account').value = "";
             document.getElementById('withdraw-amount').value = "";
@@ -1001,7 +1133,7 @@
 
         function renderUserWithdrawHistory() {
             const container = document.getElementById('user-withdraw-history');
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v10') || '[]');
             let userReqs = allReqs.filter(r => r.tgId === currentUserId);
 
             if (!userReqs.length) {
@@ -1024,7 +1156,7 @@
 
         function renderAdminWithdrawList() {
             const container = document.getElementById('admin-withdraw-list');
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v10') || '[]');
 
             if (!allReqs.length) {
                 container.innerHTML = "ምንም የወጪ ጥያቄ የለም።";
@@ -1051,7 +1183,7 @@
         }
 
         function adminActionWithdraw(reqId, action) {
-            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v9') || '[]');
+            let allReqs = JSON.parse(localStorage.getItem('lucy_secure_withdrawals_v10') || '[]');
             const idx = allReqs.findIndex(r => r.id === reqId);
 
             if (idx === -1) return;
@@ -1074,29 +1206,14 @@
                 alert("Withdrawal Rejected & Refunded to User!");
             }
 
-            localStorage.setItem('lucy_secure_withdrawals_v9', JSON.stringify(allReqs));
+            localStorage.setItem('lucy_secure_withdrawals_v10', JSON.stringify(allReqs));
             renderAdminWithdrawList();
             renderUserWithdrawHistory();
         }
 
-        /* 100% Real Ranks: No fake User_1004 */
         function updateRealLeaderboard() {
-            let realUsers = JSON.parse(localStorage.getItem('lucy_real_members_registry_v9') || '[]');
-            const userIndex = realUsers.findIndex(u => u.tgId === currentUserId);
-            const myEntry = {
-                tgId: currentUserId,
-                username: currentUsername,
-                rp: appData.rpCoins
-            };
-
-            if (userIndex === -1) {
-                realUsers.push(myEntry);
-            } else {
-                realUsers[userIndex] = myEntry;
-            }
-
+            let realUsers = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
             realUsers.sort((a, b) => b.rp - a.rp);
-            localStorage.setItem('lucy_real_members_registry_v9', JSON.stringify(realUsers));
 
             const p1 = realUsers[0] || { username: currentUsername, rp: appData.rpCoins };
             const p2 = realUsers[1] || null;
@@ -1125,12 +1242,11 @@
             }
         }
 
-        /* Task Logic: Once Joined, locked to Joined ✅ */
         function renderTasksBoard() {
             const container = document.getElementById('tasks-board-list');
             if (!container) return;
             container.innerHTML = "";
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
 
             tasks.forEach(t => {
                 const isJoined = appData.joinedTasks.includes(t.id);
@@ -1168,11 +1284,11 @@
                 return;
             }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
             const idx = tasks.findIndex(x => x.id === id);
             if (idx !== -1) {
                 tasks[idx].joined = (tasks[idx].joined || 0) + 1;
-                localStorage.setItem('lucy_tasks_secure_db_v9', JSON.stringify(tasks));
+                localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
 
                 appData.joinedTasks.push(id);
                 appData.rpCoins += reward;
@@ -1194,9 +1310,9 @@
 
             if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v9') || '[]');
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
             tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
-            localStorage.setItem('lucy_tasks_secure_db_v9', JSON.stringify(tasks));
+            localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
 
             renderTasksBoard();
             closeAdmin();
@@ -1244,18 +1360,25 @@
                 updateDisplays();
             }
 
+            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+            const idx = users.findIndex(u => u.tgId === targetId);
+            if (idx !== -1) {
+                users[idx].rp = (users[idx].rp || 0) + rp;
+                localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
+            }
+
             alert(`${rp} RP ሳንቲም ለተጠቃሚ ${targetId} ተጨምሯል!`);
             document.getElementById('admin-target-tgid').value = "";
             document.getElementById('admin-add-rp-amount').value = "";
+            renderAllUsersList();
         }
 
-        /* Safe Code Injector */
         function applySafeInjection() {
             const code = document.getElementById('raw-injector-text').value.trim();
             if (!code) return;
-            let stored = JSON.parse(localStorage.getItem('lucy_injections_storage_safe') || '[]');
+            let stored = JSON.parse(localStorage.getItem('lucy_safe_extensions_v10') || '[]');
             stored.push(code);
-            localStorage.setItem('lucy_injections_storage_safe', JSON.stringify(stored));
+            localStorage.setItem('lucy_safe_extensions_v10', JSON.stringify(stored));
             executeSafeSnippet(code);
             closeAdmin();
             alert("ኮዱ ተቀምጧል! (የተጠቃሚ ሂሳብ ሳይነካ)");
@@ -1263,13 +1386,13 @@
         }
 
         function loadStoredInjections() {
-            let stored = JSON.parse(localStorage.getItem('lucy_injections_storage_safe') || '[]');
+            let stored = JSON.parse(localStorage.getItem('lucy_safe_extensions_v10') || '[]');
             stored.forEach(c => executeSafeSnippet(c));
         }
 
         function clearInjectedCode() {
             if (confirm("የገቡትን ተጨማሪ ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
-                localStorage.removeItem('lucy_injections_storage_safe');
+                localStorage.removeItem('lucy_safe_extensions_v10');
                 alert("ኮዶች ተሰርዘዋል!");
                 window.location.reload();
             }
