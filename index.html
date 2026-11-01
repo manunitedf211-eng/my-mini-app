@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
             --bg-color: #0b1118;
@@ -34,7 +35,72 @@
             overflow-x: hidden;
         }
 
-        /* Maintenance Screen for Regular Users */
+        /* 1. ውብ እና ፈጣን የመግቢያ ገጽ (Splash Screen) */
+        #lucy-startup-splash {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(11, 17, 24, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #lucy-startup-splash.splash-closed {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .lucy-bold-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00c067 0%, #10b981 40%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(0, 192, 103, 0.4), 0 0 50px rgba(245, 158, 11, 0.25);
+            animation: logoPulse 1.8s infinite ease-in-out;
+        }
+        .lucy-sub-title {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .lucy-loader-line {
+            width: 140px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            margin-top: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .lucy-loader-line::after {
+            content: '';
+            position: absolute;
+            left: -50%;
+            width: 50%;
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 999px;
+            animation: loaderBarMove 1.2s infinite ease-in-out;
+        }
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(0.97); filter: drop-shadow(0 0 15px rgba(0, 192, 103, 0.5)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 35px rgba(245, 158, 11, 0.6)); }
+        }
+        @keyframes loaderBarMove {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        /* Maintenance Screen */
         #maintenance-screen {
             display: none;
             position: fixed;
@@ -430,7 +496,14 @@
 </head>
 <body>
 
-    <!-- Maintenance Screen (ለተጠቃሚዎች ብቻ) -->
+    <!-- 1. Splash Screen -->
+    <div id="lucy-startup-splash">
+        <div class="lucy-bold-title">Lucy</div>
+        <div class="lucy-sub-title">Earning App</div>
+        <div class="lucy-loader-line"></div>
+    </div>
+
+    <!-- Maintenance Screen -->
     <div id="maintenance-screen">
         <i class="fas fa-tools"></i>
         <h2>App Under Maintenance</h2>
@@ -536,7 +609,7 @@
             <div id="injected-tasks-content"></div>
         </div>
 
-        <!-- 3. RANKS PAGE (100% Real Users) -->
+        <!-- 3. RANKS PAGE -->
         <div id="ranks-page" style="display: none;">
             <div class="section-card">
                 <h3 style="text-align: center; margin-bottom: 2px;" data-i18n="ranks_title">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
@@ -590,7 +663,6 @@
                 </div>
             </div>
 
-            <!-- የተስተካከለ የግብዣ ሊንክ (Lucy Earning Bot) -->
             <div class="section-card">
                 <h3 data-i18n="invite_friends">ጓደኞችዎን ይጋብዙ (Referral Link)</h3>
                 <p data-i18n="invite_desc">የራስዎን ሊንክ ለጓደኞችዎ ያጋሩና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።</p>
@@ -600,7 +672,6 @@
                 </div>
             </div>
 
-            <!-- Dynamic Withdrawal Section -->
             <div class="section-card">
                 <h3 data-i18n="withdraw_funds">ገንዘብ ማውጫ (Withdraw Funds)</h3>
                 <div class="form-group">
@@ -621,7 +692,6 @@
                 <button class="btn-green" style="width: 100%;" onclick="submitWithdraw()" data-i18n="submit_withdraw">ወጪ አድርግ (Withdraw)</button>
             </div>
 
-            <!-- User Requests History -->
             <div class="section-card">
                 <h3>የወጪ ጥያቄዎች ታሪክ (Withdrawal Status)</h3>
                 <div id="user-withdraw-history" style="font-size:0.85rem; margin-top:8px;">ምንም የወጪ ጥያቄ የለም።</div>
@@ -647,7 +717,6 @@
                 <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem;" onclick="closeAdmin()"></i>
             </div>
 
-            <!-- Mini App ON / OFF (Maintenance Switch) -->
             <div class="section-card">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div>
@@ -664,7 +733,7 @@
                     <h4>👥 የተጠቃሚዎች ሙሉ ዝርዝር መረጃ</h4>
                     <span id="total-users-badge" style="font-size:0.75rem; background:var(--accent-green); padding:2px 8px; border-radius:10px; color:#fff; font-weight:800;">0 Users</span>
                 </div>
-                <div id="admin-all-users-list" style="margin-top:8px; font-size:0.8rem; max-height:200px; overflow-y:auto;">
+                <div id="admin-all-users-list" style="margin-top:8px; font-size:0.8rem; max-height:220px; overflow-y:auto;">
                     ምንም ተጠቃሚ የለም።
                 </div>
             </div>
@@ -751,14 +820,11 @@
         </div>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         let currentUsername = "@Niro_X12";
         let currentUserId = "8797798511";
         let currentLang = "AM";
-
-        // የቦትህ ትክክለኛ የቴሌግራም የተጠቃሚ ስም (Bot Username)
         const BOT_USERNAME = "Birr_lab_tech_bot";
 
         const translations = {
@@ -832,6 +898,14 @@
             joinedTasks: []
         };
 
+        // Splash screen 1.2 ሰከንድ ብቻ ቆይቶ እንዲጠፋ ማድረግ (ተጣብቆ እንዳይቀር)
+        function closeSplashNow() {
+            const splash = document.getElementById('lucy-startup-splash');
+            if (splash) splash.classList.add('splash-closed');
+        }
+        setTimeout(closeSplashNow, 1200);
+        window.addEventListener('load', closeSplashNow);
+
         document.addEventListener('DOMContentLoaded', () => {
             let uName = "∇NIRO_X12∇ $";
             let uPhoto = "https://via.placeholder.com/44";
@@ -849,8 +923,6 @@
 
             document.getElementById('display-username').innerHTML = `<b>${uName}</b>`;
             document.getElementById('user-photo').src = uPhoto;
-
-            // ትክክለኛ የቦት ግብዣ ሊንክ
             document.getElementById('ref-share-url').value = `https://t.me/${BOT_USERNAME}?start=${currentUserId}`;
 
             document.getElementById('prof-full-name').textContent = uName;
@@ -862,12 +934,10 @@
                 try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
             }
 
-            // Register/Update User in Directory
-            registerGlobalUser();
+            // ተጠቃሚዎችን ከሁሉም የቆዩ ማህደሮች አሰባስቦ ማደስ
+            fetchAllHistoricalUsers();
 
-            // Check Maintenance Status
             checkMaintenanceStatus();
-
             updateDisplays();
             updateRealLeaderboard();
             renderTasksBoard();
@@ -889,11 +959,10 @@
 
         function saveState() {
             localStorage.setItem('lucy_app_final_system_v10', JSON.stringify(appData));
-            registerGlobalUser();
+            fetchAllHistoricalUsers();
             updateRealLeaderboard();
         }
 
-        /* Maintenance Engine: Admins always bypass */
         function checkMaintenanceStatus() {
             const isOff = localStorage.getItem('lucy_maintenance_mode') === 'true';
             const user = currentUsername.toLowerCase().replace('@', '');
@@ -919,14 +988,47 @@
             alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል (Under Maintenance)!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        /* Directory of Users for Admin */
-        function registerGlobalUser() {
-            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
-            const idx = users.findIndex(u => u.tgId === currentUserId);
-            const userRecord = {
-                tgId: currentUserId,
+        // የቀደሙና አዳዲስ ተጠቃሚዎችን በሙሉ ከነባር ቁልፎች ሰብስቦ ማውጣት
+        function fetchAllHistoricalUsers() {
+            let masterList = [];
+            const storageKeys = [
+                'lucy_global_user_directory',
+                'lucy_users_database',
+                'lucy_all_users_v1',
+                'lucy_registered_users',
+                'lucy_app_users_v2',
+                'lucy_users_list'
+            ];
+
+            storageKeys.forEach(k => {
+                try {
+                    const parsed = JSON.parse(localStorage.getItem(k) || '[]');
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(u => {
+                            if (u && (u.tgId || u.id)) {
+                                const uid = String(u.tgId || u.id);
+                                if (!masterList.some(x => String(x.tgId) === uid)) {
+                                    masterList.push({
+                                        tgId: uid,
+                                        username: u.username || u.name || ("@User_" + uid.slice(-4)),
+                                        balanceETB: Number(u.balanceETB || u.balance || 0),
+                                        rp: Number(u.rp || u.rpCoins || 0),
+                                        referrals: Number(u.referrals || 0),
+                                        completedTasks: Number(u.completedTasks || u.tasks || 0),
+                                        lastSeen: u.lastSeen || '11/1/2026'
+                                    });
+                                }
+                            }
+                        });
+                    }
+                } catch(e) {}
+            });
+
+            // አሁን ያለውን ተጠቃሚ መረጃ ማካተት
+            const curIdx = masterList.findIndex(u => String(u.tgId) === String(currentUserId));
+            const myRecord = {
+                tgId: String(currentUserId),
                 username: currentUsername,
-                name: document.getElementById('prof-full-name').textContent,
                 balanceETB: appData.mainBalanceETB,
                 rp: appData.rpCoins,
                 referrals: appData.referrals,
@@ -934,18 +1036,34 @@
                 lastSeen: new Date().toLocaleDateString()
             };
 
-            if (idx === -1) {
-                users.push(userRecord);
+            if (curIdx === -1) {
+                masterList.push(myRecord);
             } else {
-                users[idx] = userRecord;
+                masterList[curIdx] = myRecord;
             }
-            localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
+
+            // ነባር ዋና ተጠቃሚዎችን ማረጋገጥ
+            const defaultMembers = [
+                { tgId: "8797798511", username: "@Niro_X12", rp: 15, balanceETB: 0.00, referrals: 0, completedTasks: 2, lastSeen: "11/1/2026" },
+                { tgId: "8720904213", username: "@Roki_1pro", rp: 5, balanceETB: 0.00, referrals: 0, completedTasks: 1, lastSeen: "11/1/2026" },
+                { tgId: "8610336481", username: "@Auto_Realeses", rp: 20, balanceETB: 0.00, referrals: 0, completedTasks: 3, lastSeen: "11/1/2026" }
+            ];
+
+            defaultMembers.forEach(d => {
+                const idx = masterList.findIndex(x => String(x.tgId) === d.tgId);
+                if (idx === -1) {
+                    masterList.push(d);
+                }
+            });
+
+            localStorage.setItem('lucy_global_user_directory', JSON.stringify(masterList));
+            return masterList;
         }
 
         function renderAllUsersList() {
             const listEl = document.getElementById('admin-all-users-list');
             const badge = document.getElementById('total-users-badge');
-            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+            const users = fetchAllHistoricalUsers();
 
             if (badge) badge.textContent = `${users.length} Users`;
             if (!listEl) return;
@@ -962,7 +1080,7 @@
                         <span style="color:var(--gold); font-weight:800;">${u.rp} RP</span>
                     </div>
                     <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">
-                        ID: <b>${u.tgId}</b> | Balance: <b>${u.balanceETB.toFixed(2)} ETB</b><br>
+                        ID: <b>${u.tgId}</b> | Balance: <b>${Number(u.balanceETB).toFixed(2)} ETB</b><br>
                         Tasks: <b>${u.completedTasks}</b> | Referrals: <b>${u.referrals}</b> | Date: ${u.lastSeen}
                     </div>
                 </div>
@@ -983,7 +1101,10 @@
             });
 
             if (pageId === 'home-page') document.getElementById('btn-home').classList.add('active');
-            if (pageId === 'tasks-page') document.getElementById('btn-tasks').classList.add('active');
+            if (pageId === 'tasks-page') {
+                document.getElementById('btn-tasks').classList.add('active');
+                renderTasksBoard();
+            }
             if (pageId === 'ranks-page') {
                 document.getElementById('btn-ranks').classList.add('active');
                 updateRealLeaderboard();
@@ -1212,8 +1333,8 @@
         }
 
         function updateRealLeaderboard() {
-            let realUsers = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
-            realUsers.sort((a, b) => b.rp - a.rp);
+            let realUsers = fetchAllHistoricalUsers();
+            realUsers.sort((a, b) => (b.rp || 0) - (a.rp || 0));
 
             const p1 = realUsers[0] || { username: currentUsername, rp: appData.rpCoins };
             const p2 = realUsers[1] || null;
@@ -1242,11 +1363,23 @@
             }
         }
 
+        // የተስተካከለ የ Tasks ዝርዝር (Sponsor ቻናልን ጨምሮ)
+        function getTasksList() {
+            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
+            if (!tasks.length) {
+                tasks = [
+                    { id: 101, platform: "Telegram Channel", name: "Sponsor (Telegram Channel)", link: "https://t.me/crypto_topup_f", reward: 5, color: "#00c067", limit: 1000, joined: 2 }
+                ];
+                localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
+            }
+            return tasks;
+        }
+
         function renderTasksBoard() {
             const container = document.getElementById('tasks-board-list');
             if (!container) return;
             container.innerHTML = "";
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
+            let tasks = getTasksList();
 
             tasks.forEach(t => {
                 const isJoined = appData.joinedTasks.includes(t.id);
@@ -1264,8 +1397,8 @@
                             <button class="btn-secondary" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-green); color:var(--accent-green); font-weight:800;" disabled>Joined ✅</button>
                         ` : `
                             <div style="display:flex; gap:6px;">
-                                <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="openTaskUrl('${t.link}')">Join</button>
-                                <button class="btn-secondary" style="padding:6px 10px; font-size:0.8rem;" onclick="checkTaskCompletion(${t.id}, ${t.reward})">Check</button>
+                                <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="trackJoinTaskClick(${t.id}, '${t.link}')">Join</button>
+                                <button class="btn-secondary" style="padding:6px 10px; font-size:0.8rem;" onclick="checkTaskCompletionStrict(${t.id}, ${t.reward})">Check</button>
                             </div>
                         `}
                     </div>
@@ -1274,30 +1407,52 @@
             });
         }
 
-        function openTaskUrl(url) {
-            window.open(url, '_blank');
+        // ተጠቃሚው Join መጫኑን መመዝገብ
+        function trackJoinTaskClick(id, link) {
+            sessionStorage.setItem('lucy_join_click_' + currentUserId + '_' + id, Date.now().toString());
+            window.open(link, '_blank');
         }
 
-        function checkTaskCompletion(id, reward) {
+        // ጥብቅ ማረጋገጫ፦ Join ሳይነካ Check ከተነካ ሳንቲም እንዳይሰጥ ማገድ
+        function checkTaskCompletionStrict(id, reward) {
             if (appData.joinedTasks.includes(id)) {
                 alert("ይህንን Task አስቀድመው ተቀላቅለው ሽልማት ወስደዋል!");
                 return;
             }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
+            const clickKey = 'lucy_join_click_' + currentUserId + '_' + id;
+            const clickTime = sessionStorage.getItem(clickKey);
+
+            if (!clickTime) {
+                alert("❌ ቻናሉን እስካሁን አልተቀላቀሉም!\n\nእባክዎ መጀመሪያ አረንጓዴውን 'Join' ነክተው ወደ ቻናሉ ይግቡ፤ ከዚያ ተመልሰው 'Check' ይጫኑ።");
+                return;
+            }
+
+            const elapsed = Date.now() - parseInt(clickTime);
+            if (elapsed < 3500) {
+                const waitSec = Math.ceil((3500 - elapsed) / 1000);
+                alert("⏳ እባክዎ ቻናሉን ተቀላቅለው እስኪመለሱ " + waitSec + " ሰከንዶች ይጠብቁ፤ ከዚያ 'Check' ይጫኑ!");
+                return;
+            }
+
+            sessionStorage.removeItem(clickKey);
+
+            let tasks = getTasksList();
             const idx = tasks.findIndex(x => x.id === id);
             if (idx !== -1) {
                 tasks[idx].joined = (tasks[idx].joined || 0) + 1;
                 localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
-
-                appData.joinedTasks.push(id);
-                appData.rpCoins += reward;
-                appData.completedTasksCount += 1;
-                saveState();
-                updateDisplays();
-                renderTasksBoard();
-                alert(`ተረጋግጧል! +${reward} RP ተጨምሯል ✅`);
             }
+
+            appData.joinedTasks.push(id);
+            appData.rpCoins += reward;
+            appData.completedTasksCount += 1;
+            saveState();
+            updateDisplays();
+            renderTasksBoard();
+
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert(`ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${reward} RP ተጨምሯል ✅`);
         }
 
         function adminCreateTask() {
@@ -1310,7 +1465,7 @@
 
             if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
+            let tasks = getTasksList();
             tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
             localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
 
@@ -1360,8 +1515,8 @@
                 updateDisplays();
             }
 
-            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
-            const idx = users.findIndex(u => u.tgId === targetId);
+            let users = fetchAllHistoricalUsers();
+            const idx = users.findIndex(u => String(u.tgId) === targetId);
             if (idx !== -1) {
                 users[idx].rp = (users[idx].rp || 0) + rp;
                 localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
@@ -1371,6 +1526,7 @@
             document.getElementById('admin-target-tgid').value = "";
             document.getElementById('admin-add-rp-amount').value = "";
             renderAllUsersList();
+            updateRealLeaderboard();
         }
 
         function applySafeInjection() {
