@@ -35,72 +35,6 @@
             overflow-x: hidden;
         }
 
-        /* ፈጣን Splash Screen - በጭራሽ ክሊክ አይዘጋም፣ በ 0.8s ውስጥ ተንኖ ይጠፋል */
-        #lucy-startup-splash {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(11, 17, 24, 0.95);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999999;
-            pointer-events: none; /* እንዳያግድ */
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-            animation: autoFadeSplash 0.4s ease 0.8s forwards;
-        }
-
-        @keyframes autoFadeSplash {
-            to {
-                opacity: 0;
-                visibility: hidden;
-                display: none;
-            }
-        }
-
-        .lucy-bold-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #00c067 0%, #10b981 40%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(0, 192, 103, 0.4), 0 0 50px rgba(245, 158, 11, 0.25);
-        }
-        .lucy-sub-title {
-            margin-top: 6px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        .lucy-loader-line {
-            width: 120px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 999px;
-            margin-top: 20px;
-            overflow: hidden;
-            position: relative;
-        }
-        .lucy-loader-line::after {
-            content: '';
-            position: absolute;
-            left: -50%;
-            width: 50%;
-            height: 100%;
-            background: var(--accent-green);
-            border-radius: 999px;
-            animation: loaderBarMove 0.8s infinite ease-in-out;
-        }
-        @keyframes loaderBarMove {
-            0% { left: -50%; }
-            100% { left: 100%; }
-        }
-
         /* Maintenance Screen */
         #maintenance-screen {
             display: none;
@@ -497,13 +431,6 @@
 </head>
 <body>
 
-    <!-- Splash Screen -->
-    <div id="lucy-startup-splash">
-        <div class="lucy-bold-title">Lucy</div>
-        <div class="lucy-sub-title">Earning App</div>
-        <div class="lucy-loader-line"></div>
-    </div>
-
     <!-- Maintenance Screen -->
     <div id="maintenance-screen">
         <i class="fas fa-tools"></i>
@@ -898,22 +825,6 @@
             completedTasksCount: 0,
             joinedTasks: []
         };
-
-        // Splash Screen ከ 0.8 ሰከንድ በኋላ ከስሩ ነቅሎ ማጥፋት (ተጣብቆ እንዳይቀር)
-        function closeSplashNow() {
-            const splash = document.getElementById('lucy-startup-splash');
-            if (splash) {
-                splash.style.opacity = '0';
-                splash.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    if (splash && splash.parentNode) {
-                        splash.parentNode.removeChild(splash);
-                    }
-                }, 300);
-            }
-        }
-        setTimeout(closeSplashNow, 800);
-        window.addEventListener('load', closeSplashNow);
 
         document.addEventListener('DOMContentLoaded', () => {
             let uName = "∇NIRO_X12∇ $";
