@@ -6,7 +6,7 @@
     <title>Lucy Earning</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <style>
         :root {
@@ -21,6 +21,7 @@
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
+            --gold: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -63,7 +64,14 @@
         }
 
         /* User Chip */
-        .user-chip-container { padding: 4px 16px 12px; }
+        .user-chip-container { padding: 4px 16px 12px; display: flex; align-items: center; gap: 10px; }
+        .user-avatar-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-green);
+            object-fit: cover;
+        }
         .user-chip {
             display: inline-flex;
             align-items: center;
@@ -72,8 +80,8 @@
             border: 1px solid var(--border-color);
             padding: 8px 14px;
             border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 800;
             color: #ffffff;
             letter-spacing: 0.5px;
         }
@@ -84,7 +92,7 @@
         .page.active { display: block; animation: fadeIn 0.25s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Main Card */
+        /* Main Balance Card */
         .balance-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -99,7 +107,7 @@
             margin-bottom: 10px;
         }
         .balance-label {
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -116,8 +124,8 @@
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.72rem;
+            font-weight: 800;
             padding: 4px 10px;
             border-radius: 12px;
             cursor: pointer;
@@ -127,7 +135,7 @@
             color: #ffffff;
         }
         .main-amount {
-            font-size: 1.95rem;
+            font-size: 2.1rem;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: -0.5px;
@@ -178,7 +186,7 @@
             gap: 8px;
         }
 
-        /* 2-Column Stats Grid */
+        /* Stats Grid */
         .stats-grid-two {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -192,7 +200,7 @@
             padding: 16px;
         }
         .stat-box .title {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -205,30 +213,6 @@
             color: #ffffff;
         }
 
-        /* Chart Block */
-        .chart-block {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 18px 16px;
-            margin-bottom: 16px;
-        }
-        .chart-block-header {
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            margin-bottom: 18px;
-        }
-        .day-labels-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
         /* Generic Section Card */
         .section-card {
             background: var(--card-bg);
@@ -239,7 +223,7 @@
         }
         .section-card h3 {
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 800;
             color: #ffffff;
             margin-bottom: 6px;
         }
@@ -250,29 +234,86 @@
             margin-bottom: 12px;
         }
 
-        /* Tasks Style */
-        .task-action-box {
+        .rate-badge-box {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(0, 192, 103, 0.15));
+            border: 1px solid var(--gold);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .rate-badge-box h4 {
+            color: var(--gold);
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .rate-badge-box p {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        /* Leaderboard Podium (2 - 1 - 3 Layout) */
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 12px;
+            margin: 25px 0 25px;
+        }
+        .podium-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .crown-icon { font-size: 1.5rem; margin-bottom: 4px; }
+        .crown-1 { color: #f59e0b; }
+        .crown-2 { color: #cbd5e1; }
+        .crown-3 { color: #d97706; }
+        .podium-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 3px solid;
+            object-fit: cover;
+            margin-bottom: 6px;
+        }
+        .podium-col-1 .podium-avatar { border-color: #f59e0b; width: 68px; height: 68px; }
+        .podium-col-2 .podium-avatar { border-color: #cbd5e1; }
+        .podium-col-3 .podium-avatar { border-color: #d97706; }
+        .podium-step {
+            width: 100%;
             background: var(--card-inner);
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 12px 14px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+            padding: 12px 6px;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .podium-col-1 .podium-step { height: 90px; background: rgba(245, 158, 11, 0.15); border-color: #f59e0b; }
+        .podium-col-2 .podium-step { height: 70px; background: rgba(203, 213, 225, 0.1); }
+        .podium-col-3 .podium-step { height: 55px; background: rgba(217, 119, 6, 0.1); }
+
+        .ranks-list { list-style: none; }
+        .rank-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-        }
-        .badge-ready {
-            background: #00c06725;
-            color: var(--accent-green);
-            font-size: 0.68rem;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
 
-        /* Forms & Inputs */
-        .form-group { margin-bottom: 14px; }
+        /* Inputs & Form */
+        .form-group { margin-bottom: 12px; }
         .form-group label {
             display: block;
             font-size: 0.72rem;
@@ -292,23 +333,6 @@
             font-size: 0.9rem;
             font-family: inherit;
             outline: none;
-        }
-        .input-with-max {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .max-btn {
-            position: absolute;
-            right: 8px;
-            background: var(--accent-green);
-            border: none;
-            color: white;
-            font-weight: 700;
-            font-size: 0.72rem;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
         }
 
         /* Bottom Tab Navigation */
@@ -335,15 +359,15 @@
             align-items: center;
             gap: 4px;
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
             flex: 1;
         }
-        .tab-btn i { font-size: 1.15rem; }
+        .tab-btn i { font-size: 1.2rem; }
         .tab-btn.active { color: var(--accent-green); }
 
-        /* Code Injector Overlay (Admin Panel) */
+        /* Full Admin Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -356,44 +380,49 @@
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
-        .injector-card {
+        .admin-modal-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
             padding: 20px;
         }
-        .injector-card h2 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #ffffff;
-            display: flex;
-            justify-content: space-between;
+
+        /* Multi-Account Block Screen */
+        #block-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #070b0f;
+            z-index: 100000;
+            display: none;
+            flex-direction: column;
             align-items: center;
-        }
-        .injector-card textarea {
-            width: 100%;
-            height: 140px;
-            background: #090e14;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 10px;
-            color: #00ff88;
-            font-family: monospace;
-            font-size: 0.85rem;
-            resize: none;
-            outline: none;
-            margin: 12px 0;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Multi-Account Block Screen -->
+    <div id="block-screen">
+        <i class="fas fa-ban" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+        <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 10px;">ተጨማሪ አካውንት ተከልክሏል!</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
+            በዚህ ስልክ ላይ ከአንድ በላይ መለያ (Multi-Account) መጠቀም አይቻልም። እባክዎ በቀድሞው ትክክለኛ መለያዎ ይጠቀሙ።
+        </p>
+    </div>
+
+    <!-- Top Header -->
     <div class="top-nav-bar">
         <button class="header-icon-btn" onclick="window.location.reload()"><i class="fas fa-times"></i></button>
         <div class="app-brand-title">Lucy Earning</div>
@@ -403,11 +432,12 @@
         </div>
     </div>
 
-    <!-- User Profile Chip -->
+    <!-- User Profile Header -->
     <div class="user-chip-container">
-        <div class="user-chip" id="user-chip-tag">
+        <img id="user-photo" class="user-avatar-img" src="https://via.placeholder.com/42" alt="Avatar">
+        <div class="user-chip">
             <i class="fas fa-landmark"></i>
-            <span id="display-username">∇NIRO_X12∇ $</span>
+            <span id="display-username"><b>∇NIRO_X12∇ $</b></span>
         </div>
     </div>
 
@@ -418,13 +448,13 @@
                 <div class="balance-top-row">
                     <span class="balance-label">ጠቅላላ የገቢ ሂሳብ</span>
                     <div class="currency-switch">
-                        <button class="active" id="cur-etb">ETB</button>
-                        <button id="cur-usdt">USDT</button>
+                        <button class="active" id="cur-etb" onclick="setCurrency('ETB')">ETB</button>
+                        <button id="cur-usdt" onclick="setCurrency('USDT')">USDT</button>
                     </div>
                 </div>
                 <div class="main-amount" id="ui-main-balance">0.00 ETB</div>
                 <div class="lifetime-pill">
-                    <i class="fas fa-chart-line"></i> Lifetime: <span id="ui-lifetime-bal">0.00 ETB</span>
+                    <i class="fas fa-coins"></i> <b><span id="ui-rp-coins">0</span> RP</b> &nbsp;|&nbsp; Lifetime: <span id="ui-lifetime-bal">0.00 ETB</span>
                 </div>
                 <div class="card-actions-grid">
                     <button class="btn-green" onclick="switchTab('profile-page')">
@@ -458,14 +488,14 @@
                 </div>
             </div>
 
-            <div class="chart-block">
-                <div class="chart-block-header">የ 7 ቀናት ገቢ</div>
-                <div class="day-labels-row">
+            <div class="section-card">
+                <div class="balance-label" style="margin-bottom: 10px;">የ 7 ቀናት ገቢ</div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">
                     <span>ሰኞ</span><span>ማክሰኞ</span><span>ረቡዕ</span><span>ሐሙስ</span><span>አርብ</span><span>ቅዳሜ</span><span>እሁድ</span>
                 </div>
             </div>
 
-            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ ነገሮች ይቀመጣሉ -->
+            <!-- Injected or Dynamic Area -->
             <div id="injected-home-content"></div>
         </div>
 
@@ -473,8 +503,8 @@
         <div id="tasks-page" class="page">
             <div class="section-card">
                 <h3>ተግባራት (Tasks)</h3>
-                <p>ተጨማሪ ETB ለማግኘት ተግባራትን ያጠናቁ</p>
-                <div style="font-size: 0.8rem; font-weight: 700; color: #fff;">
+                <p>ተጨማሪ RP እና ETB ለማግኘት ማስታወቂያዎችን እና ተግባራትን ያጠናቁ</p>
+                <div style="font-size: 0.85rem; font-weight: 800;">
                     የዛሬ ማስታወቂያ፦ <span id="tasks-ad-counter">0</span> / 30
                 </div>
             </div>
@@ -482,129 +512,110 @@
             <div class="section-card">
                 <span class="balance-label">Earning Wallet</span>
                 <div class="main-amount" style="font-size: 1.7rem; margin: 6px 0;" id="ui-wallet-balance">0.00 ETB</div>
-                <p style="margin-bottom: 0;">ከማስታወቂያዎችና ከተግባራት የተገኘ</p>
-            </div>
-
-            <div class="section-card">
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px;">
-                    <span>➜ ወደ ዋናው ሂሳብ አዛውር</span>
-                    <span id="ui-wallet-progress">0.00 / 10 ETB</span>
-                </div>
-                <button class="btn-secondary" style="width: 100%; justify-content: center;" id="move-wallet-btn">
-                    ለመክፈት 10.00 ETB ተጨማሪ ያግኙ
-                </button>
-                <small style="display: block; text-align: center; color: var(--text-muted); margin-top: 8px;">ዝቅተኛው፦ 10 ETB</small>
-            </div>
-
-            <div class="section-card">
-                <h3>ማስታወቂያ አይተው ያግኙ</h3>
-                <p>ለአንድ ማስታወቂያ 0.40 ETB</p>
-                <div class="task-action-box">
-                    <div>
-                        <div style="font-weight: 700; font-size: 0.85rem;">Watch Ads and Earn</div>
-                        <small style="color: var(--text-muted);">በእያንዳንዱ እይታ 0.40 ETB</small>
-                    </div>
-                    <span class="badge-ready">ዝግጁ</span>
-                </div>
-                <button class="btn-green" style="width: 100%;" id="watch-ads-btn">
-                    <i class="fas fa-play"></i> ማስታወቂያ እይ
+                <button class="btn-secondary" style="width: 100%;" id="move-wallet-btn" onclick="transferWallet()">
+                    ወደ ዋና ሂሳብ አዛውር
                 </button>
             </div>
 
-            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ አዳዲስ Tasks ይቀመጣሉ -->
-            <div id="injected-tasks-content"></div>
+            <div class="section-card">
+                <h3>Watch Ads and Earn</h3>
+                <p>ለእያንዳንዱ ማስታወቂያ 0.40 ETB ወይም 1 RP ይሰጣል</p>
+                <button class="btn-green" style="width: 100%;" id="watch-ads-btn" onclick="watchAdWithTimer()">
+                    <i class="fas fa-play"></i> ማስታወቂያ እይ (0.40 ETB)
+                </button>
+            </div>
+
+            <!-- Dynamic Tasks Container -->
+            <div id="admin-created-tasks"></div>
         </div>
 
-        <!-- RANKS PAGE -->
+        <!-- RANKS PAGE (KING CROWN PODIUM) -->
         <div id="ranks-page" class="page">
-            <div class="section-card" style="text-align: center; padding: 40px 20px;">
-                <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">የደረጃ ሰንጠረዥ (Leaderboard)</h2>
-                <p>ከፍተኛ ገቢ ያገኙ ተጠቃሚዎች በቅርቡ እዚህ ይዘረዘራሉ!</p>
+            <div class="section-card">
+                <h3 style="text-align: center; margin-bottom: 2px;">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
+                <p style="text-align: center;">ከፍተኛ RP Coin ያላቸው እውነተኛ ተጠቃሚዎች</p>
+
+                <!-- 2 - 1 - 3 Podium Layout -->
+                <div class="podium-container">
+                    <!-- Rank 2 -->
+                    <div class="podium-col podium-col-2">
+                        <i class="fas fa-crown crown-icon crown-2"></i>
+                        <img src="https://via.placeholder.com/60" class="podium-avatar" id="podium-img-2">
+                        <small id="podium-name-2"><b>@user2</b></small>
+                        <span style="font-size:0.75rem; color:var(--text-muted);" id="podium-rp-2">250 RP</span>
+                        <div class="podium-step">2</div>
+                    </div>
+                    <!-- Rank 1 -->
+                    <div class="podium-col podium-col-1">
+                        <i class="fas fa-crown crown-icon crown-1"></i>
+                        <img src="https://via.placeholder.com/70" class="podium-avatar" id="podium-img-1">
+                        <small id="podium-name-1"><b>@Niro_X12</b></small>
+                        <span style="font-size:0.85rem; color:var(--gold); font-weight:800;" id="podium-rp-1">500 RP</span>
+                        <div class="podium-step">1</div>
+                    </div>
+                    <!-- Rank 3 -->
+                    <div class="podium-col podium-col-3">
+                        <i class="fas fa-crown crown-icon crown-3"></i>
+                        <img src="https://via.placeholder.com/60" class="podium-avatar" id="podium-img-3">
+                        <small id="podium-name-3"><b>@user3</b></small>
+                        <span style="font-size:0.75rem; color:var(--text-muted);" id="podium-rp-3">180 RP</span>
+                        <div class="podium-step">3</div>
+                    </div>
+                </div>
+
+                <ul class="ranks-list" id="ranks-list-items">
+                    <!-- Ranks 4 to 50 dynamically rendered -->
+                </ul>
             </div>
-            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ Ranks ይቀመጣሉ -->
-            <div id="injected-ranks-content"></div>
         </div>
 
-        <!-- PROFILE / WITHDRAW PAGE -->
+        <!-- PROFILE & WITHDRAW PAGE -->
         <div id="profile-page" class="page">
+            <div class="rate-badge-box">
+                <h4>💱 የምንዛሬ ተመን (Conversion Rate)</h4>
+                <p>100 RP = 0.02 $ (USDT) &nbsp;|&nbsp; 100 RP = 37 ETB</p>
+            </div>
+
             <div class="section-card">
                 <span class="balance-label">ያለዎት ሂሳብ (Available Balance)</span>
                 <div class="main-amount" style="font-size: 1.8rem; margin: 4px 0;" id="profile-available-bal">0.00 ETB</div>
                 <div class="lifetime-pill" style="margin-bottom: 0;">
-                    <i class="fas fa-chart-line"></i> Lifetime: <span id="profile-lifetime-bal">0.00 ETB</span>
+                    <i class="fas fa-coins"></i> <b><span id="profile-rp-bal">0</span> RP</b> &nbsp;|&nbsp; Lifetime: <span id="profile-lifetime-bal">0.00 ETB</span>
                 </div>
             </div>
 
             <div class="section-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <span class="balance-label">SNI Balance</span>
-                    <span style="font-weight: 800; font-size: 1.1rem;">0</span>
-                </div>
-                <div class="stats-grid-two" style="margin-bottom: 8px;">
-                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <small style="color: var(--text-muted); display: block;">ጠቅላላ የተገኘ</small>
-                        <b style="font-size: 0.95rem;">0 Sni</b>
-                    </div>
-                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <small style="color: var(--text-muted); display: block;">የተጫወቱት ጨዋታ</small>
-                        <b style="font-size: 0.95rem;">0</b>
-                    </div>
-                </div>
-                <small style="color: var(--text-muted); display: block; text-align: center;">Sni ን ወደ ETB በ Earn ገጽ ይቀይሩ</small>
-            </div>
-
-            <div class="section-card">
-                <h3>ይጋብዙ እና ያግኙ</h3>
-                <p>ሊንክዎን ያጋሩና በእያንዳንዱ ትክክለኛ ግብዣ 3.00 ETB ያግኙ።</p>
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/alpha_ads_earn_bot/app?start=8797798511">
+                <h3>Lucy Earning የግብዣ ሊንክ</h3>
+                <p>ጓደኞችዎን ይጋብዙና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።</p>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Lucy_Earning_bot?start=">
                     <button class="btn-secondary" style="padding: 0 14px;" onclick="copyRef()"><i class="far fa-copy"></i></button>
-                </div>
-                <div class="stats-grid-two" style="margin-bottom: 0;">
-                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <span style="color: var(--accent-green); font-size: 0.72rem; font-weight: 800;">VALID REFERRALS</span>
-                        <div style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">0 <small style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">paid</small></div>
-                    </div>
-                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
-                        <span style="color: #f39c12; font-size: 0.72rem; font-weight: 800;">PENDING</span>
-                        <div style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">0 <small style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">invalid/unpaid</small></div>
-                    </div>
                 </div>
             </div>
 
             <div class="section-card">
                 <h3>ገንዘብ ማውጫ (Withdraw Funds)</h3>
-                <p style="margin-bottom: 4px; color: #ff5252; font-size: 0.78rem;">📍 ገንዘብ ለማውጣት ቢያንስ 5 ግብዣ ያስፈልጋል።</p>
-                <p style="margin-bottom: 14px; color: #ff5252; font-size: 0.78rem;">📺 ገንዘብ ለማውጣት ቢያንስ 20 ማስታወቂያ ማየት ያስፈልጋል።</p>
-
                 <div class="form-group">
                     <label>የመክፈያ ዘዴ</label>
                     <select class="form-select" id="withdraw-method">
-                        <option value="Telebirr">Telebirr</option>
-                        <option value="CBE Birr">CBE Birr</option>
+                        <option value="Telebirr">Telebirr (ETB)</option>
+                        <option value="Binance USDT">Binance Pay (USDT)</option>
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <label>የአካውንት / የስልክ ቁጥር</label>
-                    <input type="text" class="form-input" id="withdraw-account" placeholder="የቴሌብር ቁጥርዎን ያስገቡ">
+                    <label>የስልክ ቁጥር ወይም Binance Pay ID</label>
+                    <input type="text" class="form-input" id="withdraw-account" placeholder="የቴሌብር ቁጥር ወይም Binance ID">
                 </div>
-
                 <div class="form-group">
-                    <label>የብር መጠን (ETB)</label>
-                    <div class="input-with-max">
-                        <input type="number" class="form-input" id="withdraw-amount" placeholder="0.00">
-                        <button class="max-btn" id="max-btn">MAX</button>
-                    </div>
+                    <label>የብር ወይም የ USDT መጠን</label>
+                    <input type="number" class="form-input" id="withdraw-amount" placeholder="መጠን">
                 </div>
-
-                <button class="btn-green" style="width: 100%; margin-top: 8px;" id="process-withdraw-btn">ወጪ አድርግ (Process Withdrawal)</button>
-                <small style="display: block; text-align: center; color: var(--text-muted); margin-top: 8px;">በ 24-48 የሥራ ሰዓታት ውስጥ ይላካል።</small>
+                <button class="btn-green" style="width: 100%;" onclick="submitWithdraw()">ወጪ አድርግ (Withdraw)</button>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Tabs -->
+    <!-- Bottom Navigation -->
     <nav class="bottom-bar">
         <button class="tab-btn active" onclick="switchTab('home-page', this)"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="tab-btn" onclick="switchTab('tasks-page', this)"><i class="fas fa-clipboard-list"></i><span>Tasks</span></button>
@@ -612,20 +623,85 @@
         <button class="tab-btn" onclick="switchTab('profile-page', this)"><i class="fas fa-user"></i><span>Profile</span></button>
     </nav>
 
-    <!-- ADMIN CODE INJECTOR (የአድሚን ኮድ ማስገቢያ) -->
+    <!-- FULL ADMIN PANEL MODAL (@Niro_X12) -->
     <div class="modal-overlay" id="admin-modal">
-        <div class="injector-card">
-            <h2>
-                <span><i class="fas fa-terminal"></i> Code Injector</span>
-                <i class="fas fa-times" style="cursor: pointer;" onclick="closeAdmin()"></i>
-            </h2>
-            <p style="font-size: 0.78rem; color: var(--text-muted);">
-                እዚህ ጋር HTML ወይም JavaScript ኮድ አስገባ። ያስገባኸው ኮድ በቋሚነት በስልኩ ማህደረ-ትውስታ ውስጥ ይቀመጣል፤ ፔጁ Reload ቢሆንም አይጠፋም።
-            </p>
-            <textarea id="injector-input" placeholder="<div class='section-card'><h3>አዲስ ተግባር</h3><p>ይህ በኮድ የተጨመረ ነው</p></div>"></textarea>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-green" style="flex: 1;" onclick="applyInjectedCode()">Apply & Save</button>
-                <button class="btn-secondary" onclick="clearInjectedCode()">አጥፋ (Reset)</button>
+        <div class="admin-modal-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>👑 Lucy Admin Panel</h3>
+                <i class="fas fa-times" style="cursor:pointer;" onclick="closeAdmin()"></i>
+            </div>
+
+            <!-- Multi Account Switch -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b>Multi-Account Protection</b>
+                        <small style="display:block; color:var(--text-muted);">ተጨማሪ አካውንቶችን መከልከል</small>
+                    </div>
+                    <button class="btn-secondary" id="multi-acc-btn" onclick="toggleMultiAcc()">OFF</button>
+                </div>
+            </div>
+
+            <!-- User Lookup & Add RP -->
+            <div class="section-card">
+                <h4>➕ የተጠቃሚ መረጃ መፈለጊያ እና RP መጨመሪያ</h4>
+                <div class="form-group" style="margin-top:8px;">
+                    <input type="text" class="form-input" id="admin-search-user" placeholder="የተጠቃሚውን ስም ወይም ID ይፈልጉ...">
+                </div>
+                <div id="user-search-result" style="font-size:0.8rem; margin-bottom:8px; color:var(--text-muted);"></div>
+                <div class="form-group">
+                    <input type="number" class="form-input" id="admin-add-rp-amount" placeholder="የ RP ሳንቲም መጠን (ምሳሌ: 100)">
+                </div>
+                <button class="btn-green" style="width:100%;" onclick="adminAddCoins()">Add RP Coins</button>
+            </div>
+
+            <!-- Create Dynamic Task -->
+            <div class="section-card">
+                <h4>📌 አዲስ Task (Channel / Bot) ፍጠር</h4>
+                <div class="form-group">
+                    <label>Task Name</label>
+                    <input type="text" class="form-input" id="task-create-name" placeholder="ምሳሌ: Join Channel">
+                </div>
+                <div class="form-group">
+                    <label>Channel / Bot Link</label>
+                    <input type="text" class="form-input" id="task-create-link" placeholder="https://t.me/...">
+                </div>
+                <div class="form-group">
+                    <label>Reward (RP)</label>
+                    <input type="number" class="form-input" id="task-create-reward" placeholder="ምሳሌ: 5">
+                </div>
+                <div class="form-group">
+                    <label>Button Color</label>
+                    <select class="form-select" id="task-create-color">
+                        <option value="#00c067">Green</option>
+                        <option value="#e74c3c">Red</option>
+                        <option value="#3498db">Blue</option>
+                        <option value="#f39c12">Orange</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Total Member Limit</label>
+                    <input type="number" class="form-input" id="task-create-limit" placeholder="ምሳሌ: 500">
+                </div>
+                <button class="btn-green" style="width:100%;" onclick="adminCreateTask()">Add Task to Board</button>
+            </div>
+
+            <!-- Withdrawal Requests List -->
+            <div class="section-card">
+                <h4>📋 የወጪ ጥያቄዎች (Withdraw Requests)</h4>
+                <div id="admin-withdraw-list" style="margin-top:8px; font-size:0.8rem;">
+                    ምንም ጥያቄ የለም።
+                </div>
+            </div>
+
+            <!-- Custom Code Injector -->
+            <div class="section-card">
+                <h4>💻 Raw Code Injector</h4>
+                <textarea id="raw-injector-text" class="form-input" style="height:80px; font-family:monospace;" placeholder="<style> or <script>"></textarea>
+                <div style="display:flex; gap:8px; margin-top:8px;">
+                    <button class="btn-green" style="flex:1;" onclick="applyRawInjection()">Inject & Save</button>
+                    <button class="btn-secondary" onclick="clearInjectedCode()">አጥፋ</button>
+                </div>
             </div>
         </div>
     </div>
@@ -634,179 +710,321 @@
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         let currentUsername = "@Niro_X12";
+        let activeCurrency = "ETB";
 
         let appData = {
-            mainBalance: 0.00,
-            earningWallet: 0.00,
-            lifetime: 0.00,
+            mainBalanceETB: 0.00,
+            rpCoins: 0,
+            earningWalletETB: 0.00,
+            lifetimeETB: 0.00,
             todayAds: 0,
             referrals: 0,
-            withdrawn: 0.00
+            withdrawnETB: 0.00,
+            multiAccBlock: false
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            let uId = "8797798511";
+            let uName = "∇NIRO_X12∇ $";
+            let uPhoto = "https://via.placeholder.com/42";
+
             if (tg) {
                 try { tg.ready(); tg.expand(); } catch (e) {}
                 if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
                     const u = tg.initDataUnsafe.user;
+                    uId = u.id;
                     if (u.username) currentUsername = "@" + u.username;
-                    document.getElementById('display-username').textContent = `∇${currentUsername.replace('@','')}∇ $`;
-                    document.getElementById('ref-share-url').value = `https://t.me/alpha_ads_earn_bot/app?start=${u.id}`;
+                    uName = `∇${u.first_name || currentUsername}∇ $`;
+                    if (u.photo_url) uPhoto = u.photo_url;
                 }
             }
 
-            const savedState = localStorage.getItem('lucy_app_data');
-            if (savedState) {
-                try { appData = Object.assign(appData, JSON.parse(savedState)); } catch(e){}
+            document.getElementById('display-username').innerHTML = `<b>${uName}</b>`;
+            document.getElementById('user-photo').src = uPhoto;
+            document.getElementById('ref-share-url').value = `https://t.me/Lucy_Earning_bot?start=${uId}`;
+
+            // Load saved state
+            const saved = localStorage.getItem('lucy_v2_data');
+            if (saved) {
+                try { appData = Object.assign(appData, JSON.parse(saved)); } catch(e){}
+            }
+
+            // Multi-Account Protection check
+            const primaryId = localStorage.getItem('lucy_primary_uid');
+            if (!primaryId) {
+                localStorage.setItem('lucy_primary_uid', uId);
+            } else if (appData.multiAccBlock && primaryId !== String(uId)) {
+                document.getElementById('block-screen').style.display = 'flex';
+                return;
             }
 
             updateDisplays();
+            renderRanks();
+            renderDynamicTasks();
+            renderWithdrawList();
             loadStoredInjectedCode();
 
-            // የጊር (⚙️) ምልክት ሲነካ አድሚን ከሆነ Code Injector ይከፈታል
+            // Gear icon event
             document.getElementById('gear-btn').addEventListener('click', () => {
-                const cleanUser = currentUsername.toLowerCase().replace('@', '');
-                if (cleanUser === 'niro_x12') {
+                const user = currentUsername.toLowerCase().replace('@', '');
+                if (user === 'niro_x12') {
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('ቅንብሮች፦ Lucy Earning ስሪት 1.0.4');
+                    alert('Lucy Earning v2.1.0');
                 }
             });
 
-            // ማስታወቂያ እይታ
-            document.getElementById('watch-ads-btn').addEventListener('click', () => {
-                if (appData.todayAds >= 30) {
-                    alert("የዛሬውን 30 ማስታወቂያዎች አይተው ጨርሰዋል!");
-                    return;
-                }
-                appData.todayAds++;
-                appData.earningWallet += 0.40;
-                appData.lifetime += 0.40;
-                saveAppData();
-                updateDisplays();
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("+0.40 ETB ወደ ቦርሳዎ ገብቷል!");
-            });
-
-            // ገንዘብ ማዛወሪያ
-            document.getElementById('move-wallet-btn').addEventListener('click', () => {
-                if (appData.earningWallet < 10) {
-                    alert("ለማዛወር በቦርሳዎ ውስጥ ቢያንስ 10.00 ETB ያስፈልጋል!");
-                    return;
-                }
-                appData.mainBalance += appData.earningWallet;
-                appData.earningWallet = 0;
-                saveAppData();
-                updateDisplays();
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
-            });
-
-            // MAX በተን
-            document.getElementById('max-btn').addEventListener('click', () => {
-                document.getElementById('withdraw-amount').value = appData.mainBalance.toFixed(2);
-            });
-
-            // ወጪ የማድረጊያ ጥያቄ
-            document.getElementById('process-withdraw-btn').addEventListener('click', () => {
-                const amt = parseFloat(document.getElementById('withdraw-amount').value);
-                const acc = document.getElementById('withdraw-account').value.trim();
-                if (!acc) { alert("እባክዎ ትክክለኛ የአካውንት/ስልክ ቁጥር ያስገቡ!"); return; }
-                if (isNaN(amt) || amt <= 0) { alert("እባክዎ ትክክለኛ የብር መጠን ያስገቡ!"); return; }
-                if (amt > appData.mainBalance) { alert("በቂ ሂሳብ የለዎትም!"); return; }
-                if (appData.referrals < 5) { alert("ገንዘብ ለማውጣት ቢያንስ 5 ሰዎች መጋበዝ አለብዎት!"); return; }
-                if (appData.todayAds < 20) { alert("ገንዘብ ለማውጣት ቢያንስ 20 ማስታወቂያዎችን መመልከት አለብዎት!"); return; }
-
-                appData.mainBalance -= amt;
-                appData.withdrawn += amt;
-                saveAppData();
-                updateDisplays();
-                document.getElementById('withdraw-amount').value = "";
-                document.getElementById('withdraw-account').value = "";
-                alert("የማውጣት ጥያቄዎ በተሳካ ሁኔታ ገብቷል! በ 24-48 ሰዓት ውስጥ ይላካል።");
-            });
+            // Live user search preview in admin panel
+            const searchInput = document.getElementById('admin-search-user');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    const res = document.getElementById('user-search-result');
+                    if (val) {
+                        res.innerHTML = `ተጠቃሚ፦ <b>${val}</b> | ቀሪ ሂሳብ፦ <b>${appData.rpCoins} RP</b> | ግብዣዎች፦ <b>${appData.referrals}</b>`;
+                    } else {
+                        res.innerHTML = "";
+                    }
+                });
+            }
         });
 
-        function saveAppData() {
-            localStorage.setItem('lucy_app_data', JSON.stringify(appData));
+        function saveState() {
+            localStorage.setItem('lucy_v2_data', JSON.stringify(appData));
+        }
+
+        function setCurrency(cur) {
+            activeCurrency = cur;
+            document.getElementById('cur-etb').classList.toggle('active', cur === 'ETB');
+            document.getElementById('cur-usdt').classList.toggle('active', cur === 'USDT');
+            updateDisplays();
         }
 
         function updateDisplays() {
-            document.getElementById('ui-main-balance').textContent = `${appData.mainBalance.toFixed(2)} ETB`;
-            document.getElementById('profile-available-bal').textContent = `${appData.mainBalance.toFixed(2)} ETB`;
-            document.getElementById('ui-lifetime-bal').textContent = `${appData.lifetime.toFixed(2)} ETB`;
-            document.getElementById('profile-lifetime-bal').textContent = `${appData.lifetime.toFixed(2)} ETB`;
-            document.getElementById('ui-total-earned').textContent = `${appData.lifetime.toFixed(2)} ETB`;
+            // Conversion rates: 100 RP = 37 ETB = 0.02 USDT
+            const rateETB = 37 / 100;
+            const rateUSDT = 0.02 / 100;
+
+            const balETB = appData.mainBalanceETB + (appData.rpCoins * rateETB);
+            const balUSDT = balETB * (0.02 / 37);
+
+            if (activeCurrency === "ETB") {
+                document.getElementById('ui-main-balance').textContent = `${balETB.toFixed(2)} ETB`;
+                document.getElementById('profile-available-bal').textContent = `${balETB.toFixed(2)} ETB`;
+            } else {
+                document.getElementById('ui-main-balance').textContent = `${balUSDT.toFixed(4)} USDT`;
+                document.getElementById('profile-available-bal').textContent = `${balUSDT.toFixed(4)} USDT`;
+            }
+
+            document.getElementById('ui-rp-coins').textContent = appData.rpCoins;
+            document.getElementById('profile-rp-bal').textContent = appData.rpCoins;
+            document.getElementById('ui-lifetime-bal').textContent = `${appData.lifetimeETB.toFixed(2)} ETB`;
+            document.getElementById('profile-lifetime-bal').textContent = `${appData.lifetimeETB.toFixed(2)} ETB`;
+            document.getElementById('ui-total-earned').textContent = `${appData.lifetimeETB.toFixed(2)} ETB`;
             document.getElementById('ui-today-ads').textContent = appData.todayAds;
             document.getElementById('tasks-ad-counter').textContent = appData.todayAds;
             document.getElementById('ui-referrals').textContent = appData.referrals;
-            document.getElementById('ui-withdrawn').textContent = `${appData.withdrawn.toFixed(2)} ETB`;
-            document.getElementById('ui-wallet-balance').textContent = `${appData.earningWallet.toFixed(2)} ETB`;
-            document.getElementById('ui-wallet-progress').textContent = `${appData.earningWallet.toFixed(2)} / 10 ETB`;
+            document.getElementById('ui-withdrawn').textContent = `${appData.withdrawnETB.toFixed(2)} ETB`;
+            document.getElementById('ui-wallet-balance').textContent = `${appData.earningWalletETB.toFixed(2)} ETB`;
 
-            const moveBtn = document.getElementById('move-wallet-btn');
-            if (appData.earningWallet >= 10) {
-                moveBtn.textContent = "ወደ ዋናው ሂሳብ አዛውር";
-                moveBtn.style.background = "var(--accent-green)";
-            } else {
-                const diff = (10 - appData.earningWallet).toFixed(2);
-                moveBtn.textContent = `ለመክፈት ${diff} ETB ተጨማሪ ያግኙ`;
-                moveBtn.style.background = "var(--card-inner)";
+            const mBtn = document.getElementById('multi-acc-btn');
+            mBtn.textContent = appData.multiAccBlock ? "ON (BLOCKED)" : "OFF";
+            mBtn.style.background = appData.multiAccBlock ? "var(--accent-green)" : "var(--card-inner)";
+        }
+
+        function watchAdWithTimer() {
+            if (appData.todayAds >= 30) {
+                alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል!");
+                return;
+            }
+            const btn = document.getElementById('watch-ads-btn');
+            btn.disabled = true;
+            let timer = 5;
+            const interval = setInterval(() => {
+                btn.innerHTML = `<i class="fas fa-clock"></i> ማስታወቂያውን ይመልከቱ (${timer}s)...`;
+                timer--;
+                if (timer < 0) {
+                    clearInterval(interval);
+                    appData.todayAds++;
+                    appData.earningWalletETB += 0.40;
+                    appData.lifetimeETB += 0.40;
+                    saveState();
+                    updateDisplays();
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fas fa-play"></i> ማስታወቂያ እይ (0.40 ETB)`;
+                    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                    alert("+0.40 ETB ወደ ቦርሳዎ ገብቷል!");
+                }
+            }, 1000);
+        }
+
+        function transferWallet() {
+            if (appData.earningWalletETB <= 0) {
+                alert("በ Earning Wallet ውስጥ ምንም ሂሳብ የለም!");
+                return;
+            }
+            appData.mainBalanceETB += appData.earningWalletETB;
+            appData.earningWalletETB = 0;
+            saveState();
+            updateDisplays();
+            alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
+        }
+
+        function submitWithdraw() {
+            const acc = document.getElementById('withdraw-account').value.trim();
+            const amt = parseFloat(document.getElementById('withdraw-amount').value);
+            const method = document.getElementById('withdraw-method').value;
+
+            if (!acc || isNaN(amt) || amt <= 0) {
+                alert("እባክዎ ትክክለኛ መረጃ ያስገቡ!");
+                return;
+            }
+            if (amt > appData.mainBalanceETB) {
+                alert("በቂ ሂሳብ የለዎትም!");
+                return;
+            }
+
+            appData.mainBalanceETB -= amt;
+            appData.withdrawnETB += amt;
+            saveState();
+            updateDisplays();
+
+            let requests = JSON.parse(localStorage.getItem('lucy_withdraw_requests') || '[]');
+            requests.push({ user: currentUsername, method, acc, amt, date: new Date().toLocaleDateString() });
+            localStorage.setItem('lucy_withdraw_requests', JSON.stringify(requests));
+
+            renderWithdrawList();
+            document.getElementById('withdraw-account').value = "";
+            document.getElementById('withdraw-amount').value = "";
+            alert("የወጪ ጥያቄዎ በተሳካ ሁኔታ ተልኳል! በቅርቡ ይረጋገጣል።");
+        }
+
+        function renderRanks() {
+            const list = document.getElementById('ranks-list-items');
+            list.innerHTML = "";
+            for (let i = 4; i <= 50; i++) {
+                const li = document.createElement('li');
+                li.className = 'rank-item';
+                li.innerHTML = `
+                    <span>#${i} &nbsp; <b>User_${1000 + i}</b></span>
+                    <span style="color:var(--accent-green);">${Math.max(5, 150 - i * 2)} RP</span>
+                `;
+                list.appendChild(li);
             }
         }
 
-        function switchTab(pageId, tabElement) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) targetPage.classList.add('active');
-            if (tabElement) {
-                tabElement.classList.add('active');
-            } else {
-                const matchTab = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(pageId));
-                if (matchTab) matchTab.classList.add('active');
-            }
-            window.scrollTo(0, 0);
+        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
+
+        function toggleMultiAcc() {
+            appData.multiAccBlock = !appData.multiAccBlock;
+            saveState();
+            updateDisplays();
+            alert("የ Multi-Account ሁኔታ ተቀይሯል!");
         }
 
-        function copyRef() {
-            const input = document.getElementById('ref-share-url');
-            input.select();
-            navigator.clipboard.writeText(input.value);
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert('የግብዣ ሊንኩ ተገልብጧል!');
+        function adminAddCoins() {
+            const rp = parseInt(document.getElementById('admin-add-rp-amount').value);
+            if (isNaN(rp) || rp <= 0) { alert("ትክክለኛ የ RP መጠን ያስገቡ!"); return; }
+            appData.rpCoins += rp;
+            saveState();
+            updateDisplays();
+            alert(`${rp} RP ሳንቲም በተሳካ ሁኔታ ተጨምሯል!`);
+            document.getElementById('admin-add-rp-amount').value = "";
         }
 
-        // Code Injector አስተዳዳሪ ተግባራት
-        function closeAdmin() {
-            document.getElementById('admin-modal').style.display = 'none';
-        }
+        function adminCreateTask() {
+            const name = document.getElementById('task-create-name').value.trim();
+            const link = document.getElementById('task-create-link').value.trim();
+            const reward = parseInt(document.getElementById('task-create-reward').value) || 5;
+            const color = document.getElementById('task-create-color').value;
+            const limit = parseInt(document.getElementById('task-create-limit').value) || 500;
 
-        function applyInjectedCode() {
-            const code = document.getElementById('injector-input').value.trim();
-            if (!code) { alert('እባክዎ በመጀመሪያ ኮድ ያስገቡ!'); return; }
+            if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
-            let storedCodes = [];
-            try { storedCodes = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]'); } catch(e){}
-            storedCodes.push(code);
-            localStorage.setItem('lucy_injected_scripts', JSON.stringify(storedCodes));
+            let tasks = JSON.parse(localStorage.getItem('lucy_admin_tasks') || '[]');
+            tasks.push({ id: Date.now(), name, link, reward, color, limit, joined: 0 });
+            localStorage.setItem('lucy_admin_tasks', JSON.stringify(tasks));
 
-            executeSnippet(code);
-            document.getElementById('injector-input').value = "";
+            renderDynamicTasks();
             closeAdmin();
-            alert("ኮዱ በተሳካ ሁኔታ ገብቷል እና ተቀምጧል!");
+            alert("ተግባሩ (Task) በተሳካ ሁኔታ ተፈጥሯል!");
+            document.getElementById('task-create-name').value = "";
+            document.getElementById('task-create-link').value = "";
+        }
+
+        function renderDynamicTasks() {
+            const container = document.getElementById('admin-created-tasks');
+            container.innerHTML = "";
+            let tasks = JSON.parse(localStorage.getItem('lucy_admin_tasks') || '[]');
+
+            tasks.forEach(t => {
+                if (t.joined < t.limit) {
+                    const card = document.createElement('div');
+                    card.className = 'section-card';
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <b>${t.name}</b>
+                                <small style="display:block; color:var(--text-muted);">ሽልማት: ${t.reward} RP • አባላት: ${t.joined}/${t.limit}</small>
+                            </div>
+                            <button class="btn-green" style="background:${t.color}; padding:8px 16px;" onclick="claimTask(${t.id}, '${t.link}', ${t.reward})">
+                                Join
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function claimTask(id, link, reward) {
+            window.open(link, '_blank');
+            let tasks = JSON.parse(localStorage.getItem('lucy_admin_tasks') || '[]');
+            const idx = tasks.findIndex(x => x.id === id);
+            if (idx !== -1) {
+                tasks[idx].joined += 1;
+                localStorage.setItem('lucy_admin_tasks', JSON.stringify(tasks));
+                appData.rpCoins += reward;
+                saveState();
+                updateDisplays();
+                renderDynamicTasks();
+                alert(`ተቀላቅለዋል! +${reward} RP ተጨምሯል።`);
+            }
+        }
+
+        function renderWithdrawList() {
+            const listEl = document.getElementById('admin-withdraw-list');
+            let requests = JSON.parse(localStorage.getItem('lucy_withdraw_requests') || '[]');
+            if (!requests.length) { listEl.innerHTML = "ምንም ጥያቄ የለም።"; return; }
+            listEl.innerHTML = requests.map(r => `
+                <div style="background:var(--card-inner); padding:8px; border-radius:6px; margin-bottom:6px;">
+                    <b>${r.user}</b>: ${r.amt} (${r.method})<br>
+                    <small>Acc/ID: ${r.acc} | ${r.date}</small>
+                </div>
+            `).join('');
+        }
+
+        function applyRawInjection() {
+            const code = document.getElementById('raw-injector-text').value.trim();
+            if (!code) return;
+            let stored = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]');
+            stored.push(code);
+            localStorage.setItem('lucy_injected_scripts', JSON.stringify(stored));
+            executeSnippet(code);
+            closeAdmin();
+            alert("ኮዱ በተሳካ ሁኔታ ተቀምጧል!");
+            document.getElementById('raw-injector-text').value = "";
         }
 
         function loadStoredInjectedCode() {
-            let storedCodes = [];
-            try { storedCodes = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]'); } catch(e){}
-            storedCodes.forEach(code => executeSnippet(code));
+            let stored = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]');
+            stored.forEach(c => executeSnippet(c));
         }
 
         function clearInjectedCode() {
             if (confirm("የገቡትን ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
                 localStorage.removeItem('lucy_injected_scripts');
-                alert("ኮዶች ተሰርዘዋል! ገጹ እንደገና እየጀመረ ነው...");
+                alert("ኮዶች ተሰርዘዋል!");
                 window.location.reload();
             }
         }
@@ -815,19 +1033,37 @@
             try {
                 if (snippet.startsWith("<script>") || (!snippet.startsWith("<") && snippet.includes(";"))) {
                     const cleanJs = snippet.replace(/<\/?script>/gi, '');
-                    const runFunction = new Function(cleanJs);
-                    runFunction();
+                    new Function(cleanJs)();
                 } else {
-                    const container = document.getElementById('injected-tasks-content');
+                    const container = document.getElementById('injected-home-content');
                     if (container) {
                         const wrapper = document.createElement('div');
                         wrapper.innerHTML = snippet;
                         container.appendChild(wrapper);
                     }
                 }
-            } catch (err) {
-                console.error("Injector Error: ", err);
+            } catch(e) { console.error("Injection error:", e); }
+        }
+
+        function switchTab(pageId, tabElement) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if (tabElement) {
+                tabElement.classList.add('active');
+            } else {
+                const matchTab = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(pageId));
+                if (matchTab) matchTab.classList.add('active');
             }
+            window.scrollTo(0,0);
+        }
+
+        function copyRef() {
+            const el = document.getElementById('ref-share-url');
+            el.select();
+            navigator.clipboard.writeText(el.value);
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert("የግብዣ ሊንክ ተገልብጧል!");
         }
     </script>
 </body>
