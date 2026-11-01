@@ -3,190 +3,832 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Looby Earning</title>
+    <title>Lucy Earning</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <style>
         :root {
-            --primary-color: #E74C3C;
-            --secondary-color: #F39C12;
-            --background-dark: #1B2631;
-            --surface-dark: #283747;
-            --text-primary-dark: #FDFEFE;
-            --text-secondary-dark: #ABB2B9;
-            --border-dark: #566573;
-            --success: #27AE60;
+            --bg-color: #0b1118;
+            --card-bg: #141d27;
+            --card-inner: #192432;
+            --accent-green: #00c067;
+            --accent-green-hover: #00a85a;
+            --text-main: #f0f4f8;
+            --text-muted: #7e8b9b;
+            --border-color: #1f2c3d;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--background-dark); color: var(--text-primary-dark); -webkit-font-smoothing: antialiased; }
-        #app { max-width: 500px; margin: 0 auto; padding-bottom: 80px; }
-        .page { display: none; padding: 15px; }
-        .page.active { display: block; }
-        
-        .profile-header {
-            padding: 25px 15px; border-bottom: 1px solid var(--border-dark);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            background-color: var(--surface-dark);
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 75px;
+            overflow-x: hidden;
         }
-        #user-photo { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--primary-color); object-fit: cover; margin-bottom: 10px; }
-        #user-name { font-size: 1.4rem; font-weight: 700; margin-bottom: 5px; }
-        #user-balance-container { font-size: 1rem; font-weight: 500; }
-        #user-balance { font-size: 1.1rem; font-weight: 700; color: var(--primary-color); }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .stat-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid var(--border-dark); background-color: var(--surface-dark); }
-        .stat-card h3 { font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; color: var(--text-secondary-dark); }
-        .stat-card p { font-size: 1.4rem; font-weight: 600; color: var(--primary-color); }
-        
-        .earning-wallet-card, .chart-container { padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid var(--border-dark); background-color: var(--surface-dark); }
-        .action-btn { padding: 10px 20px; font-size: 0.9rem; font-weight: 600; color: #fff; border: none; border-radius: 8px; cursor: pointer; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); width: 100%; margin-top: 10px; }
-        
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border-dark); background-color: var(--surface-dark); z-index: 1000; }
-        .nav-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; color: var(--text-secondary-dark); font-size: 0.75rem; flex-grow: 1; }
-        .nav-btn i { font-size: 1.5rem; margin-bottom: 4px; }
-        .nav-btn.active { color: var(--primary-color); }
+        /* Top Header */
+        .top-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background-color: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .app-brand-title {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .header-icon-btn {
+            background: none;
+            border: none;
+            color: #b0bac9;
+            font-size: 1.15rem;
+            cursor: pointer;
+            padding: 4px;
+        }
 
-        .task-container { padding: 15px; border-radius: 12px; margin-top: 15px; background-color: var(--surface-dark); border: 1px solid var(--border-dark); }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid var(--border-dark); background: #1B2631; color: #fff; text-align: center; }
+        /* User Chip */
+        .user-chip-container { padding: 4px 16px 12px; }
+        .user-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .user-chip i { font-size: 0.85rem; color: #8fa0b5; }
 
-        #app-loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: var(--background-dark); }
-        .spinner { width: 50px; height: 50px; border-radius: 50%; border: 5px solid; border-color: var(--primary-color) transparent; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        #loading-progress { margin-top: 15px; font-size: 1.2rem; font-weight: 600; }
+        .container { padding: 0 16px; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.25s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Main Card */
+        .balance-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 18px;
+            margin-bottom: 12px;
+        }
+        .balance-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .balance-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+        .currency-switch {
+            display: flex;
+            background: #0d151f;
+            border-radius: 14px;
+            padding: 2px;
+            border: 1px solid var(--border-color);
+        }
+        .currency-switch button {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .currency-switch button.active {
+            background: var(--accent-green);
+            color: #ffffff;
+        }
+        .main-amount {
+            font-size: 1.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+        .lifetime-pill {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .card-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .btn-green {
+            background: var(--accent-green);
+            color: #ffffff;
+            border: none;
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-green:hover { background: var(--accent-green-hover); }
+        .btn-secondary {
+            background: var(--card-inner);
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* 2-Column Stats Grid */
+        .stats-grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .stat-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+        }
+        .stat-box .title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .stat-box .val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        /* Chart Block */
+        .chart-block {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px;
+            margin-bottom: 16px;
+        }
+        .chart-block-header {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+        .day-labels-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Generic Section Card */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 18px 16px;
+            margin-bottom: 12px;
+        }
+        .section-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+        .section-card p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        /* Tasks Style */
+        .task-action-box {
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .badge-ready {
+            background: #00c06725;
+            color: var(--accent-green);
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Forms & Inputs */
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+        }
+        .input-with-max {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .max-btn {
+            position: absolute;
+            right: 8px;
+            background: var(--accent-green);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 0.72rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Bottom Tab Navigation */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: var(--bg-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+        }
+        .tab-btn i { font-size: 1.15rem; }
+        .tab-btn.active { color: var(--accent-green); }
+
+        /* Code Injector Overlay (Admin Panel) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .injector-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+        }
+        .injector-card h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .injector-card textarea {
+            width: 100%;
+            height: 140px;
+            background: #090e14;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            color: #00ff88;
+            font-family: monospace;
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            margin: 12px 0;
+        }
     </style>
 </head>
 <body>
-    <div id="app-loader">
-        <div class="spinner"></div>
-        <p id="loading-progress">0%</p>
+
+    <!-- Header -->
+    <div class="top-nav-bar">
+        <button class="header-icon-btn" onclick="window.location.reload()"><i class="fas fa-times"></i></button>
+        <div class="app-brand-title">Lucy Earning</div>
+        <div class="header-actions">
+            <button class="header-icon-btn"><i class="far fa-comment-dots"></i></button>
+            <button class="header-icon-btn" id="gear-btn"><i class="fas fa-cog"></i></button>
+        </div>
     </div>
 
-    <div id="app" style="display: none;">
-        <header class="profile-header">
-            <img id="user-photo" src="https://via.placeholder.com/80" alt="User">
-            <h1 id="user-name">ተጠቃሚ</h1>
-            <div id="user-balance-container">ዋና ሂሳብ፦ <span id="user-balance">0.00</span> ETB</div>
-        </header>
+    <!-- User Profile Chip -->
+    <div class="user-chip-container">
+        <div class="user-chip" id="user-chip-tag">
+            <i class="fas fa-landmark"></i>
+            <span id="display-username">∇NIRO_X12∇ $</span>
+        </div>
+    </div>
 
-        <main>
-            <div id="home-page" class="page active">
-                <div class="stats-grid">
-                    <div class="stat-card"><h3>የዛሬ ማስታወቂያ</h3><p id="daily-ads">0 / 15</p></div>
-                    <div class="stat-card"><h3>ጠቅላላ ግብዣ</h3><p id="ref-count">0</p></div>
-                    <div class="stat-card"><h3>የታዩ ማስታወቂያዎች</h3><p id="total-ads">0</p></div>
-                    <div class="stat-card"><h3>ጠቅላላ ገቢ</h3><p id="total-income">0.00</p></div>
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div id="home-page" class="page active">
+            <div class="balance-card">
+                <div class="balance-top-row">
+                    <span class="balance-label">ጠቅላላ የገቢ ሂሳብ</span>
+                    <div class="currency-switch">
+                        <button class="active" id="cur-etb">ETB</button>
+                        <button id="cur-usdt">USDT</button>
+                    </div>
                 </div>
-                <div class="task-container">
-                    <h3>ማስታወቂያዎችን በመመልከት ያግኙ</h3>
-                    <p>በእያንዳንዱ እይታ 1.00 ETB ወደ አካውንትዎ ይጨመራል</p>
-                    <button class="action-btn" id="watch-btn">ማስታወቂያ ይመልከቱ</button>
+                <div class="main-amount" id="ui-main-balance">0.00 ETB</div>
+                <div class="lifetime-pill">
+                    <i class="fas fa-chart-line"></i> Lifetime: <span id="ui-lifetime-bal">0.00 ETB</span>
+                </div>
+                <div class="card-actions-grid">
+                    <button class="btn-green" onclick="switchTab('profile-page')">
+                        <i class="far fa-credit-card"></i> ወጪ አድርግ
+                    </button>
+                    <button class="btn-secondary" onclick="alert('ምንም የታሪክ መረጃ የለም።')">
+                        <i class="fas fa-scroll"></i> ታሪክ
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid-two">
+                <div class="stat-box">
+                    <div class="title">ጠቅላላ የተገኘ</div>
+                    <div class="val" id="ui-total-earned">0.00 ETB</div>
+                </div>
+                <div class="stat-box">
+                    <div class="title">የዛሬ ማስታወቂያ</div>
+                    <div class="val" id="ui-today-ads">0</div>
                 </div>
             </div>
 
-            <div id="tasks-page" class="page">
-                <div class="earning-wallet-card">
-                    <h3>Earning Wallet</h3>
-                    <h2 style="color: var(--primary-color); margin: 10px 0;"><span id="wallet-bal">0.00</span> ETB</h2>
-                    <small>ወደ ዋናው ሂሳብ ለማስተላለፍ ቢያንስ 50 ETB ያስፈልጋል።</small>
-                    <button class="action-btn" id="transfer-btn">ወደ ዋና ሂሳብ አዛውር</button>
+            <div class="stats-grid-two">
+                <div class="stat-box">
+                    <div class="title">ግብዣዎች</div>
+                    <div class="val" id="ui-referrals">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="title">ወጪ የተደረገ</div>
+                    <div class="val" id="ui-withdrawn">0.00 ETB</div>
                 </div>
             </div>
 
-            <div id="profile-page" class="page">
-                <div class="task-container">
-                    <h3>ጓደኞችህን ጋብዝ</h3>
-                    <p>በእያንዳንዱ ሰው 5.00 ETB ያግኙ</p>
-                    <input type="text" id="ref-link" readonly value="https://t.me/your_bot">
-                    <button class="action-btn" id="copy-btn">ሊንኩን ኮፒ አድርግ</button>
+            <div class="chart-block">
+                <div class="chart-block-header">የ 7 ቀናት ገቢ</div>
+                <div class="day-labels-row">
+                    <span>ሰኞ</span><span>ማክሰኞ</span><span>ረቡዕ</span><span>ሐሙስ</span><span>አርብ</span><span>ቅዳሜ</span><span>እሁድ</span>
                 </div>
             </div>
-        </main>
 
-        <nav class="bottom-nav">
-            <button class="nav-btn active" data-page="home-page"><i class="fas fa-home"></i><span>መነሻ</span></button>
-            <button class="nav-btn" data-page="tasks-page"><i class="fas fa-tasks"></i><span>ገንዘብ ማስተላለፊያ</span></button>
-            <button class="nav-btn" data-page="profile-page"><i class="fas fa-user"></i><span>መገለጫ</span></button>
-        </nav>
+            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ ነገሮች ይቀመጣሉ -->
+            <div id="injected-home-content"></div>
+        </div>
+
+        <!-- TASKS PAGE -->
+        <div id="tasks-page" class="page">
+            <div class="section-card">
+                <h3>ተግባራት (Tasks)</h3>
+                <p>ተጨማሪ ETB ለማግኘት ተግባራትን ያጠናቁ</p>
+                <div style="font-size: 0.8rem; font-weight: 700; color: #fff;">
+                    የዛሬ ማስታወቂያ፦ <span id="tasks-ad-counter">0</span> / 30
+                </div>
+            </div>
+
+            <div class="section-card">
+                <span class="balance-label">Earning Wallet</span>
+                <div class="main-amount" style="font-size: 1.7rem; margin: 6px 0;" id="ui-wallet-balance">0.00 ETB</div>
+                <p style="margin-bottom: 0;">ከማስታወቂያዎችና ከተግባራት የተገኘ</p>
+            </div>
+
+            <div class="section-card">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px;">
+                    <span>➜ ወደ ዋናው ሂሳብ አዛውር</span>
+                    <span id="ui-wallet-progress">0.00 / 10 ETB</span>
+                </div>
+                <button class="btn-secondary" style="width: 100%; justify-content: center;" id="move-wallet-btn">
+                    ለመክፈት 10.00 ETB ተጨማሪ ያግኙ
+                </button>
+                <small style="display: block; text-align: center; color: var(--text-muted); margin-top: 8px;">ዝቅተኛው፦ 10 ETB</small>
+            </div>
+
+            <div class="section-card">
+                <h3>ማስታወቂያ አይተው ያግኙ</h3>
+                <p>ለአንድ ማስታወቂያ 0.40 ETB</p>
+                <div class="task-action-box">
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.85rem;">Watch Ads and Earn</div>
+                        <small style="color: var(--text-muted);">በእያንዳንዱ እይታ 0.40 ETB</small>
+                    </div>
+                    <span class="badge-ready">ዝግጁ</span>
+                </div>
+                <button class="btn-green" style="width: 100%;" id="watch-ads-btn">
+                    <i class="fas fa-play"></i> ማስታወቂያ እይ
+                </button>
+            </div>
+
+            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ አዳዲስ Tasks ይቀመጣሉ -->
+            <div id="injected-tasks-content"></div>
+        </div>
+
+        <!-- RANKS PAGE -->
+        <div id="ranks-page" class="page">
+            <div class="section-card" style="text-align: center; padding: 40px 20px;">
+                <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">የደረጃ ሰንጠረዥ (Leaderboard)</h2>
+                <p>ከፍተኛ ገቢ ያገኙ ተጠቃሚዎች በቅርቡ እዚህ ይዘረዘራሉ!</p>
+            </div>
+            <!-- እዚህ ቦታ ላይ በ Injector የተጨመሩ Ranks ይቀመጣሉ -->
+            <div id="injected-ranks-content"></div>
+        </div>
+
+        <!-- PROFILE / WITHDRAW PAGE -->
+        <div id="profile-page" class="page">
+            <div class="section-card">
+                <span class="balance-label">ያለዎት ሂሳብ (Available Balance)</span>
+                <div class="main-amount" style="font-size: 1.8rem; margin: 4px 0;" id="profile-available-bal">0.00 ETB</div>
+                <div class="lifetime-pill" style="margin-bottom: 0;">
+                    <i class="fas fa-chart-line"></i> Lifetime: <span id="profile-lifetime-bal">0.00 ETB</span>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span class="balance-label">SNI Balance</span>
+                    <span style="font-weight: 800; font-size: 1.1rem;">0</span>
+                </div>
+                <div class="stats-grid-two" style="margin-bottom: 8px;">
+                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <small style="color: var(--text-muted); display: block;">ጠቅላላ የተገኘ</small>
+                        <b style="font-size: 0.95rem;">0 Sni</b>
+                    </div>
+                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <small style="color: var(--text-muted); display: block;">የተጫወቱት ጨዋታ</small>
+                        <b style="font-size: 0.95rem;">0</b>
+                    </div>
+                </div>
+                <small style="color: var(--text-muted); display: block; text-align: center;">Sni ን ወደ ETB በ Earn ገጽ ይቀይሩ</small>
+            </div>
+
+            <div class="section-card">
+                <h3>ይጋብዙ እና ያግኙ</h3>
+                <p>ሊንክዎን ያጋሩና በእያንዳንዱ ትክክለኛ ግብዣ 3.00 ETB ያግኙ።</p>
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/alpha_ads_earn_bot/app?start=8797798511">
+                    <button class="btn-secondary" style="padding: 0 14px;" onclick="copyRef()"><i class="far fa-copy"></i></button>
+                </div>
+                <div class="stats-grid-two" style="margin-bottom: 0;">
+                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <span style="color: var(--accent-green); font-size: 0.72rem; font-weight: 800;">VALID REFERRALS</span>
+                        <div style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">0 <small style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">paid</small></div>
+                    </div>
+                    <div style="background: var(--card-inner); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <span style="color: #f39c12; font-size: 0.72rem; font-weight: 800;">PENDING</span>
+                        <div style="font-size: 1.1rem; font-weight: 800; margin-top: 4px;">0 <small style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">invalid/unpaid</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h3>ገንዘብ ማውጫ (Withdraw Funds)</h3>
+                <p style="margin-bottom: 4px; color: #ff5252; font-size: 0.78rem;">📍 ገንዘብ ለማውጣት ቢያንስ 5 ግብዣ ያስፈልጋል።</p>
+                <p style="margin-bottom: 14px; color: #ff5252; font-size: 0.78rem;">📺 ገንዘብ ለማውጣት ቢያንስ 20 ማስታወቂያ ማየት ያስፈልጋል።</p>
+
+                <div class="form-group">
+                    <label>የመክፈያ ዘዴ</label>
+                    <select class="form-select" id="withdraw-method">
+                        <option value="Telebirr">Telebirr</option>
+                        <option value="CBE Birr">CBE Birr</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>የአካውንት / የስልክ ቁጥር</label>
+                    <input type="text" class="form-input" id="withdraw-account" placeholder="የቴሌብር ቁጥርዎን ያስገቡ">
+                </div>
+
+                <div class="form-group">
+                    <label>የብር መጠን (ETB)</label>
+                    <div class="input-with-max">
+                        <input type="number" class="form-input" id="withdraw-amount" placeholder="0.00">
+                        <button class="max-btn" id="max-btn">MAX</button>
+                    </div>
+                </div>
+
+                <button class="btn-green" style="width: 100%; margin-top: 8px;" id="process-withdraw-btn">ወጪ አድርግ (Process Withdrawal)</button>
+                <small style="display: block; text-align: center; color: var(--text-muted); margin-top: 8px;">በ 24-48 የሥራ ሰዓታት ውስጥ ይላካል።</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Tabs -->
+    <nav class="bottom-bar">
+        <button class="tab-btn active" onclick="switchTab('home-page', this)"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="tab-btn" onclick="switchTab('tasks-page', this)"><i class="fas fa-clipboard-list"></i><span>Tasks</span></button>
+        <button class="tab-btn" onclick="switchTab('ranks-page', this)"><i class="fas fa-chart-bar"></i><span>Ranks</span></button>
+        <button class="tab-btn" onclick="switchTab('profile-page', this)"><i class="fas fa-user"></i><span>Profile</span></button>
+    </nav>
+
+    <!-- ADMIN CODE INJECTOR (የአድሚን ኮድ ማስገቢያ) -->
+    <div class="modal-overlay" id="admin-modal">
+        <div class="injector-card">
+            <h2>
+                <span><i class="fas fa-terminal"></i> Code Injector</span>
+                <i class="fas fa-times" style="cursor: pointer;" onclick="closeAdmin()"></i>
+            </h2>
+            <p style="font-size: 0.78rem; color: var(--text-muted);">
+                እዚህ ጋር HTML ወይም JavaScript ኮድ አስገባ። ያስገባኸው ኮድ በቋሚነት በስልኩ ማህደረ-ትውስታ ውስጥ ይቀመጣል፤ ፔጁ Reload ቢሆንም አይጠፋም።
+            </p>
+            <textarea id="injector-input" placeholder="<div class='section-card'><h3>አዲስ ተግባር</h3><p>ይህ በኮድ የተጨመረ ነው</p></div>"></textarea>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-green" style="flex: 1;" onclick="applyInjectedCode()">Apply & Save</button>
+                <button class="btn-secondary" onclick="clearInjectedCode()">አጥፋ (Reset)</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        let progress = 0;
-        const progressEl = document.getElementById('loading-progress');
+        let currentUsername = "@Niro_X12";
 
-        const interval = setInterval(() => {
-            progress += 25;
-            if (progressEl) progressEl.textContent = progress + '%';
-            if (progress >= 100) {
-                clearInterval(interval);
-                document.getElementById('app-loader').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
+        let appData = {
+            mainBalance: 0.00,
+            earningWallet: 0.00,
+            lifetime: 0.00,
+            todayAds: 0,
+            referrals: 0,
+            withdrawn: 0.00
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (tg) {
+                try { tg.ready(); tg.expand(); } catch (e) {}
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    const u = tg.initDataUnsafe.user;
+                    if (u.username) currentUsername = "@" + u.username;
+                    document.getElementById('display-username').textContent = `∇${currentUsername.replace('@','')}∇ $`;
+                    document.getElementById('ref-share-url').value = `https://t.me/alpha_ads_earn_bot/app?start=${u.id}`;
+                }
             }
-        }, 150);
 
-        if (tg) {
-            try { tg.ready(); tg.expand(); } catch(e){}
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const u = tg.initDataUnsafe.user;
-                document.getElementById('user-name').textContent = u.first_name || 'ተጠቃሚ';
-                if (u.photo_url) document.getElementById('user-photo').src = u.photo_url;
-                document.getElementById('ref-link').value = `https://t.me/Crypto_Topup_F_bot?start=${u.id}`;
+            const savedState = localStorage.getItem('lucy_app_data');
+            if (savedState) {
+                try { appData = Object.assign(appData, JSON.parse(savedState)); } catch(e){}
             }
-        }
 
-        let balance = parseFloat(localStorage.getItem('user_balance') || '0');
-        let wallet = parseFloat(localStorage.getItem('user_wallet') || '0');
-        let adsCount = parseInt(localStorage.getItem('user_ads') || '0');
+            updateDisplays();
+            loadStoredInjectedCode();
 
-        function updateUI() {
-            document.getElementById('user-balance').textContent = balance.toFixed(2);
-            document.getElementById('wallet-bal').textContent = wallet.toFixed(2);
-            document.getElementById('daily-ads').textContent = `${adsCount} / 15`;
-            document.getElementById('total-ads').textContent = adsCount;
-            document.getElementById('total-income').textContent = (balance + wallet).toFixed(2);
-        }
-        updateUI();
+            // የጊር (⚙️) ምልክት ሲነካ አድሚን ከሆነ Code Injector ይከፈታል
+            document.getElementById('gear-btn').addEventListener('click', () => {
+                const cleanUser = currentUsername.toLowerCase().replace('@', '');
+                if (cleanUser === 'niro_x12') {
+                    document.getElementById('admin-modal').style.display = 'flex';
+                } else {
+                    alert('ቅንብሮች፦ Lucy Earning ስሪት 1.0.4');
+                }
+            });
 
-        document.getElementById('watch-btn').addEventListener('click', () => {
-            if (adsCount >= 15) { alert('የዛሬውን ገደብ ጨርሰዋል!'); return; }
-            alert('ማስታወቂያ ተመልክተዋል! 1.00 ETB ወደ ቦርሳህ ተጨምሯል።');
-            wallet += 1.0;
-            adsCount += 1;
-            localStorage.setItem('user_wallet', wallet);
-            localStorage.setItem('user_ads', adsCount);
-            updateUI();
-        });
+            // ማስታወቂያ እይታ
+            document.getElementById('watch-ads-btn').addEventListener('click', () => {
+                if (appData.todayAds >= 30) {
+                    alert("የዛሬውን 30 ማስታወቂያዎች አይተው ጨርሰዋል!");
+                    return;
+                }
+                appData.todayAds++;
+                appData.earningWallet += 0.40;
+                appData.lifetime += 0.40;
+                saveAppData();
+                updateDisplays();
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                alert("+0.40 ETB ወደ ቦርሳዎ ገብቷል!");
+            });
 
-        document.getElementById('transfer-btn').addEventListener('click', () => {
-            if (wallet < 50) { alert('ቢያንስ 50 ETB ያስፈልጋል!'); return; }
-            balance += wallet;
-            wallet = 0;
-            localStorage.setItem('user_balance', balance);
-            localStorage.setItem('user_wallet', 0);
-            alert('ገንዘቡ በተሳካ ሁኔታ ተዛውሯል!');
-            updateUI();
-        });
+            // ገንዘብ ማዛወሪያ
+            document.getElementById('move-wallet-btn').addEventListener('click', () => {
+                if (appData.earningWallet < 10) {
+                    alert("ለማዛወር በቦርሳዎ ውስጥ ቢያንስ 10.00 ETB ያስፈልጋል!");
+                    return;
+                }
+                appData.mainBalance += appData.earningWallet;
+                appData.earningWallet = 0;
+                saveAppData();
+                updateDisplays();
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
+            });
 
-        document.getElementById('copy-btn').addEventListener('click', () => {
-            const input = document.getElementById('ref-link');
-            input.select();
-            navigator.clipboard.writeText(input.value);
-            alert('የግብዣ ሊንክ ተገልብጧል!');
-        });
+            // MAX በተን
+            document.getElementById('max-btn').addEventListener('click', () => {
+                document.getElementById('withdraw-amount').value = appData.mainBalance.toFixed(2);
+            });
 
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.page).classList.add('active');
+            // ወጪ የማድረጊያ ጥያቄ
+            document.getElementById('process-withdraw-btn').addEventListener('click', () => {
+                const amt = parseFloat(document.getElementById('withdraw-amount').value);
+                const acc = document.getElementById('withdraw-account').value.trim();
+                if (!acc) { alert("እባክዎ ትክክለኛ የአካውንት/ስልክ ቁጥር ያስገቡ!"); return; }
+                if (isNaN(amt) || amt <= 0) { alert("እባክዎ ትክክለኛ የብር መጠን ያስገቡ!"); return; }
+                if (amt > appData.mainBalance) { alert("በቂ ሂሳብ የለዎትም!"); return; }
+                if (appData.referrals < 5) { alert("ገንዘብ ለማውጣት ቢያንስ 5 ሰዎች መጋበዝ አለብዎት!"); return; }
+                if (appData.todayAds < 20) { alert("ገንዘብ ለማውጣት ቢያንስ 20 ማስታወቂያዎችን መመልከት አለብዎት!"); return; }
+
+                appData.mainBalance -= amt;
+                appData.withdrawn += amt;
+                saveAppData();
+                updateDisplays();
+                document.getElementById('withdraw-amount').value = "";
+                document.getElementById('withdraw-account').value = "";
+                alert("የማውጣት ጥያቄዎ በተሳካ ሁኔታ ገብቷል! በ 24-48 ሰዓት ውስጥ ይላካል።");
             });
         });
-    });
+
+        function saveAppData() {
+            localStorage.setItem('lucy_app_data', JSON.stringify(appData));
+        }
+
+        function updateDisplays() {
+            document.getElementById('ui-main-balance').textContent = `${appData.mainBalance.toFixed(2)} ETB`;
+            document.getElementById('profile-available-bal').textContent = `${appData.mainBalance.toFixed(2)} ETB`;
+            document.getElementById('ui-lifetime-bal').textContent = `${appData.lifetime.toFixed(2)} ETB`;
+            document.getElementById('profile-lifetime-bal').textContent = `${appData.lifetime.toFixed(2)} ETB`;
+            document.getElementById('ui-total-earned').textContent = `${appData.lifetime.toFixed(2)} ETB`;
+            document.getElementById('ui-today-ads').textContent = appData.todayAds;
+            document.getElementById('tasks-ad-counter').textContent = appData.todayAds;
+            document.getElementById('ui-referrals').textContent = appData.referrals;
+            document.getElementById('ui-withdrawn').textContent = `${appData.withdrawn.toFixed(2)} ETB`;
+            document.getElementById('ui-wallet-balance').textContent = `${appData.earningWallet.toFixed(2)} ETB`;
+            document.getElementById('ui-wallet-progress').textContent = `${appData.earningWallet.toFixed(2)} / 10 ETB`;
+
+            const moveBtn = document.getElementById('move-wallet-btn');
+            if (appData.earningWallet >= 10) {
+                moveBtn.textContent = "ወደ ዋናው ሂሳብ አዛውር";
+                moveBtn.style.background = "var(--accent-green)";
+            } else {
+                const diff = (10 - appData.earningWallet).toFixed(2);
+                moveBtn.textContent = `ለመክፈት ${diff} ETB ተጨማሪ ያግኙ`;
+                moveBtn.style.background = "var(--card-inner)";
+            }
+        }
+
+        function switchTab(pageId, tabElement) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active');
+            if (tabElement) {
+                tabElement.classList.add('active');
+            } else {
+                const matchTab = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick')?.includes(pageId));
+                if (matchTab) matchTab.classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function copyRef() {
+            const input = document.getElementById('ref-share-url');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert('የግብዣ ሊንኩ ተገልብጧል!');
+        }
+
+        // Code Injector አስተዳዳሪ ተግባራት
+        function closeAdmin() {
+            document.getElementById('admin-modal').style.display = 'none';
+        }
+
+        function applyInjectedCode() {
+            const code = document.getElementById('injector-input').value.trim();
+            if (!code) { alert('እባክዎ በመጀመሪያ ኮድ ያስገቡ!'); return; }
+
+            let storedCodes = [];
+            try { storedCodes = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]'); } catch(e){}
+            storedCodes.push(code);
+            localStorage.setItem('lucy_injected_scripts', JSON.stringify(storedCodes));
+
+            executeSnippet(code);
+            document.getElementById('injector-input').value = "";
+            closeAdmin();
+            alert("ኮዱ በተሳካ ሁኔታ ገብቷል እና ተቀምጧል!");
+        }
+
+        function loadStoredInjectedCode() {
+            let storedCodes = [];
+            try { storedCodes = JSON.parse(localStorage.getItem('lucy_injected_scripts') || '[]'); } catch(e){}
+            storedCodes.forEach(code => executeSnippet(code));
+        }
+
+        function clearInjectedCode() {
+            if (confirm("የገቡትን ኮዶች በሙሉ ማጥፋት ይፈልጋሉ?")) {
+                localStorage.removeItem('lucy_injected_scripts');
+                alert("ኮዶች ተሰርዘዋል! ገጹ እንደገና እየጀመረ ነው...");
+                window.location.reload();
+            }
+        }
+
+        function executeSnippet(snippet) {
+            try {
+                if (snippet.startsWith("<script>") || (!snippet.startsWith("<") && snippet.includes(";"))) {
+                    const cleanJs = snippet.replace(/<\/?script>/gi, '');
+                    const runFunction = new Function(cleanJs);
+                    runFunction();
+                } else {
+                    const container = document.getElementById('injected-tasks-content');
+                    if (container) {
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = snippet;
+                        container.appendChild(wrapper);
+                    }
+                }
+            } catch (err) {
+                console.error("Injector Error: ", err);
+            }
+        }
     </script>
 </body>
 </html>
