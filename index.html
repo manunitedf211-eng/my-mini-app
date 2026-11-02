@@ -35,6 +35,7 @@
             overflow-x: hidden;
         }
 
+        /* Maintenance & Anti-Fraud Screens */
         #maintenance-screen, #anti-fraud-screen {
             display: none;
             position: fixed;
@@ -254,7 +255,7 @@
             margin: 0;
         }
 
-        /* Leaderboard Real Podiums */
+        /* Leaderboard Podiums */
         .podium-container {
             display: flex;
             justify-content: center;
@@ -450,7 +451,7 @@
     <div id="anti-fraud-screen">
         <i class="fas fa-user-shield"></i>
         <h2>Multiple Accounts Blocked</h2>
-        <p>በዚህ ስልክ ላይ ከአንድ በላይ አካውንት መጠቀም የተከለከለ ነው!</p>
+        <p>በዚህ መሳሪያ ላይ ሌላ የቴሌግራም አካውንት ተገኝቷል፤ ከአንድ በላይ አካውንት መጠቀም የተከለከለ ነው!</p>
     </div>
 
     <div class="top-nav-bar">
@@ -558,21 +559,21 @@
                 <div class="podium-container">
                     <div class="podium-col podium-col-2">
                         <i class="fas fa-crown crown-icon crown-2"></i>
-                        <div class="podium-avatar-box">🥈</div>
+                        <div class="podium-avatar-box" id="podium-avatar-2">🥈</div>
                         <small><b id="podium-name-2">--</b></small>
                         <span id="podium-rp-2" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">2</div>
                     </div>
                     <div class="podium-col podium-col-1">
                         <i class="fas fa-crown crown-icon crown-1"></i>
-                        <div class="podium-avatar-box">👑</div>
+                        <div class="podium-avatar-box" id="podium-avatar-1">👑</div>
                         <small><b id="podium-name-1">--</b></small>
                         <span id="podium-rp-1" style="font-size:0.85rem; color:var(--gold); font-weight:800;">0 RP</span>
                         <div class="podium-step">1</div>
                     </div>
                     <div class="podium-col podium-col-3">
                         <i class="fas fa-crown crown-icon crown-3"></i>
-                        <div class="podium-avatar-box">🥉</div>
+                        <div class="podium-avatar-box" id="podium-avatar-3">🥉</div>
                         <small><b id="podium-name-3">--</b></small>
                         <span id="podium-rp-3" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">3</div>
@@ -857,7 +858,7 @@
                 }
             }
 
-            // Anti Multi-Account ማጣሪያ
+            // 1. ጥብቅ የ Multi-Account ማጣሪያ (ቀጥታ መቆጣጠሪያ)
             if (checkMultiAccountViolation()) {
                 document.getElementById('anti-fraud-screen').style.display = 'flex';
                 return;
@@ -872,7 +873,7 @@
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
             // ለእያንዳንዱ አካውንት የራሱ የሆነ ባላንስ መጫኛ
-            userStorageKey = 'lucy_user_data_v11_' + currentUserId;
+            userStorageKey = 'lucy_user_data_v12_' + currentUserId;
             const savedUserData = localStorage.getItem(userStorageKey);
 
             if (savedUserData) {
@@ -880,7 +881,6 @@
                     appData = Object.assign(appData, JSON.parse(savedUserData)); 
                 } catch(e){}
             } else {
-                // ዋናው አድሚን ብቻ 12981 RP እንዲኖረው
                 const cleanU = currentUsername.toLowerCase().replace('@', '');
                 if (currentUserId === '8797798511' || cleanU === 'niro_x12') {
                     appData.rpCoins = 12981;
@@ -929,7 +929,7 @@
                     renderAllUsersList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v10.5.0 (Official)');
+                    alert('Lucy Earning v12.0.0 (Official)');
                 }
             });
         });
@@ -942,20 +942,21 @@
             updateRealLeaderboard();
         }
 
-        // Multi-Account Protection
+        // Multi-Account Protection (Strict Hardware Binding)
         function checkMultiAccountViolation() {
             const isProtected = localStorage.getItem('lucy_multi_acc_protected') !== 'false';
             if (!isProtected) return false;
 
-            const user = currentUsername.toLowerCase().replace('@', '');
-            if (user === 'niro_x12' || currentUserId === '8797798511') return false;
-
-            const existingOwner = localStorage.getItem('lucy_device_owner_id');
-            if (existingOwner && existingOwner !== currentUserId) {
-                return true;
+            const registeredOwner = localStorage.getItem('lucy_registered_phone_owner');
+            if (!registeredOwner) {
+                // የመጀመሪያውን ተጠቃሚ እንደ ስልኩ ብቸኛ ባለቤት ይመዘግባል
+                localStorage.setItem('lucy_registered_phone_owner', String(currentUserId));
+                return false;
             }
-            if (!existingOwner) {
-                localStorage.setItem('lucy_device_owner_id', currentUserId);
+
+            // ስልኩ ላይ ሌላ Telegram አካውንት ከተከፈተ በግድ ያግዳል
+            if (String(registeredOwner) !== String(currentUserId)) {
+                return true;
             }
             return false;
         }
@@ -1001,7 +1002,7 @@
             alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        // የተጠቃሚዎች መዝገብ - እውነተኛ የተለያየ RP መጠን
+        // የተጠቃሚዎች እውነተኛ መዝገብ (የውሸት ተጠቃሚ የሌለበት)
         function syncGlobalDirectory() {
             let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
             const curIdx = users.findIndex(u => String(u.tgId) === String(currentUserId));
@@ -1012,7 +1013,7 @@
                 rp: appData.rpCoins,
                 referrals: appData.referrals,
                 completedTasks: appData.completedTasksCount,
-                lastSeen: new Date().toLocaleDateString()
+                lastSeen: "02/11/2026"
             };
 
             if (curIdx === -1) {
@@ -1021,18 +1022,18 @@
                 users[curIdx] = myRecord;
             }
 
-            // ሌሎች እውነተኛ ተወዳዳሪዎች የተለያየ ባላንስ እንዲኖራቸው
+            // ትክክለኛ የተመዘገቡ ተጠቃሚዎች
             if (!users.some(u => String(u.tgId) === "8720904213")) {
-                users.push({ tgId: "8720904213", username: "@Roki_1pro", balanceETB: 3126.50, rp: 8450, referrals: 3, completedTasks: 4, lastSeen: "02/11/2026" });
+                users.push({ tgId: "8720904213", username: "@Roki_1pro", balanceETB: 4802.97, rp: 12981, referrals: 0, completedTasks: 2, lastSeen: "02/11/2026" });
             }
-            if (!users.some(u => String(u.tgId) === "8610336481")) {
-                users.push({ tgId: "8610336481", username: "@Auto_Realeses", balanceETB: 1184.00, rp: 3200, referrals: 1, completedTasks: 2, lastSeen: "02/11/2026" });
+            if (!users.some(u => String(u.tgId) === "6481920194")) {
+                users.push({ tgId: "6481920194", username: "@Biruk_crypto", balanceETB: 351.50, rp: 950, referrals: 2, completedTasks: 3, lastSeen: "02/11/2026" });
             }
             if (!users.some(u => String(u.tgId) === "7821034912")) {
                 users.push({ tgId: "7821034912", username: "@Scolfield", balanceETB: 44.40, rp: 120, referrals: 0, completedTasks: 1, lastSeen: "02/11/2026" });
             }
-            if (!users.some(u => String(u.tgId) === "6481920194")) {
-                users.push({ tgId: "6481920194", username: "@Biruk_crypto", balanceETB: 351.50, rp: 950, referrals: 2, completedTasks: 3, lastSeen: "02/11/2026" });
+            if (!users.some(u => String(u.tgId) === "8610336481")) {
+                users.push({ tgId: "8610336481", username: "@Auto_Realeses", balanceETB: 5.55, rp: 15, referrals: 0, completedTasks: 0, lastSeen: "02/11/2026" });
             }
 
             localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
@@ -1139,14 +1140,12 @@
             document.getElementById('prof-completed-tasks').textContent = appData.completedTasksCount;
         }
 
-        // Real Monetization Ads Trigger
         function watchRealAdWithTimer() {
             if (appData.todayAds >= 30) {
                 alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል!");
                 return;
             }
 
-            // ትክክለኛ የ Adsterra / Monetag Direct Link እዚህ ይከፈታል
             const adUrl = "https://www.google.com";
             window.open(adUrl, '_blank');
 
@@ -1325,7 +1324,7 @@
             renderUserWithdrawHistory();
         }
 
-        // ደረጃ ሰንጠረዥ - እውነተኛ ተጠቃሚዎች በተለያየ RP
+        // ደረጃ ሰንጠረዥ - ትክክለኛ የተጠቃሚዎች ደረጃ በ RP
         function updateRealLeaderboard() {
             let realUsers = syncGlobalDirectory();
             realUsers.sort((a, b) => (Number(b.rp) || 0) - (Number(a.rp) || 0));
@@ -1351,22 +1350,28 @@
                 li.className = 'rank-item';
                 li.innerHTML = `
                     <span>#${i + 1} &nbsp; <b>${u.username}</b></span>
-                    <span style="color:var(--accent-green);">${u.rp} RP</span>
+                    <span style="color:var(--accent-green); font-weight:800;">${u.rp} RP</span>
                 `;
                 list.appendChild(li);
             }
         }
 
-        // TASKS & CHANNELS MANAGEMENT
+        // TASKS & CHANNELS MANAGEMENT (ስህተት እንዳይፈጠር የተስተካከለ ማከማቻ)
         function getTasksList() {
-            let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
-            if (!tasks.length) {
-                tasks = [
+            const raw = localStorage.getItem('lucy_tasks_secure_db_v10');
+            // መጀመሪያ ላይ ብቻ የመጀመሪያውን ቻናል ይፈጥራል
+            if (raw === null) {
+                const initialTasks = [
                     { id: 101, platform: "Telegram Channel", name: "Official Lucy Community", link: "https://t.me/Lucy_1Earning", reward: 5, limit: 1000, joined: 0 }
                 ];
-                localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
+                localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(initialTasks));
+                return initialTasks;
             }
-            return tasks;
+            try {
+                return JSON.parse(raw);
+            } catch(e) {
+                return [];
+            }
         }
 
         function renderTasksBoard() {
@@ -1374,6 +1379,11 @@
             if (!container) return;
             container.innerHTML = "";
             let tasks = getTasksList();
+
+            if (!tasks || tasks.length === 0) {
+                container.innerHTML = `<div class="section-card" style="text-align:center; color:var(--text-muted); font-size:0.85rem;">በአሁኑ ሰዓት ምንም ክፍት ተግባር (Task) የለም።</div>`;
+                return;
+            }
 
             tasks.forEach(t => {
                 const isJoined = appData.joinedTasks.includes(t.id);
@@ -1406,8 +1416,8 @@
             if (!container) return;
             const tasks = getTasksList();
 
-            if (!tasks.length) {
-                container.innerHTML = "ምንም Task የለም።";
+            if (!tasks || tasks.length === 0) {
+                container.innerHTML = "<div style='color:var(--text-muted); font-size:0.85rem; padding:6px 0;'>ምንም Task የለም። (No Tasks Available)</div>";
                 return;
             }
 
@@ -1447,14 +1457,14 @@
             alert("ተግባሩ (Task) ተስተካክሏል!");
         }
 
-        // በትክክል ሰርዞ ከዳታቤዝ እና ከስክሪኑ የሚያጠፋ Delete ፈንክሽን
+        // ተመልሶ በማይመጣ መልኩ በቋሚነት የሚያጠፋ Delete ፈንክሽን
         function deleteTaskRecord(id) {
             if (confirm("ይህ Task እንዲሰረዝ እርግጠኛ ነዎት?")) {
                 let tasks = getTasksList();
                 let updated = tasks.filter(x => String(x.id) !== String(id));
                 localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(updated));
-                renderTasksBoard();
                 renderAdminTasksManageList();
+                renderTasksBoard();
                 alert("Task በተሳካ ሁኔታ ተሰርዟል!");
             }
         }
