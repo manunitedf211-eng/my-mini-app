@@ -255,7 +255,7 @@
             margin: 0;
         }
 
-        /* Leaderboard Podiums */
+        /* Leaderboard Real Podiums */
         .podium-container {
             display: flex;
             justify-content: center;
@@ -451,7 +451,7 @@
     <div id="anti-fraud-screen">
         <i class="fas fa-user-shield"></i>
         <h2>Multiple Accounts Blocked</h2>
-        <p>በዚህ መሳሪያ ላይ ሌላ የቴሌግራም አካውንት ተገኝቷል፤ ከአንድ በላይ አካውንት መጠቀም የተከለከለ ነው!</p>
+        <p>በዚህ ስልክ ላይ ከአንድ በላይ አካውንት መጠቀም የተከለከለ ነው!</p>
     </div>
 
     <div class="top-nav-bar">
@@ -829,7 +829,6 @@
             }
         };
 
-        // ለእያንዳንዱ አካውንት የተለየ የዳታ ቁልፍ
         let userStorageKey = "";
         let appData = {
             mainBalanceETB: 0.00,
@@ -858,7 +857,7 @@
                 }
             }
 
-            // 1. ጥብቅ የ Multi-Account ማጣሪያ (ቀጥታ መቆጣጠሪያ)
+            // 1. ጥብቅ Multi-Account ክልከላ
             if (checkMultiAccountViolation()) {
                 document.getElementById('anti-fraud-screen').style.display = 'flex';
                 return;
@@ -872,8 +871,8 @@
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
-            // ለእያንዳንዱ አካውንት የራሱ የሆነ ባላንስ መጫኛ
-            userStorageKey = 'lucy_user_data_v12_' + currentUserId;
+            // ለእያንዳንዱ አካውንት የተለየ ዳታ መጫን
+            userStorageKey = 'lucy_clean_user_' + currentUserId;
             const savedUserData = localStorage.getItem(userStorageKey);
 
             if (savedUserData) {
@@ -898,7 +897,7 @@
                 saveState();
             }
 
-            // ሪፈራል በሊንክ ከመጣ
+            // ሪፈራል
             const urlParams = new URLSearchParams(window.location.search);
             const refsFromBot = parseInt(urlParams.get('refs'));
             const bonusFromBot = parseFloat(urlParams.get('bonus'));
@@ -929,7 +928,7 @@
                     renderAllUsersList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v12.0.0 (Official)');
+                    alert('Lucy Earning v12.5.0 (Official)');
                 }
             });
         });
@@ -942,19 +941,17 @@
             updateRealLeaderboard();
         }
 
-        // Multi-Account Protection (Strict Hardware Binding)
+        // Multi-Account Protection ማጣሪያ
         function checkMultiAccountViolation() {
             const isProtected = localStorage.getItem('lucy_multi_acc_protected') !== 'false';
             if (!isProtected) return false;
 
             const registeredOwner = localStorage.getItem('lucy_registered_phone_owner');
             if (!registeredOwner) {
-                // የመጀመሪያውን ተጠቃሚ እንደ ስልኩ ብቸኛ ባለቤት ይመዘግባል
                 localStorage.setItem('lucy_registered_phone_owner', String(currentUserId));
                 return false;
             }
 
-            // ስልኩ ላይ ሌላ Telegram አካውንት ከተከፈተ በግድ ያግዳል
             if (String(registeredOwner) !== String(currentUserId)) {
                 return true;
             }
@@ -1002,9 +999,16 @@
             alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        // የተጠቃሚዎች እውነተኛ መዝገብ (የውሸት ተጠቃሚ የሌለበት)
+        // 2. እውነተኛ የተጠቃሚዎች መዝገብ (የውሸት ስሞች የሌሉበት)
         function syncGlobalDirectory() {
             let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+            
+            // የድሮ የውሸት ስሞችን ማጣራት
+            users = users.filter(u => {
+                const un = (u.username || '').toLowerCase();
+                return !un.includes('biruk') && !un.includes('scolfield') && !un.includes('auto_realeses') && String(u.tgId) !== "8720904213";
+            });
+
             const curIdx = users.findIndex(u => String(u.tgId) === String(currentUserId));
             const myRecord = {
                 tgId: String(currentUserId),
@@ -1020,20 +1024,6 @@
                 users.push(myRecord);
             } else {
                 users[curIdx] = myRecord;
-            }
-
-            // ትክክለኛ የተመዘገቡ ተጠቃሚዎች
-            if (!users.some(u => String(u.tgId) === "8720904213")) {
-                users.push({ tgId: "8720904213", username: "@Roki_1pro", balanceETB: 4802.97, rp: 12981, referrals: 0, completedTasks: 2, lastSeen: "02/11/2026" });
-            }
-            if (!users.some(u => String(u.tgId) === "6481920194")) {
-                users.push({ tgId: "6481920194", username: "@Biruk_crypto", balanceETB: 351.50, rp: 950, referrals: 2, completedTasks: 3, lastSeen: "02/11/2026" });
-            }
-            if (!users.some(u => String(u.tgId) === "7821034912")) {
-                users.push({ tgId: "7821034912", username: "@Scolfield", balanceETB: 44.40, rp: 120, referrals: 0, completedTasks: 1, lastSeen: "02/11/2026" });
-            }
-            if (!users.some(u => String(u.tgId) === "8610336481")) {
-                users.push({ tgId: "8610336481", username: "@Auto_Realeses", balanceETB: 5.55, rp: 15, referrals: 0, completedTasks: 0, lastSeen: "02/11/2026" });
             }
 
             localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
@@ -1324,42 +1314,47 @@
             renderUserWithdrawHistory();
         }
 
-        // ደረጃ ሰንጠረዥ - ትክክለኛ የተጠቃሚዎች ደረጃ በ RP
+        // 3. እውነተኛ የደረጃ ሰንጠረዥ - የውሸት ሰዎችን ያጠፋ
         function updateRealLeaderboard() {
             let realUsers = syncGlobalDirectory();
             realUsers.sort((a, b) => (Number(b.rp) || 0) - (Number(a.rp) || 0));
 
-            const p1 = realUsers[0] || { username: "@Niro_X12", rp: 0 };
-            const p2 = realUsers[1] || { username: "--", rp: 0 };
-            const p3 = realUsers[2] || { username: "--", rp: 0 };
+            const p1 = realUsers[0] || { username: "@Niro_X12", rp: appData.rpCoins };
+            const p2 = realUsers[1] || null;
+            const p3 = realUsers[2] || null;
 
             document.getElementById('podium-name-1').textContent = p1.username;
             document.getElementById('podium-rp-1').textContent = `${p1.rp} RP`;
 
-            document.getElementById('podium-name-2').textContent = p2.username;
-            document.getElementById('podium-rp-2').textContent = `${p2.rp} RP`;
+            document.getElementById('podium-name-2').textContent = p2 ? p2.username : "--";
+            document.getElementById('podium-rp-2').textContent = p2 ? `${p2.rp} RP` : "0 RP";
 
-            document.getElementById('podium-name-3').textContent = p3.username;
-            document.getElementById('podium-rp-3').textContent = `${p3.rp} RP`;
+            document.getElementById('podium-name-3').textContent = p3 ? p3.username : "--";
+            document.getElementById('podium-rp-3').textContent = p3 ? `${p3.rp} RP` : "0 RP";
 
             const list = document.getElementById('ranks-list-items');
-            list.innerHTML = "";
-            for (let i = 3; i < realUsers.length; i++) {
-                const u = realUsers[i];
-                const li = document.createElement('li');
-                li.className = 'rank-item';
-                li.innerHTML = `
-                    <span>#${i + 1} &nbsp; <b>${u.username}</b></span>
-                    <span style="color:var(--accent-green); font-weight:800;">${u.rp} RP</span>
-                `;
-                list.appendChild(li);
+            if (list) {
+                list.innerHTML = "";
+                if (realUsers.length <= 3) {
+                    list.innerHTML = `<li style="text-align:center; padding:16px; color:var(--text-muted); list-style:none; font-size:0.85rem;">በአሁኑ ሰዓት ሌላ እውነተኛ ተወዳዳሪ የለም</li>`;
+                } else {
+                    for (let i = 3; i < realUsers.length; i++) {
+                        const u = realUsers[i];
+                        const li = document.createElement('li');
+                        li.className = 'rank-item';
+                        li.innerHTML = `
+                            <span>#${i + 1} &nbsp; <b>${u.username}</b></span>
+                            <span style="color:var(--accent-green); font-weight:800;">${u.rp} RP</span>
+                        `;
+                        list.appendChild(li);
+                    }
+                }
             }
         }
 
-        // TASKS & CHANNELS MANAGEMENT (ስህተት እንዳይፈጠር የተስተካከለ ማከማቻ)
+        // 4. TASKS MANAGEMENT (ተመልሶ እንዳይመጣ ተደርጎ የተስተካከለ)
         function getTasksList() {
             const raw = localStorage.getItem('lucy_tasks_secure_db_v10');
-            // መጀመሪያ ላይ ብቻ የመጀመሪያውን ቻናል ይፈጥራል
             if (raw === null) {
                 const initialTasks = [
                     { id: 101, platform: "Telegram Channel", name: "Official Lucy Community", link: "https://t.me/Lucy_1Earning", reward: 5, limit: 1000, joined: 0 }
@@ -1417,7 +1412,7 @@
             const tasks = getTasksList();
 
             if (!tasks || tasks.length === 0) {
-                container.innerHTML = "<div style='color:var(--text-muted); font-size:0.85rem; padding:6px 0;'>ምንም Task የለም። (No Tasks Available)</div>";
+                container.innerHTML = "<div style='color:var(--text-muted); font-size:0.85rem; padding:6px 0;'>ምንም Task የለም።</div>";
                 return;
             }
 
@@ -1457,7 +1452,6 @@
             alert("ተግባሩ (Task) ተስተካክሏል!");
         }
 
-        // ተመልሶ በማይመጣ መልኩ በቋሚነት የሚያጠፋ Delete ፈንክሽን
         function deleteTaskRecord(id) {
             if (confirm("ይህ Task እንዲሰረዝ እርግጠኛ ነዎት?")) {
                 let tasks = getTasksList();
@@ -1590,17 +1584,19 @@
         function applySafeInjection() {
             const code = document.getElementById('raw-injector-text').value.trim();
             if (!code) return;
-            let stored = JSON.parse(localStorage.getItem('lucy_safe_extensions_v10') || '[]');
-            stored.push(code);
-            localStorage.setItem('lucy_safe_extensions_v10', JSON.stringify(stored));
+            try {
+                eval(code.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, '$1'));
+                alert("ኮዱ በቀጥታ ተፈጽሟል!");
+            } catch(e) {
+                alert("የኮድ ስህተት: " + e.message);
+            }
             closeAdmin();
-            alert("ኮዱ ተቀምጧል!");
             document.getElementById('raw-injector-text').value = "";
         }
 
         function clearInjectedCode() {
-            localStorage.removeItem('lucy_safe_extensions_v10');
-            alert("የተሰኩ ኮዶች በሙሉ ተሰርዘዋል!");
+            localStorage.clear();
+            alert("የስልክህ ማከማቻ (Storage) በሙሉ ጸድቷል!");
             window.location.reload();
         }
 
