@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- AdsGram Official Ad Network Script -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <style>
         :root {
             --bg-color: #0b1118;
@@ -539,10 +541,14 @@
                 </button>
             </div>
 
+            <!-- MONETIZED REAL ADS SECTION -->
             <div class="section-card">
-                <h3>Watch Ads and Earn (Monetized)</h3>
-                <p data-i18n="ad_reward_desc">ለእያንዳንዱ ማስታወቂያ 0.40 ETB ወይም 1 RP ይሰጣል</p>
-                <button class="btn-green" style="width: 100%;" id="watch-ads-btn" onclick="watchRealAdWithTimer()">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <h3>Watch Ads and Earn (Monetized)</h3>
+                    <span style="font-size:0.75rem; background:rgba(0,192,103,0.15); color:var(--accent-green); padding:2px 8px; border-radius:6px; font-weight:800;">AdsGram Live</span>
+                </div>
+                <p data-i18n="ad_reward_desc">ለእያንዳንዱ ቪዲዮ ማስታወቂያ 0.40 ETB ወይም 1 RP ይሰጣል</p>
+                <button class="btn-green" style="width: 100%;" id="watch-ads-btn" onclick="watchRealAdsGramVideo()">
                     <i class="fas fa-play"></i> <span data-i18n="watch_ad">ማስታወቂያ እይ (0.40 ETB)</span>
                 </button>
             </div>
@@ -653,6 +659,17 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
                 <h3 style="color:#ffffff;">👑 Lucy የአድሚን ፓነል</h3>
                 <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem;" onclick="closeAdmin()"></i>
+            </div>
+
+            <!-- AD NETWORK (ADSGRAM) CONFIGURATION -->
+            <div class="section-card">
+                <h4>📺 AdsGram Ad Block Configuration</h4>
+                <p>በ adsgram.ai የተመዘገብክበትን የ Block ID ቁጥር እዚህ አስቀምጠው፦</p>
+                <div class="form-group">
+                    <label>AdsGram Block ID</label>
+                    <input type="text" class="form-input" id="admin-adsgram-block-id" placeholder="ምሳሌ: 1234">
+                </div>
+                <button class="btn-green" style="width:100%;" onclick="saveAdsGramConfig()">Save Block ID</button>
             </div>
 
             <div class="section-card">
@@ -769,6 +786,9 @@
         let currentUserId = "8797798511";
         let currentLang = "AM";
         const BOT_USERNAME = "Lucy_1Earning_bot";
+
+        // AdsGram Controller Reference
+        let AdController = null;
 
         const translations = {
             AM: {
@@ -911,6 +931,7 @@
                 saveState();
             }
 
+            initAdsGramSystem();
             syncGlobalDirectory();
             checkMaintenanceStatus();
             checkMultiAccountButtonState();
@@ -923,6 +944,8 @@
             document.getElementById('gear-btn').addEventListener('click', () => {
                 const user = currentUsername.toLowerCase().replace('@', '');
                 if (user === 'niro_x12' || currentUserId === '8797798511') {
+                    const blockInput = document.getElementById('admin-adsgram-block-id');
+                    if (blockInput) blockInput.value = localStorage.getItem('lucy_adsgram_block_id') || "";
                     renderAdminTasksManageList();
                     renderAdminWithdrawList();
                     renderAllUsersList();
@@ -932,6 +955,70 @@
                 }
             });
         });
+
+        // AdsGram Initialization
+        function initAdsGramSystem() {
+            const savedBlockId = localStorage.getItem('lucy_adsgram_block_id') || "YOUR_ADSGRAM_BLOCK_ID";
+            if (window.Adsgram) {
+                try {
+                    AdController = window.Adsgram.init({ blockId: savedBlockId });
+                } catch(e) {
+                    console.log("AdsGram Init Error:", e);
+                }
+            }
+        }
+
+        function saveAdsGramConfig() {
+            const blockId = document.getElementById('admin-adsgram-block-id').value.trim();
+            if (!blockId) {
+                alert("እባክዎ ትክክለኛ Block ID ያስገቡ!");
+                return;
+            }
+            localStorage.setItem('lucy_adsgram_block_id', blockId);
+            initAdsGramSystem();
+            alert("AdsGram Block ID በተሳካ ሁኔታ ተቀምጧል!");
+        }
+
+        // AdsGram Real Monetized Ad Watch Function
+        function watchRealAdsGramVideo() {
+            if (appData.todayAds >= 30) {
+                alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል! እባክዎ ነገ ይመለሱ።");
+                return;
+            }
+
+            const btn = document.getElementById('watch-ads-btn');
+
+            if (!window.Adsgram || !AdController) {
+                initAdsGramSystem();
+                if (!AdController) {
+                    alert("የማስታወቂያ አውታረ መረብ ገና አልተዘጋጀም። በአድሚን ፓነል ውስጥ Block ID ማስገባትዎን ያረጋግጡ!");
+                    return;
+                }
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ማስታወቂያ እየተጫነ ነው...`;
+
+            AdController.show().then((result) => {
+                // ተጠቃሚው ማስታወቂያውን አይቶ ሲጨርስ የሚሰጥ ክፍያ
+                appData.todayAds++;
+                appData.earningWalletETB += 0.40;
+                appData.lifetimeETB += 0.40;
+                saveState();
+                updateDisplays();
+
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-play"></i> ${translations[currentLang].watch_ad}`;
+
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                alert("🎉 እንኳን ደስ አለዎት! ማስታወቂያውን ስለተመለከቱ +0.40 ETB ወደ Earning Wallet ገብቷል!");
+            }).catch((error) => {
+                // ማስታወቂያው ሳይጨረስ ሲዘጋ ወይም ሳይገኝ ሲቀር
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-play"></i> ${translations[currentLang].watch_ad}`;
+                alert("⚠️ ማስታወቂያውን አላጠናቀቁም ወይም በአሁኑ ሰዓት ማስታወቂያ አልተገኘም። እባክዎ ጥቂት ቆይተው እንደገና ይሞክሩ።");
+            });
+        }
 
         function saveState() {
             if (userStorageKey) {
@@ -999,7 +1086,7 @@
             alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        // 2. እውነተኛ የተጠቃሚዎች መዝገብ (የውሸት ስሞች የሌሉበት)
+        // 2. እውነተኛ የተጠቃሚዎች መዝገብ
         function syncGlobalDirectory() {
             let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
             
@@ -1128,36 +1215,6 @@
             document.getElementById('ui-withdrawn').textContent = `${appData.withdrawnETB.toFixed(2)} ETB`;
             document.getElementById('ui-wallet-balance').textContent = appData.earningWalletETB.toFixed(2);
             document.getElementById('prof-completed-tasks').textContent = appData.completedTasksCount;
-        }
-
-        function watchRealAdWithTimer() {
-            if (appData.todayAds >= 30) {
-                alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል!");
-                return;
-            }
-
-            const adUrl = "https://www.google.com";
-            window.open(adUrl, '_blank');
-
-            const btn = document.getElementById('watch-ads-btn');
-            btn.disabled = true;
-            let timer = 8;
-            const interval = setInterval(() => {
-                btn.innerHTML = `<i class="fas fa-clock"></i> (${timer}s)...`;
-                timer--;
-                if (timer < 0) {
-                    clearInterval(interval);
-                    appData.todayAds++;
-                    appData.earningWalletETB += 0.40;
-                    appData.lifetimeETB += 0.40;
-                    saveState();
-                    updateDisplays();
-                    btn.disabled = false;
-                    btn.innerHTML = `<i class="fas fa-play"></i> ${translations[currentLang].watch_ad}`;
-                    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-                    alert("+0.40 ETB ወደ Earning Wallet ገብቷል!");
-                }
-            }, 1000);
         }
 
         function transferWallet() {
@@ -1314,7 +1371,7 @@
             renderUserWithdrawHistory();
         }
 
-        // 3. እውነተኛ የደረጃ ሰንጠረዥ - የውሸት ሰዎችን ያጠፋ
+        // 3. እውነተኛ የደረጃ ሰንጠረዥ
         function updateRealLeaderboard() {
             let realUsers = syncGlobalDirectory();
             realUsers.sort((a, b) => (Number(b.rp) || 0) - (Number(a.rp) || 0));
@@ -1352,7 +1409,7 @@
             }
         }
 
-        // 4. TASKS MANAGEMENT (ተመልሶ እንዳይመጣ ተደርጎ የተስተካከለ)
+        // 4. TASKS MANAGEMENT
         function getTasksList() {
             const raw = localStorage.getItem('lucy_tasks_secure_db_v10');
             if (raw === null) {
