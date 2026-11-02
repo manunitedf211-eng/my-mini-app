@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="am">
 <head>
     <meta charset="UTF-8">
@@ -35,8 +35,8 @@
             overflow-x: hidden;
         }
 
-        /* Maintenance Screen */
-        #maintenance-screen {
+        /* Maintenance & Anti-Fraud Screens */
+        #maintenance-screen, #anti-fraud-screen {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -48,9 +48,10 @@
             text-align: center;
             padding: 24px;
         }
-        #maintenance-screen i { font-size: 3.5rem; color: var(--gold); margin-bottom: 16px; }
-        #maintenance-screen h2 { font-size: 1.3rem; margin-bottom: 8px; color: #fff; }
-        #maintenance-screen p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+        #maintenance-screen i, #anti-fraud-screen i { font-size: 3.5rem; color: var(--gold); margin-bottom: 16px; }
+        #anti-fraud-screen i { color: #e74c3c; }
+        #maintenance-screen h2, #anti-fraud-screen h2 { font-size: 1.3rem; margin-bottom: 8px; color: #fff; }
+        #maintenance-screen p, #anti-fraud-screen p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
 
         .top-nav-bar {
             display: flex;
@@ -220,7 +221,7 @@
             padding: 18px 16px;
             margin-bottom: 12px;
         }
-        .section-card h3 {
+        .section-card h3, .section-card h4 {
             font-size: 1rem;
             font-weight: 800;
             color: #ffffff;
@@ -254,6 +255,7 @@
             margin: 0;
         }
 
+        /* Leaderboard Real Podiums */
         .podium-container {
             display: flex;
             justify-content: center;
@@ -267,21 +269,28 @@
             align-items: center;
             flex: 1;
         }
-        .crown-icon { font-size: 2rem; margin-bottom: 6px; }
+        .crown-icon { font-size: 1.8rem; margin-bottom: 6px; }
         .crown-1 { color: #f59e0b; }
         .crown-2 { color: #cbd5e1; }
         .crown-3 { color: #d97706; }
-        .podium-avatar {
-            width: 60px;
-            height: 60px;
+        
+        .podium-avatar-box {
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            border: 3px solid;
-            object-fit: cover;
+            background: linear-gradient(135deg, #192432, #24354a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            border: 3px solid #1f2c3d;
             margin-bottom: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
         }
-        .podium-col-1 .podium-avatar { border-color: #f59e0b; width: 78px; height: 78px; }
-        .podium-col-2 .podium-avatar { border-color: #cbd5e1; }
-        .podium-col-3 .podium-avatar { border-color: #d97706; }
+        .podium-col-1 .podium-avatar-box { border-color: #f59e0b; width: 80px; height: 80px; font-size: 2rem; }
+        .podium-col-2 .podium-avatar-box { border-color: #cbd5e1; }
+        .podium-col-3 .podium-avatar-box { border-color: #d97706; }
+
         .podium-step {
             width: 100%;
             background: var(--card-inner);
@@ -435,7 +444,14 @@
     <div id="maintenance-screen">
         <i class="fas fa-tools"></i>
         <h2>App Under Maintenance</h2>
-        <p>Our Mini App is currently undergoing scheduled updates. Please wait and check back shortly.</p>
+        <p>Lucy Earning Mini App በአሁኑ ሰዓት ማሻሻያ እየተደረገበት ነው። እባክዎ ጥቂት ቆይተው እንደገና ይሞክሩ።</p>
+    </div>
+
+    <!-- Anti Fraud Screen -->
+    <div id="anti-fraud-screen">
+        <i class="fas fa-user-shield"></i>
+        <h2>Multiple Accounts Detected</h2>
+        <p>በዚህ ስልክ ላይ ከአንድ በላይ አካውንት መጠቀም የተከለከለ ነው!</p>
     </div>
 
     <div class="top-nav-bar">
@@ -503,8 +519,6 @@
                     <div class="val" id="ui-withdrawn">0.00 ETB</div>
                 </div>
             </div>
-
-            <div id="injected-home-content"></div>
         </div>
 
         <!-- 2. TASKS PAGE -->
@@ -526,41 +540,40 @@
             </div>
 
             <div class="section-card">
-                <h3>Watch Ads and Earn</h3>
+                <h3>Watch Ads and Earn (Monetized)</h3>
                 <p data-i18n="ad_reward_desc">ለእያንዳንዱ ማስታወቂያ 0.40 ETB ወይም 1 RP ይሰጣል</p>
-                <button class="btn-green" style="width: 100%;" id="watch-ads-btn" onclick="watchAdWithTimer()">
+                <button class="btn-green" style="width: 100%;" id="watch-ads-btn" onclick="watchRealAdWithTimer()">
                     <i class="fas fa-play"></i> <span data-i18n="watch_ad">ማስታወቂያ እይ (0.40 ETB)</span>
                 </button>
             </div>
 
             <div id="tasks-board-list"></div>
-            <div id="injected-tasks-content"></div>
         </div>
 
         <!-- 3. RANKS PAGE -->
         <div id="ranks-page" style="display: none;">
             <div class="section-card">
                 <h3 style="text-align: center; margin-bottom: 2px;" data-i18n="ranks_title">የደረጃ ሰንጠረዥ (Leaderboard)</h3>
-                <p style="text-align: center;" data-i18n="ranks_desc">ትክክለኛ ከፍተኛ RP Coin ያላቸው ተጠቃሚዎች</p>
+                <p style="text-align: center;" data-i18n="ranks_desc">ትክክለኛ ከፍተኛ RP Coin ያላቸው እውነተኛ ተጠቃሚዎች</p>
 
                 <div class="podium-container">
                     <div class="podium-col podium-col-2">
                         <i class="fas fa-crown crown-icon crown-2"></i>
-                        <img id="podium-img-2" class="podium-avatar" src="https://via.placeholder.com/65" alt="2nd">
+                        <div class="podium-avatar-box" id="podium-avatar-2">🥈</div>
                         <small><b id="podium-name-2">--</b></small>
                         <span id="podium-rp-2" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">2</div>
                     </div>
                     <div class="podium-col podium-col-1">
                         <i class="fas fa-crown crown-icon crown-1"></i>
-                        <img id="podium-img-1" class="podium-avatar" src="https://via.placeholder.com/85" alt="1st">
+                        <div class="podium-avatar-box" id="podium-avatar-1">👑</div>
                         <small><b id="podium-name-1">--</b></small>
                         <span id="podium-rp-1" style="font-size:0.85rem; color:var(--gold); font-weight:800;">0 RP</span>
                         <div class="podium-step">1</div>
                     </div>
                     <div class="podium-col podium-col-3">
                         <i class="fas fa-crown crown-icon crown-3"></i>
-                        <img id="podium-img-3" class="podium-avatar" src="https://via.placeholder.com/65" alt="3rd">
+                        <div class="podium-avatar-box" id="podium-avatar-3">🥉</div>
                         <small><b id="podium-name-3">--</b></small>
                         <span id="podium-rp-3" style="font-size:0.75rem; color:var(--text-muted);">0 RP</span>
                         <div class="podium-step">3</div>
@@ -569,7 +582,6 @@
 
                 <ul class="ranks-list" id="ranks-list-items"></ul>
             </div>
-            <div id="injected-ranks-content"></div>
         </div>
 
         <!-- 4. PROFILE PAGE -->
@@ -585,7 +597,7 @@
                     <div>👤 <b>ስም:</b> <span id="prof-full-name">--</span></div>
                     <div>🆔 <b>Username:</b> <span id="prof-username">--</span></div>
                     <div>🔢 <b>Telegram ID:</b> <span id="prof-tg-id">--</span></div>
-                    <div>🤝 <b>የጋበዘው ሰው:</b> <span id="prof-inviter">@Lucy_Earning_Bot</span></div>
+                    <div>🤝 <b>የጋበዘው ሰው:</b> <span id="prof-inviter">@Lucy_1Earning_bot</span></div>
                     <div>📊 <b>የተጠናቀቁ ተግባራት:</b> <span id="prof-completed-tasks">0</span></div>
                     <div>🪙 <b>ያለዎት RP ሳንቲም:</b> <span id="prof-rp-bal" style="color:var(--gold); font-weight:800;">0</span> RP</div>
                 </div>
@@ -595,7 +607,7 @@
                 <h3 data-i18n="invite_friends">ጓደኞችዎን ይጋብዙ (Referral Link)</h3>
                 <p data-i18n="invite_desc">የራስዎን ሊንክ ለጓደኞችዎ ያጋሩና በእያንዳንዱ ሰው 3.00 ETB ያግኙ።</p>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Birr_lab_tech_bot?start=">
+                    <input type="text" class="form-input" id="ref-share-url" readonly value="https://t.me/Lucy_1Earning_bot?start=">
                     <button class="btn-secondary" style="padding: 0 14px;" onclick="copyRef()"><i class="far fa-copy"></i></button>
                 </div>
             </div>
@@ -624,8 +636,6 @@
                 <h3>የወጪ ጥያቄዎች ታሪክ (Withdrawal Status)</h3>
                 <div id="user-withdraw-history" style="font-size:0.85rem; margin-top:8px;">ምንም የወጪ ጥያቄ የለም።</div>
             </div>
-
-            <div id="injected-profile-content"></div>
         </div>
     </div>
 
@@ -646,18 +656,34 @@
             </div>
 
             <div class="section-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <div>
                         <b>Mini App Status (ON/OFF)</b>
-                        <small style="display:block; color:var(--text-muted);">ለደንበኞች ሚኒ አፑን ማዘጋትና ማብሪያ</small>
+                        <small style="display:block; color:var(--text-muted);">ለተጠቃሚዎች አፑን ማብሪያና ማዘጋጃ</small>
                     </div>
                     <button class="btn-green" id="app-status-toggle-btn" style="padding:6px 14px; font-size:0.8rem;" onclick="toggleAppMaintenance()">ON (LIVE)</button>
                 </div>
+                <hr style="border:none; border-top:1px solid var(--border-color); margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b>Multi-Account Protection</b>
+                        <small style="display:block; color:var(--text-muted);">በአንድ ስልክ 2 አካውንት መክፈትን መከልከያ</small>
+                    </div>
+                    <button class="btn-green" id="multi-acc-toggle-btn" style="padding:6px 14px; font-size:0.8rem;" onclick="toggleMultiAccountProtection()">ENABLED</button>
+                </div>
+            </div>
+
+            <!-- TASK / CHANNELS MANAGER (EDIT & DELETE) -->
+            <div class="section-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4>⚙️ Channels & Tasks (Edit / Delete)</h4>
+                </div>
+                <div id="admin-tasks-manage-list" style="margin-top:10px;"></div>
             </div>
 
             <div class="section-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                    <h4>👥 የተጠቃሚዎች ሙሉ ዝርዝር መረጃ</h4>
+                    <h4>👥 የተጠቃሚዎች እውነተኛ ዝርዝር መረጃ</h4>
                     <span id="total-users-badge" style="font-size:0.75rem; background:var(--accent-green); padding:2px 8px; border-radius:10px; color:#fff; font-weight:800;">0 Users</span>
                 </div>
                 <div id="admin-all-users-list" style="margin-top:8px; font-size:0.8rem; max-height:220px; overflow-y:auto;">
@@ -699,13 +725,12 @@
                         <option value="Telegram Channel">Telegram Channel</option>
                         <option value="Telegram Bot">Telegram Bot</option>
                         <option value="TikTok">TikTok Account</option>
-                        <option value="Instagram">Instagram Account</option>
                         <option value="YouTube">YouTube Channel</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Task Name</label>
-                    <input type="text" class="form-input" id="task-create-name" placeholder="ምሳሌ: Join Official Channel">
+                    <input type="text" class="form-input" id="task-create-name" placeholder="ምሳሌ: Join Lucy Official Channel">
                 </div>
                 <div class="form-group">
                     <label>የቻናል/አካውንት ሊንክ (Link)</label>
@@ -716,17 +741,8 @@
                     <input type="number" class="form-input" id="task-create-reward" placeholder="ምሳሌ: 5">
                 </div>
                 <div class="form-group">
-                    <label>የቁልፉ ቀለም (Button Color)</label>
-                    <select class="form-select" id="task-create-color">
-                        <option value="#00c067">Green</option>
-                        <option value="#e74c3c">Red</option>
-                        <option value="#3498db">Blue</option>
-                        <option value="#f39c12">Orange</option>
-                    </select>
-                </div>
-                <div class="form-group">
                     <label>የተጠቃሚዎች ገደብ (Member Limit)</label>
-                    <input type="number" class="form-input" id="task-create-limit" placeholder="ምሳሌ: 500">
+                    <input type="number" class="form-input" id="task-create-limit" placeholder="ምሳሌ: 1000">
                 </div>
                 <button class="btn-green" style="width:100%;" onclick="adminCreateTask()">Task አክልና ቦርድ ላይ አስቀምጥ</button>
             </div>
@@ -813,16 +829,16 @@
             }
         };
 
-        // 1. መነሻ ሂሳብህን 10004 RP እና 0.00 ETB (ድምሩ 3701.48 ETB) አድርጎ መያዝ
+        // እውነተኛ የዳታ መነሻ
         let appData = {
             mainBalanceETB: 0.00,
-            rpCoins: 10004,
+            rpCoins: 15,
             earningWalletETB: 0.00,
-            lifetimeETB: 0.40,
-            todayAds: 1,
+            lifetimeETB: 0.00,
+            todayAds: 0,
             referrals: 0,
             withdrawnETB: 0.00,
-            completedTasksCount: 1,
+            completedTasksCount: 0,
             joinedTasks: []
         };
 
@@ -841,6 +857,12 @@
                 }
             }
 
+            // Anti Multi-Account Check
+            if (checkMultiAccountViolation()) {
+                document.getElementById('anti-fraud-screen').style.display = 'flex';
+                return;
+            }
+
             document.getElementById('display-username').innerHTML = `<b>${uName}</b>`;
             document.getElementById('user-photo').src = uPhoto;
             document.getElementById('ref-share-url').value = `https://t.me/${BOT_USERNAME}?start=${currentUserId}`;
@@ -849,18 +871,32 @@
             document.getElementById('prof-username').textContent = currentUsername;
             document.getElementById('prof-tg-id').textContent = currentUserId;
 
-            // ቀድሞ የተመዘገበ ተለዋዋጭ ሂሳብ ካለ ማንበብ
+            // ከ URL የመጣ ሪፈራል ካለ ማንበብ
+            const urlParams = new URLSearchParams(window.location.search);
+            const refsFromBot = parseInt(urlParams.get('refs'));
+            const bonusFromBot = parseFloat(urlParams.get('bonus'));
+
+            // የተቀመጠ እውነተኛ ዳታ ካለ ማንበብ
             const saved = localStorage.getItem('lucy_app_final_system_v10');
             if (saved) {
                 try { 
                     appData = Object.assign(appData, JSON.parse(saved)); 
                 } catch(e){}
-            } else {
+            }
+
+            // ሪፈራል መጨመር ካለበት
+            if (!isNaN(refsFromBot) && refsFromBot > appData.referrals) {
+                appData.referrals = refsFromBot;
+                if (!isNaN(bonusFromBot)) {
+                    appData.mainBalanceETB += bonusFromBot;
+                    appData.lifetimeETB += bonusFromBot;
+                }
                 saveState();
             }
 
-            fetchAllHistoricalUsers();
+            fetchAllRealUsers();
             checkMaintenanceStatus();
+            checkMultiAccountButtonState();
             updateDisplays();
             updateRealLeaderboard();
             renderTasksBoard();
@@ -869,21 +905,55 @@
 
             document.getElementById('gear-btn').addEventListener('click', () => {
                 const user = currentUsername.toLowerCase().replace('@', '');
-                if (user === 'niro_x12') {
+                if (user === 'niro_x12' || currentUserId === '8797798511') {
+                    renderAdminTasksManageList();
                     renderAdminWithdrawList();
                     renderAllUsersList();
                     document.getElementById('admin-modal').style.display = 'flex';
                 } else {
-                    alert('Lucy Earning v10.0.0');
+                    alert('Lucy Earning v10.5.0 (Official)');
                 }
             });
         });
 
-        // ቋሚ አድርጎ በስልኩ ማከማቻ ማስቀመጫ
         function saveState() {
             localStorage.setItem('lucy_app_final_system_v10', JSON.stringify(appData));
-            fetchAllHistoricalUsers();
+            fetchAllRealUsers();
             updateRealLeaderboard();
+        }
+
+        // Multi-Account Protection Functionality
+        function checkMultiAccountViolation() {
+            const isProtected = localStorage.getItem('lucy_multi_acc_protected') !== 'false';
+            if (!isProtected) return false;
+
+            const user = currentUsername.toLowerCase().replace('@', '');
+            if (user === 'niro_x12' || currentUserId === '8797798511') return false;
+
+            const existingOwner = localStorage.getItem('lucy_device_owner_id');
+            if (existingOwner && existingOwner !== currentUserId) {
+                return true;
+            }
+            if (!existingOwner) {
+                localStorage.setItem('lucy_device_owner_id', currentUserId);
+            }
+            return false;
+        }
+
+        function toggleMultiAccountProtection() {
+            const current = localStorage.getItem('lucy_multi_acc_protected') !== 'false';
+            localStorage.setItem('lucy_multi_acc_protected', (!current).toString());
+            checkMultiAccountButtonState();
+            alert(!current ? "የ Multi-Account ጥበቃ በርቷል (ENABLED)!" : "የ Multi-Account ጥበቃ ጠፍቷል (DISABLED)!");
+        }
+
+        function checkMultiAccountButtonState() {
+            const isProtected = localStorage.getItem('lucy_multi_acc_protected') !== 'false';
+            const btn = document.getElementById('multi-acc-toggle-btn');
+            if (btn) {
+                btn.textContent = isProtected ? "ENABLED" : "DISABLED";
+                btn.style.background = isProtected ? "var(--accent-green)" : "#e74c3c";
+            }
         }
 
         function checkMaintenanceStatus() {
@@ -897,7 +967,7 @@
                 toggleBtn.style.background = isOff ? "#e74c3c" : "var(--accent-green)";
             }
 
-            if (isOff && user !== 'niro_x12') {
+            if (isOff && user !== 'niro_x12' && currentUserId !== '8797798511') {
                 screen.style.display = 'flex';
             } else {
                 screen.style.display = 'none';
@@ -908,42 +978,13 @@
             const current = localStorage.getItem('lucy_maintenance_mode') === 'true';
             localStorage.setItem('lucy_maintenance_mode', (!current).toString());
             checkMaintenanceStatus();
-            alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል (Under Maintenance)!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
+            alert(!current ? "ሚኒ አፑ ለተጠቃሚዎች ተዘግቷል!" : "ሚኒ አፑ ለተጠቃሚዎች ክፍት ሆኗል!");
         }
 
-        function fetchAllHistoricalUsers() {
-            let masterList = [];
-            const storageKeys = [
-                'lucy_global_user_directory',
-                'lucy_users_database',
-                'lucy_all_users_v1'
-            ];
-
-            storageKeys.forEach(k => {
-                try {
-                    const parsed = JSON.parse(localStorage.getItem(k) || '[]');
-                    if (Array.isArray(parsed)) {
-                        parsed.forEach(u => {
-                            if (u && (u.tgId || u.id)) {
-                                const uid = String(u.tgId || u.id);
-                                if (!masterList.some(x => String(x.tgId) === uid)) {
-                                    masterList.push({
-                                        tgId: uid,
-                                        username: u.username || u.name || ("@User_" + uid.slice(-4)),
-                                        balanceETB: Number(u.balanceETB || u.balance || 0),
-                                        rp: Number(u.rp || u.rpCoins || 0),
-                                        referrals: Number(u.referrals || 0),
-                                        completedTasks: Number(u.completedTasks || u.tasks || 0),
-                                        lastSeen: u.lastSeen || '11/1/2026'
-                                    });
-                                }
-                            }
-                        });
-                    }
-                } catch(e) {}
-            });
-
-            const curIdx = masterList.findIndex(u => String(u.tgId) === String(currentUserId));
+        // እውነተኛ ተጠቃሚዎችን ብቻ መመዝገቢያ
+        function fetchAllRealUsers() {
+            let users = JSON.parse(localStorage.getItem('lucy_global_user_directory') || '[]');
+            const curIdx = users.findIndex(u => String(u.tgId) === String(currentUserId));
             const myRecord = {
                 tgId: String(currentUserId),
                 username: currentUsername,
@@ -955,19 +996,19 @@
             };
 
             if (curIdx === -1) {
-                masterList.push(myRecord);
+                users.push(myRecord);
             } else {
-                masterList[curIdx] = myRecord;
+                users[curIdx] = myRecord;
             }
 
-            localStorage.setItem('lucy_global_user_directory', JSON.stringify(masterList));
-            return masterList;
+            localStorage.setItem('lucy_global_user_directory', JSON.stringify(users));
+            return users;
         }
 
         function renderAllUsersList() {
             const listEl = document.getElementById('admin-all-users-list');
             const badge = document.getElementById('total-users-badge');
-            const users = fetchAllHistoricalUsers();
+            const users = fetchAllRealUsers();
 
             if (badge) badge.textContent = `${users.length} Users`;
             if (!listEl) return;
@@ -1064,14 +1105,20 @@
             document.getElementById('prof-completed-tasks').textContent = appData.completedTasksCount;
         }
 
-        function watchAdWithTimer() {
+        // እውነተኛ ማስታወቂያ (Adsterra / Monetag Real Monetization Trigger)
+        function watchRealAdWithTimer() {
             if (appData.todayAds >= 30) {
                 alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል!");
                 return;
             }
+
+            // እውነተኛ የ Adsterra / Monetag Direct Link እዚህ ይከፈታል
+            const adUrl = "https://www.google.com"; // ይፋዊ የማስታወቂያ Direct Link እዚህ ይገባል
+            window.open(adUrl, '_blank');
+
             const btn = document.getElementById('watch-ads-btn');
             btn.disabled = true;
-            let timer = 5;
+            let timer = 8;
             const interval = setInterval(() => {
                 btn.innerHTML = `<i class="fas fa-clock"></i> (${timer}s)...`;
                 timer--;
@@ -1102,7 +1149,6 @@
             alert("ገንዘቡ በተሳካ ሁኔታ ወደ ዋናው ሂሳብ ተዛውሯል!");
         }
 
-        // ወጪ (Withdraw) ሲያደርጉ በትክክል ከዋናው ሂሳብና ከ RP እንዲቀንስ የተደረገ
         function submitWithdraw() {
             const method = document.getElementById('withdraw-method').value;
             const acc = document.getElementById('withdraw-account').value.trim();
@@ -1130,7 +1176,6 @@
                 return;
             }
 
-            // ቀድሞ ከዋናው ETB ሂሳብ መቀነስ
             if (appData.mainBalanceETB >= amtInETB) {
                 appData.mainBalanceETB -= amtInETB;
             } else {
@@ -1163,7 +1208,7 @@
             document.getElementById('withdraw-account').value = "";
             document.getElementById('withdraw-amount').value = "";
             renderUserWithdrawHistory();
-            alert("የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል! በአስተዳዳሪው ሲረጋገጥ ይላካል።");
+            alert("የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል!");
         }
 
         function renderUserWithdrawHistory() {
@@ -1230,7 +1275,7 @@
                     saveState();
                     updateDisplays();
                 }
-                alert("Withdrawal Approved Successfully!");
+                alert("Withdrawal Approved!");
             } else if (action === 'reject') {
                 allReqs[idx].status = 'rejected';
                 if (allReqs[idx].tgId === currentUserId) {
@@ -1238,7 +1283,7 @@
                     saveState();
                     updateDisplays();
                 }
-                alert("Withdrawal Rejected & Refunded to User!");
+                alert("Withdrawal Rejected & Refunded!");
             }
 
             localStorage.setItem('lucy_secure_withdrawals_v10', JSON.stringify(allReqs));
@@ -1246,8 +1291,9 @@
             renderUserWithdrawHistory();
         }
 
+        // ደረጃ ሰንጠረዥ - እውነተኛ ተጠቃሚዎች ብቻ
         function updateRealLeaderboard() {
-            let realUsers = fetchAllHistoricalUsers();
+            let realUsers = fetchAllRealUsers();
             realUsers.sort((a, b) => (b.rp || 0) - (a.rp || 0));
 
             const p1 = realUsers[0] || { username: currentUsername, rp: appData.rpCoins };
@@ -1277,11 +1323,12 @@
             }
         }
 
+        // TASKS & CHANNELS MANAGEMENT
         function getTasksList() {
             let tasks = JSON.parse(localStorage.getItem('lucy_tasks_secure_db_v10') || '[]');
             if (!tasks.length) {
                 tasks = [
-                    { id: 101, platform: "Telegram Channel", name: "Sponsor (Telegram Channel)", link: "https://t.me/crypto_topup_f", reward: 5, color: "#00c067", limit: 1000, joined: 2 }
+                    { id: 101, platform: "Telegram Channel", name: "Official Lucy Community", link: "https://t.me/Lucy_1Earning", reward: 5, limit: 1000, joined: 0 }
                 ];
                 localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
             }
@@ -1310,7 +1357,7 @@
                             <button class="btn-secondary" style="padding:6px 14px; font-size:0.8rem; border-color:var(--accent-green); color:var(--accent-green); font-weight:800;" disabled>Joined ✅</button>
                         ` : `
                             <div style="display:flex; gap:6px;">
-                                <button class="btn-green" style="background:${t.color}; padding:6px 12px; font-size:0.8rem;" onclick="trackJoinTaskClick(${t.id}, '${t.link}')">Join</button>
+                                <button class="btn-green" style="padding:6px 12px; font-size:0.8rem;" onclick="trackJoinTaskClick(${t.id}, '${t.link}')">Join</button>
                                 <button class="btn-secondary" style="padding:6px 10px; font-size:0.8rem;" onclick="checkTaskCompletionStrict(${t.id}, ${t.reward})">Check</button>
                             </div>
                         `}
@@ -1320,6 +1367,61 @@
             });
         }
 
+        function renderAdminTasksManageList() {
+            const container = document.getElementById('admin-tasks-manage-list');
+            if (!container) return;
+            const tasks = getTasksList();
+
+            if (!tasks.length) {
+                container.innerHTML = "ምንም Task የለም።";
+                return;
+            }
+
+            container.innerHTML = tasks.map(t => `
+                <div style="background:var(--card-inner); padding:10px; border-radius:8px; margin-bottom:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <b>${t.name}</b> <small style="color:var(--gold);">(${t.reward} RP)</small>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${t.link}</div>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="editTaskDetails(${t.id})" style="background:#3498db; color:#fff; border:none; padding:5px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;">✏️ Edit</button>
+                        <button onclick="deleteTaskRecord(${t.id})" style="background:#e74c3c; color:#fff; border:none; padding:5px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;">🗑️ Del</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editTaskDetails(id) {
+            let tasks = getTasksList();
+            let t = tasks.find(x => x.id === id);
+            if (!t) return;
+
+            let newName = prompt("አዲሱን የስራ/ቻናል ስም ያስገቡ:", t.name);
+            if (newName === null) return;
+            let newLink = prompt("አዲሱን ሊንክ ያስገቡ:", t.link);
+            if (newLink === null) return;
+            let newReward = prompt("የሚሰጠውን RP መጠን ያስገቡ:", t.reward);
+            if (newReward === null) return;
+
+            t.name = newName || t.name;
+            t.link = newLink || t.link;
+            t.reward = parseInt(newReward) || t.reward;
+
+            localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
+            renderTasksBoard();
+            renderAdminTasksManageList();
+            alert("ተግባሩ (Task) ተስተካክሏል!");
+        }
+
+        function deleteTaskRecord(id) {
+            if (!confirm("ይህ Task እንዲሰረዝ እርግጠኛ ነዎት?")) return;
+            let tasks = getTasksList().filter(x => x.id !== id);
+            localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
+            renderTasksBoard();
+            renderAdminTasksManageList();
+            alert("Task ተሰርዟል!");
+        }
+
         function trackJoinTaskClick(id, link) {
             sessionStorage.setItem('lucy_join_click_' + currentUserId + '_' + id, Date.now().toString());
             window.open(link, '_blank');
@@ -1327,7 +1429,7 @@
 
         function checkTaskCompletionStrict(id, reward) {
             if (appData.joinedTasks.includes(id)) {
-                alert("ይህንን Task አስቀድመው ተቀላቅለው ሽልማት ወስደዋል!");
+                alert("ይህንን ተግባር አስቀድመው ተቀላቅለዋል!");
                 return;
             }
 
@@ -1335,14 +1437,13 @@
             const clickTime = sessionStorage.getItem(clickKey);
 
             if (!clickTime) {
-                alert("❌ ቻናሉን እስካሁን አልተቀላቀሉም!\n\nእባክዎ መጀመሪያ አረንጓዴውን 'Join' ነክተው ወደ ቻናሉ ይግቡ፤ ከዚያ ተመልሰው 'Check' ይጫኑ።");
+                alert("❌ እባክዎ መጀመሪያ 'Join' የሚለውን ነክተው ይቀላቀሉ!");
                 return;
             }
 
             const elapsed = Date.now() - parseInt(clickTime);
             if (elapsed < 3500) {
-                const waitSec = Math.ceil((3500 - elapsed) / 1000);
-                alert("⏳ እባክዎ ቻናሉን ተቀላቅለው እስኪመለሱ " + waitSec + " ሰከንዶች ይጠብቁ፤ ከዚያ 'Check' ይጫኑ!");
+                alert("⏳ እባክዎ ጥቂት ሰከንዶች ቆይተው እንደገና 'Check' ይጫኑ!");
                 return;
             }
 
@@ -1363,7 +1464,7 @@
             renderTasksBoard();
 
             if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert(`ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${reward} RP ተጨምሯል ✅`);
+            alert(`+${reward} RP ሳንቲም ተጨምሯል ✅`);
         }
 
         function adminCreateTask() {
@@ -1371,18 +1472,17 @@
             const name = document.getElementById('task-create-name').value.trim();
             const link = document.getElementById('task-create-link').value.trim();
             const reward = parseInt(document.getElementById('task-create-reward').value) || 5;
-            const color = document.getElementById('task-create-color').value;
-            const limit = parseInt(document.getElementById('task-create-limit').value) || 500;
+            const limit = parseInt(document.getElementById('task-create-limit').value) || 1000;
 
-            if (!name || !link) { alert("እባክዎ መረጃዎችን በትክክል ይሙሉ!"); return; }
+            if (!name || !link) { alert("መረጃዎችን በትክክል ይሙሉ!"); return; }
 
             let tasks = getTasksList();
-            tasks.push({ id: Date.now(), platform, name, link, reward, color, limit, joined: 0 });
+            tasks.push({ id: Date.now(), platform, name, link, reward, limit, joined: 0 });
             localStorage.setItem('lucy_tasks_secure_db_v10', JSON.stringify(tasks));
 
             renderTasksBoard();
-            closeAdmin();
-            alert("Task በተሳካ ሁኔታ ተፈጥሮ በ Tasks ገጽ ላይ ተቀምጧል!");
+            renderAdminTasksManageList();
+            alert("አዲስ Task ተፈጥሯል!");
             document.getElementById('task-create-name').value = "";
             document.getElementById('task-create-link').value = "";
         }
@@ -1398,7 +1498,7 @@
             localStorage.setItem('lucy_active_broadcast', JSON.stringify(bc));
             renderBroadcast();
             closeAdmin();
-            alert("መልእክቱ በ Home ገጽ ላይ ተለጥፏል!");
+            alert("ማስታወቂያው ተለጥፏል!");
         }
 
         function renderBroadcast() {
@@ -1426,7 +1526,7 @@
                 updateDisplays();
             }
 
-            let users = fetchAllHistoricalUsers();
+            let users = fetchAllRealUsers();
             const idx = users.findIndex(u => String(u.tgId) === targetId);
             if (idx !== -1) {
                 users[idx].rp = (users[idx].rp || 0) + rp;
@@ -1453,7 +1553,7 @@
 
         function clearInjectedCode() {
             localStorage.removeItem('lucy_safe_extensions_v10');
-            alert("የተሰኩ አላስፈላጊ ኮዶች በሙሉ ተሰርዘዋል!");
+            alert("የተሰኩ ኮዶች በሙሉ ተሰርዘዋል!");
             window.location.reload();
         }
 
