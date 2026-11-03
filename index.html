@@ -52,7 +52,7 @@
         }
         @keyframes rotateDim { 100% { transform: rotate(360deg); } }
 
-        /* 1. Maintenance Screen */
+        /* Maintenance Screen */
         #maintenance-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b0f19; z-index: 100000; display: none;
@@ -90,7 +90,6 @@
             display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-weight: 600;
         }
 
-        /* 4. Live Broadcast Card on Home */
         #home-broadcast-alert {
             display: none;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(15, 23, 42, 0.8));
@@ -150,7 +149,6 @@
         .lvl-theme-5 { background: linear-gradient(135deg, #ca8a04, #eab308); border: 2px solid #fef08a; }
         .lvl-theme-6 { background: linear-gradient(135deg, #15803d, #22c55e); border: 2px solid #bbf7d0; }
 
-        /* 3. Task Layout */
         .task-card-item {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
@@ -217,7 +215,7 @@
         }
         .nav-item.active { color: var(--gold); font-weight: 700; }
 
-        /* Full Admin Panel Pro */
+        /* Admin Panel Pro */
         #admin-panel-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b1120; z-index: 20000; display: none; flex-direction: column; overflow-y: auto;
@@ -237,7 +235,6 @@
         .admin-page { display: none; padding: 16px; }
         .admin-page.active { display: block; }
 
-        /* Custom Toggle Switch for Admin */
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -266,11 +263,11 @@
 
     <div id="dimlight-spinner"></div>
 
-    <!-- 1. English Maintenance Screen for Non-Admins -->
+    <!-- Maintenance Screen -->
     <div id="maintenance-screen">
         <i class="fas fa-tools" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
-        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">System Under Maintenance</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">We are currently upgrading our systems to serve you better.<br>Please check back shortly.</p>
+        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">የጥገና ጊዜ (System Under Maintenance)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">ሚኒ አፑ ለተወሰነ ጊዜ በዝግጅት ላይ ስለሆነ ተዘግቷል።<br>እባክዎ ትንሽ ቆይተው ይመለሱ።</p>
     </div>
 
     <!-- TOP HEADER -->
@@ -288,7 +285,7 @@
     </header>
 
     <main class="container">
-        <!-- 4. Broadcast Message Box on Home -->
+        <!-- Broadcast Message Box on Home -->
         <div id="home-broadcast-alert">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:var(--gold);"><i class="fas fa-bullhorn"></i> Official Broadcast</b>
@@ -361,7 +358,7 @@
 
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-tasks" style="color: var(--primary);"></i> ዕለታዊ ተግባራት (Tasks)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">በቀን የተፈቀደው <span id="task-max-limit-tag">5</span> ተግባር ብቻ ነው። መጀመሪያ Join ነክተው ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ[span_16](start_span)[span_16](end_span)።</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">በቀን የተፈቀደው <span id="task-max-limit-tag">5</span> ተግባር ብቻ ነው። መጀመሪያ Join ነክተው ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ።</p>
                 <div id="tasks-list-container"></div>
             </div>
         </section>
@@ -486,13 +483,11 @@
         <button class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i> Profile</button>
     </nav>
 
-    <!-- ========================================================
-         ADMIN PANEL PRO ENGINE
-    ======================================================== -->
+    <!-- ADMIN PANEL PRO ENGINE -->
     <div id="admin-panel-overlay">
         <div class="admin-header">
             <div style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-shield-alt" style="color: var(--gold);"></i> Lucy Admin Dashboard Pro[span_17](start_span)[span_17](end_span)
+                <i class="fas fa-shield-alt" style="color: var(--gold);"></i> Lucy Admin Dashboard Pro
             </div>
             <button class="btn btn-danger" onclick="toggleAdmin(false)" style="padding: 6px 12px; font-size: 0.8rem;">ዝጋ</button>
         </div>
@@ -522,14 +517,14 @@
             </div>
         </div>
 
-        <!-- 1. System Controls (Real Switch Slider View) -->
+        <!-- System Controls -->
         <div id="adm-controls-panel" class="admin-page">
-            <h3>ሲስተም መቆጣጠሪያዎች (System Controls)[span_18](start_span)[span_18](end_span)</h3>
+            <h3>ሲስተም መቆጣጠሪያዎች (System Controls)</h3>
             
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
-                    <b>Mini App Status (Active / Maintenance)</b>[span_19](start_span)[span_19](end_span)
-                    <p style="font-size: 0.75rem; color: #94a3b8;">ሚኒ አፑን ለደንበኞች ብቻ ሙሉ በሙሉ ማብሪያና ማጥፊያ</p>[span_20](start_span)[span_20](end_span)
+                    <b>Mini App Status (Active / Maintenance)</b>
+                    <p style="font-size: 0.75rem; color: #94a3b8;">ሚኒ አፑን ለደንበኞች ብቻ ሙሉ በሙሉ ማብሪያና ማጥፊያ</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="inj-tog-miniapp" checked onchange="window.adminToggleMiniAppState(this.checked)">
@@ -539,8 +534,8 @@
 
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
-                    <b>Multi-Account Protection</b>[span_21](start_span)[span_21](end_span)
-                    <p style="font-size: 0.75rem; color: #94a3b8;">በአንድ ስልክ ከአንድ አካውንት በላይ እንዳይከፈት መከልከያ</p>[span_22](start_span)[span_22](end_span)
+                    <b>Multi-Account Protection</b>
+                    <p style="font-size: 0.75rem; color: #94a3b8;">በአንድ ስልክ ከአንድ አካውንት በላይ እንዳይከፈት መከልከያ</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="inj-tog-multi" checked onchange="window.adminToggleMultiAccState(this.checked)">
@@ -549,7 +544,7 @@
             </div>
         </div>
 
-        <!-- 2. Minimum Withdrawal Settings (ETB & USDT) -->
+        <!-- Minimum Withdrawal Settings -->
         <div id="adm-min-limits" class="admin-page">
             <h3>አነስተኛ ማውጫ ገደብ (Withdrawal Minimums)</h3>
             <div class="card" style="margin-top: 10px;">
@@ -609,9 +604,9 @@
             </div>
         </div>
 
-        <!-- 3 & 4. Tasks Manage (Add & Instant Delete) -->
+        <!-- Tasks Manage -->
         <div id="adm-tasks-manage" class="admin-page">
-            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Instant Delete)[span_23](start_span)[span_23](end_span)</h3>
+            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Instant Delete)</h3>
             <div class="card" style="margin-top: 10px;">
                 <input type="text" class="form-control" id="adm-task-in-name" placeholder="የስራው/ቻናሉ ስም" value="Join Official Channel">
                 <input type="text" class="form-control" id="adm-task-in-url" placeholder="ቴሌግራም ሊንክ (https://t.me/...)" value="https://t.me/Lucy_1Earning">
@@ -619,13 +614,13 @@
                     <input type="number" class="form-control" id="adm-task-in-etb" placeholder="ሽልማት ETB" value="1.00">
                     <input type="number" class="form-control" id="adm-task-in-rp" placeholder="ሽልማት RP" value="50">
                 </div>
-                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>[span_24](start_span)[span_24](end_span)
+                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>
             </div>
             <h4>ያሉ ተግባራት (Active Tasks)</h4>
             <div id="adm-tasks-existing-list"></div>
         </div>
 
-        <!-- Company Verification & Ads Settings -->
+        <!-- Company & Ads Settings -->
         <div id="adm-comp-ads" class="admin-page">
             <h3>Company Verification & Ads Setup</h3>
             <div class="card" style="margin-top: 10px;">
@@ -649,7 +644,7 @@
             </div>
         </div>
 
-        <!-- 4. Broadcast with Instant Delete -->
+        <!-- Broadcast -->
         <div id="adm-broadcast" class="admin-page">
             <h3>መልእክት ማሰራጫ (Broadcast)</h3>
             <div class="card" style="margin-top: 10px;">
@@ -660,9 +655,9 @@
             <div id="adm-broadcast-existing-list" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- 5. Code Injector with LocalStorage Persistence -->
+        <!-- Code Injector -->
         <div id="adm-injector" class="admin-page">
-            <h3>💻 Code Injector (Safe Mode)[span_25](start_span)[span_25](end_span)</h3>
+            <h3>💻 Code Injector (Safe Mode)</h3>
             <div class="card" style="margin-top: 10px;">
                 <textarea class="form-control" id="adm-code-injector-text" rows="8" placeholder="// ኮድዎን እዚህ ለጥፈው Inject ይበሉ..."></textarea>
                 <button class="btn btn-gold" style="width: 100%;" onclick="adminExecuteInjectedScript()">Inject & Save (Keep in Storage)</button>
@@ -683,6 +678,7 @@
     <script>
     const ADMIN_IDS = ["8797798511"];
     const BOT_USERNAME = "Lucy_1Earning_bot";
+    const BOT_TOKEN = "9243610638:AAF3y2TKOIW0GzKedJ5oRSfEOjPfRxFUW4I";
 
     let tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) {
@@ -701,19 +697,65 @@
         if (tg.initDataUnsafe.user.photo_url) myTgPhoto = tg.initDataUnsafe.user.photo_url;
     }
 
-    // 1. Maintenance Logic (Admins bypass completely)
-    const isMaintenance = localStorage.getItem('lucy_sys_maintenance') === 'true';
-    if (isMaintenance && !ADMIN_IDS.includes(String(myTgId))) {
-        document.getElementById('maintenance-screen').style.display = 'flex';
+    const isAdmin = ADMIN_IDS.includes(String(myTgId));
+
+    // 1. [span_...] ቆሻሻ ምልክቶችን ሙሉ በሙሉ ማጽጃ
+    function cleanSpans() {
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while (node = walker.nextNode()) {
+            if (/\[span_\d+\]\((?:start|end)_span\)/.test(node.nodeValue)) {
+                node.nodeValue = node.nodeValue.replace(/\[span_\d+\]\((?:start|end)_span\)/g, '');
+            }
+        }
+    }
+    cleanSpans();
+    new MutationObserver(cleanSpans).observe(document.body, { childList: true, subtree: true });
+
+    // 2. Cookie Helpers for Device Lock
+    function setCookie(name, value, days) {
+        let d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = name + "=" + value + ";expires=" + d.toUTCString() + ";path=/;SameSite=Lax";
     }
 
-    // 1. Multi-Account Enforcement (Block 2nd account on device)
-    const multiBlocked = localStorage.getItem('lucy_sys_multi_block') !== 'false';
-    const primaryDeviceUser = localStorage.getItem('lucy_device_owner_id');
-    if (multiBlocked && primaryDeviceUser && primaryDeviceUser !== myTgId && !ADMIN_IDS.includes(String(myTgId))) {
-        document.body.innerHTML = "<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:20px;'><i class='fas fa-ban' style='font-size:3rem; color:#ef4444; margin-bottom:15px;'></i><h2 style='color:#ef4444;'>Multi-Account Blocked</h2><p style='color:#94a3b8;'>Only one Telegram account per device is permitted.</p></div>";
+    function getCookie(name) {
+        let dc = document.cookie.split(';');
+        for (let i = 0; i < dc.length; i++) {
+            let c = dc[i].trim();
+            if (c.indexOf(name + "=") === 0) return c.substring(name.length + 1, c.length);
+        }
+        return "";
     }
-    if (!primaryDeviceUser) localStorage.setItem('lucy_device_owner_id', myTgId);
+
+    // 3. Maintenance Logic (Admins bypass completely)
+    const isMaintenance = localStorage.getItem('lucy_sys_maintenance') === 'true';
+    if (isMaintenance && !isAdmin) {
+        document.getElementById('maintenance-screen').style.display = 'flex';
+        window.stop();
+    }
+
+    // 4. MULTI-ACCOUNT STRICT BAN (ሁለተኛ አካውንት ሲገባ በቀይ ስክሪን መቆለፍ)
+    const multiBlocked = localStorage.getItem('lucy_sys_multi_block') !== 'false';
+    if (multiBlocked && !isAdmin) {
+        let primaryUser = getCookie('lucy_bound_primary_user') || localStorage.getItem('lucy_bound_primary_user');
+        if (!primaryUser) {
+            setCookie('lucy_bound_primary_user', myTgId, 365);
+            localStorage.setItem('lucy_bound_primary_user', myTgId);
+        } else if (String(primaryUser) !== String(myTgId)) {
+            document.body.innerHTML = `
+                <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:24px; background:#0b0f19;">
+                    <i class="fas fa-ban" style="font-size:4.8rem; color:#ef4444; margin-bottom:20px;"></i>
+                    <h1 style="color:#ef4444; font-size:1.6rem; margin:0 0 10px 0; font-weight:800;">Blocked: Multi-Account</h1>
+                    <p style="color:#94a3b8; font-size:0.95rem; max-width:320px; line-height:1.6; margin:0;">
+                        በዚህ ስልክ ላይ ከአንድ አካውንት በላይ መጠቀም በጥብቅ የተከለከለ ነው! ወደ መጀመሪያው አካውንትዎ ይመለሱ።
+                    </p>
+                </div>
+            `;
+            window.stop();
+            throw new Error("Multi-account access blocked.");
+        }
+    }
 
     // Referral Processing (3.00 ETB Bonus)
     function handleReferralParam() {
@@ -853,7 +895,7 @@
 
         document.getElementById('bot-ref-link').value = `https://t.me/${BOT_USERNAME}?start=${myTgId}`;
 
-        if (ADMIN_IDS.includes(String(myTgId))) {
+        if (isAdmin) {
             document.getElementById('open-admin-btn').style.display = 'flex';
         }
 
@@ -956,7 +998,7 @@
         });
     }
 
-    // 3. Task Execution with Clean Number Rendering
+    // 5. ሁሉንም ቻናሎች ለሁሉም ተጠቃሚዎች ማሳየት (Tasks Rendering)
     let userOpenedChannels = {};
 
     function renderTasksTab() {
@@ -973,6 +1015,11 @@
         let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
         let html = '';
 
+        if (tasks.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">ምንም የተጨመረ ቻናል የለም።</div>';
+            return;
+        }
+
         tasks.forEach(t => {
             const isDone = done.includes(t.id);
             const rewardETB = Number(t.etb || 0).toFixed(2);
@@ -985,7 +1032,7 @@
                     ${isDone 
                         ? `<div style="color: var(--accent); font-weight: 700; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> ተጠናቋል (Completed)</div>`
                         : `<div class="task-action-btns">
-                            <button class="btn btn-primary" onclick="openChannelLinkDirect('${t.id}', '${t.url}')"><i class="fas fa-paper-plane"></i> 1. Join Channel</button>
+                            <button class="btn btn-primary" onclick="openChannelLinkDirect('${t.id}', '${t.url}')"><i class="fab fa-telegram-plane"></i> 1. Join Channel</button>
                             <button class="btn btn-accent" onclick="verifyChannelJoined('${t.id}')"><i class="fas fa-check-double"></i> 2. Check & Verify</button>
                            </div>`
                     }
@@ -1001,7 +1048,8 @@
         else window.open(url, '_blank');
     }
 
-    function verifyChannelJoined(taskId) {
+    // 6. ጥብቅ የ getChatMember ማረጋገጫ (ሳያረጋግጥ በምንም ተአምር አይሰጥም)
+    async function verifyChannelJoined(taskId) {
         const maxDaily = getLevelTaskLimit(userData.level);
         if (userData.todayTasks >= maxDaily) {
             alert(`⚠️ በቀን የተፈቀደው ${maxDaily} ተግባር ተጠናቋል! ደረጃዎን ከፍ ያድርጉ።`);
@@ -1009,7 +1057,7 @@
         }
 
         if (!userOpenedChannels[taskId]) {
-            alert("⚠️ እባክዎ መጀመሪያ '1. Join Channel' የሚለውን ነክተው ቻናሉን ይቀላቀሉ!");
+            alert("⚠️ ቦነስ ለማግኘት መጀመሪያ '1. Join Channel' የሚለውን ነክተው ይቀላቀሉ!");
             return;
         }
 
@@ -1017,17 +1065,56 @@
         const t = tasks.find(x => x.id === taskId);
         if (!t) return;
 
-        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
-        if (!done.includes(taskId)) {
-            done.push(taskId);
-            localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
-            userData.balanceETB += Number(t.etb || 0);
-            userData.rpCoins += Number(t.rp || 0);
-            userData.todayTasks++;
-            saveUserData();
-            updateAppUI();
-            renderTasksTab();
-            alert(`🎉 ተረጋግጧል! +${Number(t.etb || 0).toFixed(2)} ETB እና +${Number(t.rp || 0)} RP ተጨምሯል!`);
+        const btn = event ? event.target : null;
+        let originalText = "";
+        if (btn) {
+            originalText = btn.innerText;
+            btn.innerText = "እየተረጋገጠ ነው... ⏳";
+            btn.disabled = true;
+        }
+
+        let cleanUrl = t.url.trim().replace(/\/$/, "");
+        let parts = cleanUrl.split('/');
+        let rawUsername = parts[parts.length - 1].replace('@', '');
+        let channelChatId = "@" + rawUsername;
+
+        try {
+            const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${channelChatId}&user_id=${myTgId}`;
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+
+            if (data.ok && data.result) {
+                const status = data.result.status;
+                if (status === 'member' || status === 'administrator' || status === 'creator') {
+                    let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
+                    if (!done.includes(taskId)) {
+                        done.push(taskId);
+                        localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
+                        userData.balanceETB += Number(t.etb || 0);
+                        userData.rpCoins += Number(t.rp || 0);
+                        userData.todayTasks++;
+                        saveUserData();
+                        updateAppUI();
+                        renderTasksTab();
+                        alert(`🎉 ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${Number(t.etb || 0).toFixed(2)} ETB እና +${Number(t.rp || 0)} RP ተጨምሯል!`);
+                    }
+                } else if (status === 'left') {
+                    alert("❌ ቻናሉን አልተቀላቀሉም! ቦነስ ለማግኘት መጀመሪያ ቻናሉን Join ማድረግ አለብዎት።");
+                } else if (status === 'kicked') {
+                    alert("⚠️ ከዚህ ቻናል ታግደዋል (Kicked/Banned)!");
+                } else {
+                    alert("❌ ቻናሉን መቀላቀልዎ አልተረጋገጠም!");
+                }
+            } else {
+                alert("⚠️ ቦቱ በቻናሉ ውስጥ Administrator መሆን አለበት፤ እንዲሁም የቻናሉ Username ትክክለኛ መሆኑን ያረጋግጡ!");
+            }
+        } catch (err) {
+            alert("❌ የቴሌግራም ሰርቨርን ማግኘት አልተቻለም። የበይነመረብ ግንኙነትዎን ያረጋግጡ።");
+        } finally {
+            if (btn) {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
         }
     }
 
@@ -1168,7 +1255,7 @@
     function renderRanksTab() {
         const container = document.getElementById('ranks-container');
         let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
-        users.sort((a, b) => (b.rpCoins || 0) - (a.rpCoins || 0));
+        users.sort((a, b) => (Number(b.rpCoins) || 0) - (Number(a.rpCoins) || 0));
 
         let html = '';
         users.forEach((u, i) => {
@@ -1182,7 +1269,7 @@
                             <div style="font-size: 0.72rem; color: #94a3b8;">Level ${u.level || 0}</div>
                         </div>
                     </div>
-                    <div style="font-weight: 700; color: var(--gold);">${(u.rpCoins || 0).toLocaleString()} RP</div>
+                    <div style="font-weight: 700; color: var(--gold);">${(Number(u.rpCoins) || 0).toLocaleString()} RP</div>
                 </div>
             `;
         });
@@ -1235,7 +1322,6 @@
         renderUserChat();
     }
 
-    // 2. Withdrawal Threshold Helper
     function updateWithdrawalThresholdDisplay() {
         const type = document.getElementById('wd-type').value;
         const note = document.getElementById('wd-minimum-note');
@@ -1285,7 +1371,6 @@
         alert("✅ የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል!");
     }
 
-    // 4. Live Broadcast on Home Tab
     function renderLiveHomeBroadcast() {
         const box = document.getElementById('home-broadcast-alert');
         const text = localStorage.getItem('lucy_active_broadcast_text');
@@ -1339,7 +1424,6 @@
         document.getElementById('ad-level-income-rp').innerText = parseInt(localStorage.getItem('lucy_admin_collected_level_rp') || '0').toLocaleString();
     }
 
-    // 1. Controls Switch Handler
     function loadControlsToggles() {
         const isMaint = localStorage.getItem('lucy_sys_maintenance') === 'true';
         const isMulti = localStorage.getItem('lucy_sys_multi_block') !== 'false';
@@ -1358,10 +1442,16 @@
 
     window.adminToggleMultiAccState = function(blocked) {
         localStorage.setItem('lucy_sys_multi_block', blocked ? 'true' : 'false');
+        if (!blocked) {
+            setCookie('lucy_bound_primary_user', '', -1);
+            localStorage.removeItem('lucy_bound_primary_user');
+        } else {
+            setCookie('lucy_bound_primary_user', myTgId, 365);
+            localStorage.setItem('lucy_bound_primary_user', myTgId);
+        }
         alert(`✅ Multi-Account ክልከላ ${blocked ? 'በርቷል (ON)' : 'ጠፍቷል (OFF)'}!`);
     };
 
-    // 2. Save Minimum Thresholds
     function loadWithdrawalThresholdInputs() {
         document.getElementById('adm-limit-etb').value = localStorage.getItem('lucy_min_wd_etb') || '50';
         document.getElementById('adm-limit-usdt').value = localStorage.getItem('lucy_min_wd_usdt') || '1.0';
@@ -1548,7 +1638,6 @@
         document.getElementById('adm-add-amount').value = '';
     }
 
-    // 3 & 4. Instant Tasks Delete and Add
     function renderAdminTasks() {
         const box = document.getElementById('adm-tasks-existing-list');
         let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
@@ -1561,7 +1650,7 @@
                         <small style="color:#38bdf8;">${t.url}</small><br>
                         <small style="color:var(--accent);">+${Number(t.etb || 0).toFixed(2)} ETB | +${Number(t.rp || 0)} RP</small>
                     </div>
-                    <button class="btn btn-danger" style="padding:6px 12px; font-size:0.75rem;" onclick="adminDeleteTaskItem('${t.id}')">Delete</button>[span_26](start_span)[span_26](end_span)
+                    <button class="btn btn-danger" style="padding:6px 12px; font-size:0.75rem;" onclick="adminDeleteTaskItem('${t.id}')">Delete</button>
                 </div>
             `;
         });
@@ -1599,7 +1688,6 @@
         alert("🗑️ Task በተሳካ ሁኔታ ተሰርዟል!");
     }
 
-    // 4. Instant Broadcast Delete and Display
     function renderAdminBroadcasts() {
         const box = document.getElementById('adm-broadcast-existing-list');
         const activeText = localStorage.getItem('lucy_active_broadcast_text');
@@ -1659,7 +1747,6 @@
         alert("✅ Company & Ads Setup በተሳካ ሁኔታ ተቀምጧል!");
     }
 
-    // 5. Code Injector with Storage Persistence
     function loadSavedInjectedCode() {
         const savedCode = localStorage.getItem('lucy_persistent_injected_code');
         if (savedCode) {
@@ -1712,7 +1799,7 @@
         saveUserData();
         updateAppUI();
         renderAdminDashStats();
-        alert("🔄 Instant Restart ተጠናቋል! ሁሉም ነገር ወዲያውኑ ወደ 0 ሆኗል።");
+        alert("🔄 Instant Restart ተጠናቋል! ሁሉም ነገር ወደ 0 ተመልሷል።");
     }
 
     // App Startup
