@@ -52,10 +52,11 @@
         }
         @keyframes rotateDim { 100% { transform: rotate(360deg); } }
 
+        /* 1. Maintenance Screen */
         #maintenance-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b0f19; z-index: 100000; display: none;
-            flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;
+            flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px;
         }
 
         .top-nav {
@@ -87,6 +88,17 @@
             background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35);
             border-radius: 14px; padding: 12px 14px; font-size: 0.82rem; color: #fbbf24;
             display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-weight: 600;
+        }
+
+        /* 4. Live Broadcast Card on Home */
+        #home-broadcast-alert {
+            display: none;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(15, 23, 42, 0.8));
+            border: 1px solid var(--primary);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
         }
 
         .card {
@@ -138,6 +150,7 @@
         .lvl-theme-5 { background: linear-gradient(135deg, #ca8a04, #eab308); border: 2px solid #fef08a; }
         .lvl-theme-6 { background: linear-gradient(135deg, #15803d, #22c55e); border: 2px solid #bbf7d0; }
 
+        /* 3. Task Layout */
         .task-card-item {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
@@ -204,6 +217,7 @@
         }
         .nav-item.active { color: var(--gold); font-weight: 700; }
 
+        /* Full Admin Panel Pro */
         #admin-panel-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b1120; z-index: 20000; display: none; flex-direction: column; overflow-y: auto;
@@ -223,6 +237,25 @@
         .admin-page { display: none; padding: 16px; }
         .admin-page.active { display: block; }
 
+        /* Custom Toggle Switch for Admin */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .switch-slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155; transition: 0.3s; border-radius: 28px;
+        }
+        .switch-slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px;
+            background-color: white; transition: 0.3s; border-radius: 50%;
+        }
+        input:checked + .switch-slider { background-color: var(--accent); }
+        input:checked + .switch-slider:before { transform: translateX(22px); }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.82rem; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; }
@@ -233,10 +266,11 @@
 
     <div id="dimlight-spinner"></div>
 
+    <!-- 1. English Maintenance Screen for Non-Admins -->
     <div id="maintenance-screen">
-        <i class="fas fa-tools" style="font-size: 3rem; color: var(--gold); margin-bottom: 15px;"></i>
-        <h2>Under Maintenance</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">ሚኒ አፑ ለጊዜው በአስተዳዳሪው ተዘግቷል። ጥቂት ቆይተው ይመለሱ።</p>
+        <i class="fas fa-tools" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">System Under Maintenance</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">We are currently upgrading our systems to serve you better.<br>Please check back shortly.</p>
     </div>
 
     <!-- TOP HEADER -->
@@ -254,6 +288,15 @@
     </header>
 
     <main class="container">
+        <!-- 4. Broadcast Message Box on Home -->
+        <div id="home-broadcast-alert">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <b style="color:var(--gold);"><i class="fas fa-bullhorn"></i> Official Broadcast</b>
+                <small id="bc-home-time" style="color:var(--text-muted);"></small>
+            </div>
+            <div id="bc-home-text"></div>
+        </div>
+
         <!-- 1. HOME TAB -->
         <section id="tab-home" class="tab-content active">
             <div class="notice-banner">
@@ -318,7 +361,7 @@
 
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-tasks" style="color: var(--primary);"></i> ዕለታዊ ተግባራት (Tasks)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">በቀን የተፈቀደው <span id="task-max-limit-tag">5</span> ተግባር ብቻ ነው። መጀመሪያ Join ብለው ቻናሉን ይቀላቀሉ፤ ከዚያ Check የሚለውን ይጫኑ[span_4](start_span)[span_4](end_span)።</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">በቀን የተፈቀደው <span id="task-max-limit-tag">5</span> ተግባር ብቻ ነው። መጀመሪያ Join ነክተው ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ[span_16](start_span)[span_16](end_span)።</p>
                 <div id="tasks-list-container"></div>
             </div>
         </section>
@@ -376,7 +419,7 @@
 
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-share-alt" style="color: var(--gold);"></i> ጓደኞችን ይጋብዙ (3.00 ETB)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">በዚህ ሊንክ ለተመዘገበ እያንዳንዱ ሰው 3.00 ETB ወዲያውኑ ይሰጥዎታል!</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">በዚህ ሊንክ ለተመዘገበ እያንዳንዱ ሰው 3.00 ETB ይሰጥዎታል!</p>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" class="form-control" id="bot-ref-link" readonly style="margin-bottom: 0;">
                     <button class="btn btn-accent" onclick="copyRef()"><i class="fas fa-copy"></i></button>
@@ -385,13 +428,14 @@
 
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 12px;"><i class="fas fa-wallet" style="color: var(--accent);"></i> ገንዘብ ማውጫ (Withdraw)</h3>
-                <select class="form-control" id="wd-type">
+                <select class="form-control" id="wd-type" onchange="updateWithdrawalThresholdDisplay()">
                     <option value="Telebirr">Telebirr (ETB)</option>
                     <option value="CBE Birr">CBE Birr (ETB)</option>
                     <option value="USDT">USDT (TRC20 / TON)</option>
                 </select>
                 <input type="text" class="form-control" id="wd-account" placeholder="የስልክ ቁጥር ወይም USDT Wallet አድራሻ">
-                <input type="number" class="form-control" id="wd-amount" placeholder="የገንዘብ መጠን (አነስተኛው 50 ETB ወይም 1 USDT)">
+                <input type="number" class="form-control" id="wd-amount" placeholder="የገንዘብ መጠን">
+                <small id="wd-minimum-note" style="display:block; color:var(--gold); font-size:0.75rem; margin-bottom:10px;"></small>
                 <button class="btn btn-primary" style="width: 100%;" onclick="submitWd()">ገንዘብ አውጣ</button>
             </div>
         </section>
@@ -448,7 +492,7 @@
     <div id="admin-panel-overlay">
         <div class="admin-header">
             <div style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-shield-alt" style="color: var(--gold);"></i> Lucy Admin Dashboard Pro
+                <i class="fas fa-shield-alt" style="color: var(--gold);"></i> Lucy Admin Dashboard Pro[span_17](start_span)[span_17](end_span)
             </div>
             <button class="btn btn-danger" onclick="toggleAdmin(false)" style="padding: 6px 12px; font-size: 0.8rem;">ዝጋ</button>
         </div>
@@ -457,6 +501,7 @@
             <button class="admin-tab-btn active" onclick="switchAdm('adm-dash')">Dashboard</button>
             <button class="admin-tab-btn" onclick="switchAdm('adm-controls-panel')">App & Multi Controls</button>
             <button class="admin-tab-btn" onclick="switchAdm('adm-wds')">Withdraw Requests</button>
+            <button class="admin-tab-btn" onclick="switchAdm('adm-min-limits')">Withdraw Limits</button>
             <button class="admin-tab-btn" onclick="switchAdm('adm-deposits')">Level Deposits</button>
             <button class="admin-tab-btn" onclick="switchAdm('adm-chat-inbox')">Chat Inbox</button>
             <button class="admin-tab-btn" onclick="switchAdm('adm-addbal')">Add Balance</button>
@@ -477,29 +522,46 @@
             </div>
         </div>
 
-        <!-- System Controls (Mini-App & Multi-Account Toggles) -->
+        <!-- 1. System Controls (Real Switch Slider View) -->
         <div id="adm-controls-panel" class="admin-page">
-            <h3>ሲስተም መቆጣጠሪያዎች (System Controls)</h3>
+            <h3>ሲስተም መቆጣጠሪያዎች (System Controls)[span_18](start_span)[span_18](end_span)</h3>
+            
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
-                    <b>Mini App Status (Active / Maintenance)</b>
-                    <p style="font-size: 0.75rem; color: #94a3b8;">ሚኒ አፑን ለደንበኞች ብቻ ሙሉ በሙሉ ማብሪያና ማጥፊያ</p>
+                    <b>Mini App Status (Active / Maintenance)</b>[span_19](start_span)[span_19](end_span)
+                    <p style="font-size: 0.75rem; color: #94a3b8;">ሚኒ አፑን ለደንበኞች ብቻ ሙሉ በሙሉ ማብሪያና ማጥፊያ</p>[span_20](start_span)[span_20](end_span)
                 </div>
-                <label style="position: relative; display: inline-block; width: 48px; height: 26px;">
-                    <input type="checkbox" id="inj-tog-miniapp" checked onchange="window.adminToggleMiniAppState(this.checked)" style="opacity:0; width:0; height:0;">
-                    <span style="position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background: #22c55e; border-radius: 26px; transition: 0.3s;" id="inj-slider-miniapp"></span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="inj-tog-miniapp" checked onchange="window.adminToggleMiniAppState(this.checked)">
+                    <span class="switch-slider"></span>
                 </label>
             </div>
 
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
-                    <b>Multi-Account Protection</b>
-                    <p style="font-size: 0.75rem; color: #94a3b8;">በአንድ ስልክ ከአንድ አካውንት በላይ እንዳይከፈት መከልከያ</p>
+                    <b>Multi-Account Protection</b>[span_21](start_span)[span_21](end_span)
+                    <p style="font-size: 0.75rem; color: #94a3b8;">በአንድ ስልክ ከአንድ አካውንት በላይ እንዳይከፈት መከልከያ</p>[span_22](start_span)[span_22](end_span)
                 </div>
-                <label style="position: relative; display: inline-block; width: 48px; height: 26px;">
-                    <input type="checkbox" id="inj-tog-multi" checked onchange="window.adminToggleMultiAccState(this.checked)" style="opacity:0; width:0; height:0;">
-                    <span style="position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background: #22c55e; border-radius: 26px; transition: 0.3s;" id="inj-slider-multi"></span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="inj-tog-multi" checked onchange="window.adminToggleMultiAccState(this.checked)">
+                    <span class="switch-slider"></span>
                 </label>
+            </div>
+        </div>
+
+        <!-- 2. Minimum Withdrawal Settings (ETB & USDT) -->
+        <div id="adm-min-limits" class="admin-page">
+            <h3>አነስተኛ ማውጫ ገደብ (Withdrawal Minimums)</h3>
+            <div class="card" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>አነስተኛ የ ETB ማውጫ ገደብ (Telebirr / CBE)</label>
+                    <input type="number" step="any" class="form-control" id="adm-limit-etb" value="50">
+                </div>
+                <div class="form-group">
+                    <label>አነስተኛ የ USDT ማውጫ ገደብ</label>
+                    <input type="number" step="any" class="form-control" id="adm-limit-usdt" value="1.0">
+                </div>
+                <button class="btn btn-accent" style="width: 100%;" onclick="adminSaveWithdrawalThresholds()">ገደቦችን መዝግብ (Save Limits)</button>
             </div>
         </div>
 
@@ -547,18 +609,19 @@
             </div>
         </div>
 
-        <!-- Tasks Manage (Add & Instant Delete) -->
+        <!-- 3 & 4. Tasks Manage (Add & Instant Delete) -->
         <div id="adm-tasks-manage" class="admin-page">
-            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Instant Delete)</h3>
+            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Instant Delete)[span_23](start_span)[span_23](end_span)</h3>
             <div class="card" style="margin-top: 10px;">
-                <input type="text" class="form-control" id="adm-task-in-name" placeholder="የስራው/ቻናሉ ስም">
-                <input type="text" class="form-control" id="adm-task-in-url" placeholder="ቴሌግራም ሊንክ (https://t.me/...)">
+                <input type="text" class="form-control" id="adm-task-in-name" placeholder="የስራው/ቻናሉ ስም" value="Join Official Channel">
+                <input type="text" class="form-control" id="adm-task-in-url" placeholder="ቴሌግራም ሊንክ (https://t.me/...)" value="https://t.me/Lucy_1Earning">
                 <div style="display: flex; gap: 8px;">
-                    <input type="number" class="form-control" id="adm-task-in-etb" placeholder="ሽልማት ETB">
-                    <input type="number" class="form-control" id="adm-task-in-rp" placeholder="ሽልማት RP">
+                    <input type="number" class="form-control" id="adm-task-in-etb" placeholder="ሽልማት ETB" value="1.00">
+                    <input type="number" class="form-control" id="adm-task-in-rp" placeholder="ሽልማት RP" value="50">
                 </div>
-                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>[span_24](start_span)[span_24](end_span)
             </div>
+            <h4>ያሉ ተግባራት (Active Tasks)</h4>
             <div id="adm-tasks-existing-list"></div>
         </div>
 
@@ -586,7 +649,7 @@
             </div>
         </div>
 
-        <!-- Broadcast (Publish & Instant Delete) -->
+        <!-- 4. Broadcast with Instant Delete -->
         <div id="adm-broadcast" class="admin-page">
             <h3>መልእክት ማሰራጫ (Broadcast)</h3>
             <div class="card" style="margin-top: 10px;">
@@ -597,12 +660,12 @@
             <div id="adm-broadcast-existing-list" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- Code Injector Tab -->
+        <!-- 5. Code Injector with LocalStorage Persistence -->
         <div id="adm-injector" class="admin-page">
-            <h3>💻 Code Injector (Safe Mode)</h3>
+            <h3>💻 Code Injector (Safe Mode)[span_25](start_span)[span_25](end_span)</h3>
             <div class="card" style="margin-top: 10px;">
                 <textarea class="form-control" id="adm-code-injector-text" rows="8" placeholder="// ኮድዎን እዚህ ለጥፈው Inject ይበሉ..."></textarea>
-                <button class="btn btn-gold" style="width: 100%;" onclick="adminExecuteInjectedScript()">Inject & Save</button>
+                <button class="btn btn-gold" style="width: 100%;" onclick="adminExecuteInjectedScript()">Inject & Save (Keep in Storage)</button>
             </div>
         </div>
 
@@ -616,7 +679,7 @@
         </div>
     </div>
 
-    <!-- MAIN LOGIC JAVASCRIPT -->
+    <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
     const ADMIN_IDS = ["8797798511"];
     const BOT_USERNAME = "Lucy_1Earning_bot";
@@ -638,17 +701,17 @@
         if (tg.initDataUnsafe.user.photo_url) myTgPhoto = tg.initDataUnsafe.user.photo_url;
     }
 
-    // Maintenance & Multi-Account Check
+    // 1. Maintenance Logic (Admins bypass completely)
     const isMaintenance = localStorage.getItem('lucy_sys_maintenance') === 'true';
     if (isMaintenance && !ADMIN_IDS.includes(String(myTgId))) {
         document.getElementById('maintenance-screen').style.display = 'flex';
     }
 
+    // 1. Multi-Account Enforcement (Block 2nd account on device)
     const multiBlocked = localStorage.getItem('lucy_sys_multi_block') !== 'false';
     const primaryDeviceUser = localStorage.getItem('lucy_device_owner_id');
     if (multiBlocked && primaryDeviceUser && primaryDeviceUser !== myTgId && !ADMIN_IDS.includes(String(myTgId))) {
-        alert("⚠️ Multi-Account የተከለከለ ነው! በአንድ ስልክ አንድ አካውንት ብቻ መጠቀም ይችላሉ።");
-        document.body.innerHTML = "<h3 style='color:red; text-align:center; margin-top:50px;'>Multi-Account Blocked</h3>";
+        document.body.innerHTML = "<div style='display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:20px;'><i class='fas fa-ban' style='font-size:3rem; color:#ef4444; margin-bottom:15px;'></i><h2 style='color:#ef4444;'>Multi-Account Blocked</h2><p style='color:#94a3b8;'>Only one Telegram account per device is permitted.</p></div>";
     }
     if (!primaryDeviceUser) localStorage.setItem('lucy_device_owner_id', myTgId);
 
@@ -659,7 +722,7 @@
         const done = localStorage.getItem('lucy_reflink_claimed_' + myTgId);
 
         if (refId && !done && String(refId) !== String(myTgId)) {
-            let refUserKey = 'lucy_usr_v6_' + refId;
+            let refUserKey = 'lucy_usr_v7_' + refId;
             let refUser = localStorage.getItem(refUserKey);
             if (refUser) {
                 try {
@@ -674,7 +737,7 @@
     }
 
     // User Data Initialization
-    let userKey = 'lucy_usr_v6_' + myTgId;
+    let userKey = 'lucy_usr_v7_' + myTgId;
     let userData = JSON.parse(localStorage.getItem(userKey) || 'null');
 
     if (!userData) {
@@ -739,7 +802,7 @@
     }
 
     function syncGlobalDirectory() {
-        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v6') || '[]');
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
         const idx = users.findIndex(u => String(u.id) === String(myTgId));
         const rec = {
             id: userData.id,
@@ -753,7 +816,7 @@
         };
         if (idx !== -1) users[idx] = rec;
         else users.push(rec);
-        localStorage.setItem('lucy_global_dir_v6', JSON.stringify(users));
+        localStorage.setItem('lucy_global_dir_v7', JSON.stringify(users));
     }
 
     function getLevelTaskLimit(lvl) {
@@ -794,6 +857,8 @@
             document.getElementById('open-admin-btn').style.display = 'flex';
         }
 
+        updateWithdrawalThresholdDisplay();
+        renderLiveHomeBroadcast();
         applyLanguageStrings();
     }
 
@@ -891,29 +956,32 @@
         });
     }
 
-    // Task Execution with Separated Join & Check
+    // 3. Task Execution with Clean Number Rendering
     let userOpenedChannels = {};
 
     function renderTasksTab() {
         const container = document.getElementById('tasks-list-container');
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || 'null');
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || 'null');
         if (!tasks) {
             tasks = [
                 { id: "t1", name: "Join Official Telegram", url: "https://t.me/Lucy_1Earning", etb: 1.00, rp: 50 },
                 { id: "t2", name: "Join Crypto Updates", url: "https://t.me/Crypto_Topup_F", etb: 0.50, rp: 30 }
             ];
-            localStorage.setItem('lucy_tasks_v6', JSON.stringify(tasks));
+            localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
         }
 
-        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v6_' + myTgId) || '[]');
+        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
         let html = '';
 
         tasks.forEach(t => {
             const isDone = done.includes(t.id);
+            const rewardETB = Number(t.etb || 0).toFixed(2);
+            const rewardRP = Number(t.rp || 0);
+
             html += `
                 <div class="task-card-item">
                     <div style="font-weight: 700; font-size: 0.95rem;">📢 ${t.name}</div>
-                    <div style="font-size: 0.78rem; color: var(--accent); margin: 3px 0 8px;">+${t.etb} ETB | +${t.rp} RP</div>
+                    <div style="font-size: 0.78rem; color: var(--accent); margin: 3px 0 8px;">+${rewardETB} ETB | +${rewardRP} RP</div>
                     ${isDone 
                         ? `<div style="color: var(--accent); font-weight: 700; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> ተጠናቋል (Completed)</div>`
                         : `<div class="task-action-btns">
@@ -945,21 +1013,21 @@
             return;
         }
 
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
         const t = tasks.find(x => x.id === taskId);
         if (!t) return;
 
-        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v6_' + myTgId) || '[]');
+        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
         if (!done.includes(taskId)) {
             done.push(taskId);
-            localStorage.setItem('lucy_tasks_done_v6_' + myTgId, JSON.stringify(done));
-            userData.balanceETB += t.etb;
-            userData.rpCoins += t.rp;
+            localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
+            userData.balanceETB += Number(t.etb || 0);
+            userData.rpCoins += Number(t.rp || 0);
             userData.todayTasks++;
             saveUserData();
             updateAppUI();
             renderTasksTab();
-            alert(`🎉 ተረጋግጧል! +${t.etb} ETB እና +${t.rp} RP ተጨምሯል!`);
+            alert(`🎉 ተረጋግጧል! +${Number(t.etb || 0).toFixed(2)} ETB እና +${Number(t.rp || 0)} RP ተጨምሯል!`);
         }
     }
 
@@ -1077,7 +1145,7 @@
         const rp = getLevelCostRP(lvl);
         const birr = (rp / 100) * 37;
 
-        let deposits = JSON.parse(localStorage.getItem('lucy_level_deposits_v6') || '[]');
+        let deposits = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
         deposits.push({
             id: "dep_" + Date.now(),
             uid: myTgId,
@@ -1091,7 +1159,7 @@
             time: new Date().toLocaleString(),
             status: "pending"
         });
-        localStorage.setItem('lucy_level_deposits_v6', JSON.stringify(deposits));
+        localStorage.setItem('lucy_level_deposits_v7', JSON.stringify(deposits));
 
         closeDepositModal();
         alert("✅ የክፍያ መረጃዎ ለአስተዳዳሪው ተልኳል! ክፍያው ሲረጋገጥ Level ይከፈትልዎታል።");
@@ -1099,7 +1167,7 @@
 
     function renderRanksTab() {
         const container = document.getElementById('ranks-container');
-        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v6') || '[]');
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
         users.sort((a, b) => (b.rpCoins || 0) - (a.rpCoins || 0));
 
         let html = '';
@@ -1123,7 +1191,7 @@
 
     function renderUserChat() {
         const stream = document.getElementById('user-chat-stream');
-        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v6') || '[]');
+        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
         let myChats = chats.filter(c => String(c.uid) === String(myTgId));
         let html = '';
 
@@ -1153,7 +1221,7 @@
         const txt = inp.value.trim();
         if (!txt) return;
 
-        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v6') || '[]');
+        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
         chats.push({
             id: "msg_" + Date.now(),
             uid: myTgId,
@@ -1162,9 +1230,23 @@
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             adminReply: null
         });
-        localStorage.setItem('lucy_user_admin_chats_v6', JSON.stringify(chats));
+        localStorage.setItem('lucy_user_admin_chats_v7', JSON.stringify(chats));
         inp.value = '';
         renderUserChat();
+    }
+
+    // 2. Withdrawal Threshold Helper
+    function updateWithdrawalThresholdDisplay() {
+        const type = document.getElementById('wd-type').value;
+        const note = document.getElementById('wd-minimum-note');
+        const minETB = parseFloat(localStorage.getItem('lucy_min_wd_etb') || '50');
+        const minUSDT = parseFloat(localStorage.getItem('lucy_min_wd_usdt') || '1.0');
+
+        if (type === 'USDT') {
+            note.innerText = `⚠️ አነስተኛው የማውጫ ገደብ፦ ${minUSDT.toFixed(2)} USDT ነው`;
+        } else {
+            note.innerText = `⚠️ አነስተኛው የማውጫ ገደብ፦ ${minETB.toFixed(2)} ETB ነው`;
+        }
     }
 
     function submitWd() {
@@ -1172,9 +1254,12 @@
         const acc = document.getElementById('wd-account').value.trim();
         const amt = parseFloat(document.getElementById('wd-amount').value);
 
+        const minETB = parseFloat(localStorage.getItem('lucy_min_wd_etb') || '50');
+        const minUSDT = parseFloat(localStorage.getItem('lucy_min_wd_usdt') || '1.0');
+        const minVal = type === 'USDT' ? minUSDT : minETB;
+
         if (!acc) { alert("እባክዎ አድራሻ ያስገቡ!"); return; }
-        const minVal = type === 'USDT' ? 1.00 : 50.00;
-        if (isNaN(amt) || amt < minVal) { alert(`አነስተኛው መጠን ${minVal} ነው!`); return; }
+        if (isNaN(amt) || amt < minVal) { alert(`አነስተኛው መጠን ${minVal} ${type === 'USDT' ? 'USDT' : 'ETB'} ነው!`); return; }
 
         const checkBal = type === 'USDT' ? (userData.balanceETB / 185.0) : userData.balanceETB;
         if (amt > checkBal) { alert("በቂ ሂሳብ የለዎትም!"); return; }
@@ -1185,7 +1270,7 @@
         saveUserData();
         updateAppUI();
 
-        let reqs = JSON.parse(localStorage.getItem('lucy_withdrawals_v6') || '[]');
+        let reqs = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
         reqs.push({
             id: "wd_" + Date.now(),
             uid: myTgId,
@@ -1196,8 +1281,23 @@
             status: "pending",
             time: new Date().toLocaleString()
         });
-        localStorage.setItem('lucy_withdrawals_v6', JSON.stringify(reqs));
+        localStorage.setItem('lucy_withdrawals_v7', JSON.stringify(reqs));
         alert("✅ የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል!");
+    }
+
+    // 4. Live Broadcast on Home Tab
+    function renderLiveHomeBroadcast() {
+        const box = document.getElementById('home-broadcast-alert');
+        const text = localStorage.getItem('lucy_active_broadcast_text');
+        const time = localStorage.getItem('lucy_active_broadcast_time');
+
+        if (text) {
+            document.getElementById('bc-home-text').innerText = text;
+            document.getElementById('bc-home-time').innerText = time || '';
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
     }
 
     // ==========================================
@@ -1214,6 +1314,8 @@
             renderAdminBroadcasts();
             loadCompanyAdsConfig();
             loadControlsToggles();
+            loadWithdrawalThresholdInputs();
+            loadSavedInjectedCode();
         }
     }
 
@@ -1227,9 +1329,9 @@
     }
 
     function renderAdminDashStats() {
-        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v6') || '[]');
-        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v6') || '[]');
-        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v6') || '[]');
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
+        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
 
         document.getElementById('ad-users-cnt').innerText = users.length;
         document.getElementById('ad-wd-cnt').innerText = wds.filter(w => w.status === 'pending').length;
@@ -1237,7 +1339,7 @@
         document.getElementById('ad-level-income-rp').innerText = parseInt(localStorage.getItem('lucy_admin_collected_level_rp') || '0').toLocaleString();
     }
 
-    // Mini App & Multi Account Toggle Handlers
+    // 1. Controls Switch Handler
     function loadControlsToggles() {
         const isMaint = localStorage.getItem('lucy_sys_maintenance') === 'true';
         const isMulti = localStorage.getItem('lucy_sys_multi_block') !== 'false';
@@ -1245,33 +1347,38 @@
         const miniappCheck = document.getElementById('inj-tog-miniapp');
         const multiCheck = document.getElementById('inj-tog-multi');
 
-        if (miniappCheck) {
-            miniappCheck.checked = !isMaint;
-            document.getElementById('inj-slider-miniapp').style.background = !isMaint ? '#22c55e' : '#334155';
-        }
-        if (multiCheck) {
-            multiCheck.checked = isMulti;
-            document.getElementById('inj-slider-multi').style.background = isMulti ? '#22c55e' : '#334155';
-        }
+        if (miniappCheck) miniappCheck.checked = !isMaint;
+        if (multiCheck) multiCheck.checked = isMulti;
     }
 
     window.adminToggleMiniAppState = function(active) {
         localStorage.setItem('lucy_sys_maintenance', active ? 'false' : 'true');
-        const slider = document.getElementById('inj-slider-miniapp');
-        if (slider) slider.style.background = active ? '#22c55e' : '#334155';
         alert(`✅ Mini App ${active ? 'በርቷል (ACTIVE)' : 'ተዘግቷል (MAINTENANCE)'}!`);
     };
 
     window.adminToggleMultiAccState = function(blocked) {
         localStorage.setItem('lucy_sys_multi_block', blocked ? 'true' : 'false');
-        const slider = document.getElementById('inj-slider-multi');
-        if (slider) slider.style.background = blocked ? '#22c55e' : '#334155';
         alert(`✅ Multi-Account ክልከላ ${blocked ? 'በርቷል (ON)' : 'ጠፍቷል (OFF)'}!`);
     };
 
+    // 2. Save Minimum Thresholds
+    function loadWithdrawalThresholdInputs() {
+        document.getElementById('adm-limit-etb').value = localStorage.getItem('lucy_min_wd_etb') || '50';
+        document.getElementById('adm-limit-usdt').value = localStorage.getItem('lucy_min_wd_usdt') || '1.0';
+    }
+
+    function adminSaveWithdrawalThresholds() {
+        const etb = document.getElementById('adm-limit-etb').value;
+        const usdt = document.getElementById('adm-limit-usdt').value;
+        localStorage.setItem('lucy_min_wd_etb', etb);
+        localStorage.setItem('lucy_min_wd_usdt', usdt);
+        updateWithdrawalThresholdDisplay();
+        alert("✅ አነስተኛ ማውጫ ገደቦች በተሳካ ሁኔታ ተቀምጠዋል!");
+    }
+
     function renderAdminWithdrawals() {
         const tbody = document.getElementById('adm-withdraw-table-body');
-        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v6') || '[]');
+        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
         let pending = wds.filter(w => w.status === 'pending');
         let html = '';
 
@@ -1292,7 +1399,7 @@
     }
 
     function processWdAction(wdId, action) {
-        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v6') || '[]');
+        let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
         const idx = wds.findIndex(w => w.id === wdId);
         if (idx === -1) return;
 
@@ -1302,7 +1409,7 @@
         if (action === 'approve') {
             alert("✅ ክፍያው ጸድቋል (Approved)!");
         } else {
-            let targetKey = 'lucy_usr_v6_' + w.uid;
+            let targetKey = 'lucy_usr_v7_' + w.uid;
             let tUser = JSON.parse(localStorage.getItem(targetKey) || 'null');
             if (tUser) {
                 if (w.method === 'USDT') tUser.balanceETB += (w.amount * 185.0);
@@ -1318,14 +1425,14 @@
             alert("❌ ጥያቄው ተሰርዞ ገንዘቡ ወደ ተጠቃሚው ተመልሷል!");
         }
 
-        localStorage.setItem('lucy_withdrawals_v6', JSON.stringify(wds));
+        localStorage.setItem('lucy_withdrawals_v7', JSON.stringify(wds));
         renderAdminWithdrawals();
         renderAdminDashStats();
     }
 
     function renderAdminDeposits() {
         const box = document.getElementById('adm-deposits-list');
-        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v6') || '[]');
+        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
         let pending = deps.filter(d => d.status === 'pending');
         let html = '';
 
@@ -1347,7 +1454,7 @@
     }
 
     function processDepositAction(depId, action) {
-        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v6') || '[]');
+        let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
         const idx = deps.findIndex(d => d.id === depId);
         if (idx === -1) return;
 
@@ -1355,7 +1462,7 @@
         d.status = action === 'approve' ? 'completed' : 'rejected';
 
         if (action === 'approve') {
-            let targetUserKey = 'lucy_usr_v6_' + d.uid;
+            let targetUserKey = 'lucy_usr_v7_' + d.uid;
             let targetUser = JSON.parse(localStorage.getItem(targetUserKey) || 'null');
             if (targetUser) {
                 targetUser.level = Math.max(targetUser.level, d.targetLevel);
@@ -1371,14 +1478,14 @@
             alert("❌ የክፍያ ጥያቄው ውድቅ ተደርጓል!");
         }
 
-        localStorage.setItem('lucy_level_deposits_v6', JSON.stringify(deps));
+        localStorage.setItem('lucy_level_deposits_v7', JSON.stringify(deps));
         renderAdminDeposits();
         renderAdminDashStats();
     }
 
     function renderAdminChatInbox() {
         const box = document.getElementById('adm-chat-inbox-list');
-        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v6') || '[]');
+        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
         let html = '';
 
         chats.forEach(c => {
@@ -1403,12 +1510,12 @@
         const reply = inp.value.trim();
         if (!reply) return;
 
-        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v6') || '[]');
+        let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
         const idx = chats.findIndex(c => c.id === cId);
         if (idx !== -1) {
             chats[idx].adminReply = reply;
             chats[idx].replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            localStorage.setItem('lucy_user_admin_chats_v6', JSON.stringify(chats));
+            localStorage.setItem('lucy_user_admin_chats_v7', JSON.stringify(chats));
             alert("✅ መልስ ተልኳል!");
             renderAdminChatInbox();
         }
@@ -1420,7 +1527,7 @@
 
         if (!uid || isNaN(amt)) { alert("እባክዎ ትክክለኛ ID እና Amount ያስገቡ!"); return; }
 
-        let targetKey = 'lucy_usr_v6_' + uid;
+        let targetKey = 'lucy_usr_v7_' + uid;
         let tUser = JSON.parse(localStorage.getItem(targetKey) || 'null');
 
         if (!tUser) { alert("ተጠቃሚው አልተገኘም!"); return; }
@@ -1441,19 +1548,24 @@
         document.getElementById('adm-add-amount').value = '';
     }
 
+    // 3 & 4. Instant Tasks Delete and Add
     function renderAdminTasks() {
         const box = document.getElementById('adm-tasks-existing-list');
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
         let html = '';
         tasks.forEach(t => {
             html += `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #334155;">
-                    <div><b>${t.name}</b><br><small style="color:#94a3b8;">${t.url}</small></div>
-                    <button class="btn btn-danger" style="padding:5px 10px; font-size:0.75rem;" onclick="adminDeleteTaskItem('${t.id}')">Delete</button>
+                    <div>
+                        <b>${t.name}</b><br>
+                        <small style="color:#38bdf8;">${t.url}</small><br>
+                        <small style="color:var(--accent);">+${Number(t.etb || 0).toFixed(2)} ETB | +${Number(t.rp || 0)} RP</small>
+                    </div>
+                    <button class="btn btn-danger" style="padding:6px 12px; font-size:0.75rem;" onclick="adminDeleteTaskItem('${t.id}')">Delete</button>[span_26](start_span)[span_26](end_span)
                 </div>
             `;
         });
-        box.innerHTML = html;
+        box.innerHTML = html || 'ምንም ተግባር አልተመዘገበም።';
     }
 
     function adminAddNewTaskItem() {
@@ -1464,7 +1576,7 @@
 
         if (!name || !url) { alert("ስምና ሊንክ ያስገቡ!"); return; }
 
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
         tasks.push({
             id: "t_" + Date.now(),
             name: name,
@@ -1472,57 +1584,58 @@
             etb: isNaN(etb) ? 1.00 : etb,
             rp: isNaN(rp) ? 30 : rp
         });
-        localStorage.setItem('lucy_tasks_v6', JSON.stringify(tasks));
-        alert("✅ Task ተጨምሯል!");
+        localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
+        alert("✅ Task በተሳካ ሁኔታ ተጨምሯል!");
         renderAdminTasks();
+        renderTasksTab();
     }
 
     function adminDeleteTaskItem(tId) {
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v6') || '[]');
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
         tasks = tasks.filter(t => t.id !== tId);
-        localStorage.setItem('lucy_tasks_v6', JSON.stringify(tasks));
+        localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
         renderAdminTasks();
         renderTasksTab();
         alert("🗑️ Task በተሳካ ሁኔታ ተሰርዟል!");
     }
 
+    // 4. Instant Broadcast Delete and Display
     function renderAdminBroadcasts() {
         const box = document.getElementById('adm-broadcast-existing-list');
-        let bcs = JSON.parse(localStorage.getItem('lucy_broadcasts_v6') || '[]');
-        let html = '';
-        bcs.forEach(b => {
-            html += `
-                <div style="background: rgba(255,255,255,0.04); padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <div>${b.text}<br><small style="color:#94a3b8;">${b.time}</small></div>
-                    <button class="btn btn-danger" style="padding:5px 10px; font-size:0.75rem;" onclick="adminDeleteBroadcastItem('${b.id}')">Delete</button>
+        const activeText = localStorage.getItem('lucy_active_broadcast_text');
+        const activeTime = localStorage.getItem('lucy_active_broadcast_time');
+
+        if (activeText) {
+            box.innerHTML = `
+                <div style="background: rgba(255,255,255,0.04); padding:12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>${activeText}<br><small style="color:#94a3b8;">${activeTime}</small></div>
+                    <button class="btn btn-danger" style="padding:6px 12px; font-size:0.75rem;" onclick="adminDeleteActiveBroadcast()">Delete</button>
                 </div>
             `;
-        });
-        box.innerHTML = html || 'ምንም የተላከ Broadcast የለም።';
+        } else {
+            box.innerHTML = 'ምንም የተላከ መልእክት የለም።';
+        }
     }
 
     function adminPublishBroadcast() {
         const text = document.getElementById('adm-bc-body').value.trim();
         if (!text) { alert("መልእክት ያስገቡ!"); return; }
 
-        let bcs = JSON.parse(localStorage.getItem('lucy_broadcasts_v6') || '[]');
-        bcs.push({
-            id: "bc_" + Date.now(),
-            text: text,
-            time: new Date().toLocaleString()
-        });
-        localStorage.setItem('lucy_broadcasts_v6', JSON.stringify(bcs));
-        alert("📢 Broadcast በተሳካ ሁኔታ ተልኳል!");
+        localStorage.setItem('lucy_active_broadcast_text', text);
+        localStorage.setItem('lucy_active_broadcast_time', new Date().toLocaleString());
+
+        alert("📢 Broadcast ተሰራጭቷል፤ በሁሉም ደንበኞች Home ገጽ ላይ ይታያል!");
         document.getElementById('adm-bc-body').value = '';
         renderAdminBroadcasts();
+        renderLiveHomeBroadcast();
     }
 
-    function adminDeleteBroadcastItem(bId) {
-        let bcs = JSON.parse(localStorage.getItem('lucy_broadcasts_v6') || '[]');
-        bcs = bcs.filter(b => b.id !== bId);
-        localStorage.setItem('lucy_broadcasts_v6', JSON.stringify(bcs));
+    function adminDeleteActiveBroadcast() {
+        localStorage.removeItem('lucy_active_broadcast_text');
+        localStorage.removeItem('lucy_active_broadcast_time');
         renderAdminBroadcasts();
-        alert("🗑️ Broadcast ተሰርዟል!");
+        renderLiveHomeBroadcast();
+        alert("🗑️ Broadcast ከስክሪን ላይ ሙሉ በሙሉ ተሰርዟል!");
     }
 
     function loadCompanyAdsConfig() {
@@ -1546,27 +1659,43 @@
         alert("✅ Company & Ads Setup በተሳካ ሁኔታ ተቀምጧል!");
     }
 
+    // 5. Code Injector with Storage Persistence
+    function loadSavedInjectedCode() {
+        const savedCode = localStorage.getItem('lucy_persistent_injected_code');
+        if (savedCode) {
+            document.getElementById('adm-code-injector-text').value = savedCode;
+        }
+    }
+
     function adminExecuteInjectedScript() {
         const code = document.getElementById('adm-code-injector-text').value;
         if (!code) { alert("እባክዎ ኮድ ያስገቡ!"); return; }
         try {
             eval(code);
-            alert("🚀 ኮዱ በተሳካ ሁኔታ ተሰርቷል (Executed)!");
+            localStorage.setItem('lucy_persistent_injected_code', code);
+            alert("🚀 ኮዱ ሰርቷል፤ በቋሚነት በ LocalStorage ተቀምጧል!");
             updateAppUI();
         } catch(e) {
             alert("❌ ስህተት፦ " + e.message);
         }
     }
 
+    function runPersistentInjectedCodeOnStartup() {
+        const savedCode = localStorage.getItem('lucy_persistent_injected_code');
+        if (savedCode) {
+            try { eval(savedCode); } catch(e){}
+        }
+    }
+
     function adminExecuteDirectRestart() {
-        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v6') || '[]');
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
         users.forEach(u => {
             u.balanceETB = 0;
             u.rpCoins = 0;
             u.level = 0;
             u.referrals = 0;
         });
-        localStorage.setItem('lucy_global_dir_v6', JSON.stringify(users));
+        localStorage.setItem('lucy_global_dir_v7', JSON.stringify(users));
 
         userData.balanceETB = 0;
         userData.rpCoins = 0;
@@ -1575,22 +1704,24 @@
         userData.todayTasks = 0;
         userData.referrals = 0;
 
-        localStorage.removeItem('lucy_withdrawals_v6');
-        localStorage.removeItem('lucy_level_deposits_v6');
-        localStorage.removeItem('lucy_user_admin_chats_v6');
+        localStorage.removeItem('lucy_withdrawals_v7');
+        localStorage.removeItem('lucy_level_deposits_v7');
+        localStorage.removeItem('lucy_user_admin_chats_v7');
         localStorage.setItem('lucy_admin_collected_level_rp', '0');
 
         saveUserData();
         updateAppUI();
         renderAdminDashStats();
-        alert("🔄 Instant Restart ተከናውኗል! ሁሉም ነገር ወዲያውኑ ወደ 0 ሆኗል።");
+        alert("🔄 Instant Restart ተጠናቋል! ሁሉም ነገር ወዲያውኑ ወደ 0 ሆኗል።");
     }
 
+    // App Startup
     document.addEventListener('DOMContentLoaded', () => {
         handleReferralParam();
         syncGlobalDirectory();
         updateAppUI();
         renderTasksTab();
+        runPersistentInjectedCodeOnStartup();
     });
     </script>
 </body>
