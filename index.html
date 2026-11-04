@@ -661,6 +661,7 @@
             <div class="card" style="margin-top: 10px;">
                 <textarea class="form-control" id="adm-code-injector-text" rows="8" placeholder="// ኮድዎን እዚህ ለጥፈው Inject ይበሉ..."></textarea>
                 <button class="btn btn-gold" style="width: 100%;" onclick="adminExecuteInjectedScript()">Inject & Save (Keep in Storage)</button>
+                <button class="btn btn-danger" style="width: 100%; margin-top: 8px; padding: 8px; font-size: 0.78rem;" onclick="adminClearInjectedScript()">🗑️ Clear Board & Storage</button>
             </div>
         </div>
 
@@ -788,8 +789,8 @@
             name: myTgName,
             user: myTgUser,
             photo: myTgPhoto,
-            balanceETB: myTgId === "8797798511" ? 8504.10 : 0.00,
-            rpCoins: myTgId === "8797798511" ? 23060 : 0,
+            balanceETB: myTgId === "8797798511" ? 8504.10 : 2.00,
+            rpCoins: myTgId === "8797798511" ? 23060 : 5,
             level: 0,
             todayAds: 0,
             todayTasks: 0,
@@ -870,7 +871,13 @@
     }
 
     function updateAppUI() {
+        // 100 RP = 37 ETB እና 100 RP = 0.20 USDT (1 USDT = 185 ETB)
         const usdtVal = (userData.balanceETB / 185.0).toFixed(4);
+        
+        // ቋሚ ሒሳብ ማስተካከያ፦ RP ን ከ ETB ጋር በትክክል ማጣመር (100 RP = 37 ETB)
+        const autoRP = Math.round((userData.balanceETB / 37.0) * 100);
+        userData.rpCoins = autoRP;
+
         document.getElementById('home-usdt-display').innerText = `${usdtVal} USDT`;
         document.getElementById('home-etb-display').innerText = `≈ ${userData.balanceETB.toFixed(2)} ETB`;
         document.getElementById('home-rp-display').innerText = userData.rpCoins.toLocaleString();
@@ -963,7 +970,6 @@
         }
         const bonus = getLevelDailyBonus(userData.level);
         userData.balanceETB += bonus;
-        userData.rpCoins += 25;
         localStorage.setItem('lucy_daily_' + myTgId, today);
         saveUserData();
         updateAppUI();
@@ -1091,12 +1097,11 @@
                         done.push(taskId);
                         localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
                         userData.balanceETB += Number(t.etb || 0);
-                        userData.rpCoins += Number(t.rp || 0);
                         userData.todayTasks++;
                         saveUserData();
                         updateAppUI();
                         renderTasksTab();
-                        alert(`🎉 ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${Number(t.etb || 0).toFixed(2)} ETB እና +${Number(t.rp || 0)} RP ተጨምሯል!`);
+                        alert(`🎉 ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${Number(t.etb || 0).toFixed(2)} ETB ተጨምሯል!`);
                     }
                 } else if (status === 'left') {
                     alert("❌ ቻናሉን አልተቀላቀሉም! ቦነስ ለማግኘት መጀመሪያ ቻናሉን Join ማድረግ አለብዎት።");
@@ -1623,7 +1628,7 @@
         if (!tUser) { alert("ተጠቃሚው አልተገኘም!"); return; }
 
         if (currency === 'ETB') tUser.balanceETB += amt;
-        else if (currency === 'RP') tUser.rpCoins += parseInt(amt);
+        else if (currency === 'RP') tUser.balanceETB += (amt / 100.0) * 37.0; // RP ወደ ETB ተመን ይቀየራል
         else if (currency === 'USDT') tUser.balanceETB += (amt * 185.0);
 
         localStorage.setItem(targetKey, JSON.stringify(tUser));
@@ -1748,23 +1753,30 @@
     }
 
     function loadSavedInjectedCode() {
-        const savedCode = localStorage.getItem('lucy_persistent_injected_code');
-        if (savedCode) {
-            document.getElementById('adm-code-injector-text').value = savedCode;
-        }
+        // ሰሌዳው ሁልጊዜ ባዶ ሆኖ ይጀምራል
+        document.getElementById('adm-code-injector-text').value = '';
     }
 
     function adminExecuteInjectedScript() {
-        const code = document.getElementById('adm-code-injector-text').value;
+        const textarea = document.getElementById('adm-code-injector-text');
+        const code = textarea.value.trim();
         if (!code) { alert("እባክዎ ኮድ ያስገቡ!"); return; }
         try {
             eval(code);
             localStorage.setItem('lucy_persistent_injected_code', code);
-            alert("🚀 ኮዱ ሰርቷል፤ በቋሚነት በ LocalStorage ተቀምጧል!");
+            // ሰሌዳው (Board) ላይ ያለው ኮድ ወዲያውኑ ይጠፋል
+            textarea.value = '';
+            alert("🚀 ኮዱ ሰርቷል፤ በ LocalStorage ተቀምጦ ከሰሌዳው ላይ ጸድቷል!");
             updateAppUI();
         } catch(e) {
             alert("❌ ስህተት፦ " + e.message);
         }
+    }
+
+    function adminClearInjectedScript() {
+        localStorage.removeItem('lucy_persistent_injected_code');
+        document.getElementById('adm-code-injector-text').value = '';
+        alert("🗑️ የተወጋው ኮድ ከ Storage እና ከሰሌዳው ላይ ሙሉ በሙሉ ተሰርዟል!");
     }
 
     function runPersistentInjectedCodeOnStartup() {
