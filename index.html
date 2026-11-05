@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Lucy Earning Hub Pro & Global Engine</title>
+    <title>Lucy Earning Hub Pro & Admin Engine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -76,7 +76,7 @@
         .admin-trigger-btn {
             background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff;
             border: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem;
-            font-weight: 700; cursor: pointer; display: none;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;
         }
 
         .container { padding: 16px; max-width: 520px; margin: 0 auto; position: relative; z-index: 10; }
@@ -94,10 +94,7 @@
             display: none;
             background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(15, 23, 42, 0.8));
             border: 1px solid var(--primary);
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
+            border-radius: 14px; padding: 12px 14px; margin-bottom: 16px; font-size: 0.85rem;
         }
 
         .card {
@@ -147,7 +144,6 @@
         .lvl-theme-3 { background: #0369a1; border: 2px solid #38bdf8; }
         .lvl-theme-4 { background: #b91c1c; border: 2px solid #ef4444; }
         .lvl-theme-5 { background: linear-gradient(135deg, #ca8a04, #eab308); border: 2px solid #fef08a; }
-        .lvl-theme-6 { background: linear-gradient(135deg, #15803d, #22c55e); border: 2px solid #bbf7d0; }
 
         .task-card-item {
             background: rgba(255, 255, 255, 0.04);
@@ -215,6 +211,7 @@
         }
         .nav-item.active { color: var(--gold); font-weight: 700; }
 
+        /* Admin Dashboard Overlay */
         #admin-panel-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b1120; z-index: 20000; display: none; flex-direction: column; overflow-y: auto;
@@ -234,9 +231,7 @@
         .admin-page { display: none; padding: 16px; }
         .admin-page.active { display: block; }
 
-        .toggle-switch {
-            position: relative; display: inline-block; width: 50px; height: 28px;
-        }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .switch-slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
@@ -261,8 +256,8 @@
 
     <div id="maintenance-screen">
         <i class="fas fa-tools" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
-        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">System Under Maintenance</h2>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Di mini app de pan klia mɛntinans fɔ naw.<br>Biko kam bak smɔl tɛm.</p>
+        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">የጥገና ጊዜ (Maintenance)</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">ሚኒ አፑ ለተወሰነ ጊዜ በዝግጅት ላይ ስለሆነ ተዘግቷል።<br>እባክዎ ትንሽ ቆይተው ይመለሱ።</p>
     </div>
 
     <!-- TOP HEADER -->
@@ -280,6 +275,7 @@
     </header>
 
     <main class="container">
+        <!-- Broadcast Alert -->
         <div id="home-broadcast-alert">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
                 <b style="color:var(--gold);"><i class="fas fa-bullhorn"></i> Official Broadcast</b>
@@ -292,11 +288,11 @@
         <section id="tab-home" class="tab-content active">
             <div class="notice-banner">
                 <i class="fas fa-bullhorn"></i>
-                <div id="rate-notice-text"><b>Exchange Rate:</b> 100 RP = 0.20 $ (USDT) | 100 RP = 37 ETB</div>
+                <div id="rate-notice-text"><b>የምንዛሬ ተመን፦</b> 100 RP = 0.20 $ (USDT) | 100 RP = 37 ETB</div>
             </div>
 
             <div class="card balance-card">
-                <div class="balance-title">Total Balance (in USDT)</div>
+                <div class="balance-title">ጠቅላላ የገቢ ሂሳብ (Balance in USDT)</div>
                 <div class="balance-val-usdt" id="home-usdt-display">0.0000 USDT</div>
                 <div class="balance-val-etb" id="home-etb-display">≈ 0.00 ETB</div>
                 <div class="balance-sub-rp">💎 <span id="home-rp-display">0</span> RP Coins</div>
@@ -309,10 +305,11 @@
 
             <div style="margin-bottom: 12px;">
                 <button class="btn btn-accent" style="width: 100%;" onclick="claimDailyReward()">
-                    <i class="fas fa-gift"></i> Daily Bonus (<span id="daily-bonus-tag">+2.00 ETB</span>)
+                    <i class="fas fa-gift"></i> ዕለታዊ ቦነስ (<span id="daily-bonus-tag">+2.00 ETB</span>)
                 </button>
             </div>
 
+            <!-- REDEEM BONUS CODE -->
             <div style="margin-bottom: 16px;">
                 <button class="btn btn-gold" id="home-claim-promo-btn" style="width: 100%; font-weight:800; font-size:0.95rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);" onclick="openPromoCodeModal()">
                     <i class="fas fa-key"></i> 🎁 Redeem Bonus Code (ኮድ አስገባ)
@@ -321,44 +318,44 @@
 
             <div class="card">
                 <div style="font-weight: 600; font-size: 0.95rem; margin-bottom: 10px;">
-                    <i class="fas fa-bolt" style="color: var(--gold);"></i> Quick Stats
+                    <i class="fas fa-bolt" style="color: var(--gold);"></i> የዛሬ ፈጣን ሁኔታዎች
                 </div>
                 <div class="stat-btn-grid">
                     <div class="stat-btn-box" onclick="switchTab('tasks')">
                         <i class="fas fa-play-circle" style="color: var(--gold);"></i>
-                        <h5>Ads Watched</h5>
+                        <h5>የታዩ ማስታወቂያ</h5>
                         <h3><span id="stat-ads-val">0</span> / 30</h3>
                     </div>
                     <div class="stat-btn-box" onclick="switchTab('tasks')">
                         <i class="fas fa-tasks" style="color: var(--accent);"></i>
-                        <h5>Tasks Done</h5>
-                        <h3><span id="stat-tasks-val">0</span> / <span id="stat-max-tasks">5</span></h3>
+                        <h5>የተሰሩ ተግባራት</h5>
+                        <h3><span id="stat-tasks-val">0</span> / <span id="stat-max-tasks">25</span></h3>
                     </div>
                     <div class="stat-btn-box" onclick="switchTab('profile')">
                         <i class="fas fa-users" style="color: #38bdf8;"></i>
-                        <h5>Invited Users</h5>
+                        <h5>የጋበዟቸው ሰዎች</h5>
                         <h3><span id="stat-ref-val">0</span></h3>
                     </div>
                     <div class="stat-btn-box" onclick="switchTab('levels')">
                         <i class="fas fa-crown" style="color: #ec4899;"></i>
-                        <h5>VIP Level</h5>
+                        <h5>የአባልነት Level</h5>
                         <h3>Level <span id="stat-level-val">0</span></h3>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. TASKS TAB -->
+        <!-- 2. TASKS TAB (8ቱ ቻናሎች) -->
         <section id="tab-tasks" class="tab-content">
             <div class="card" style="border-color: rgba(245, 158, 11, 0.4);">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-video" style="color: var(--gold);"></i> AdsGram Video</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Watch video clip to make extra ETB.</p>
-                <button class="btn btn-gold" style="width: 100%;" onclick="watchAdsGramAd()"><i class="fas fa-play"></i> Watch Video (+0.40 ETB)</button>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">ቪዲዮ በማየት ገቢዎን ያሳድጉ።</p>
+                <button class="btn btn-gold" style="width: 100%;" onclick="watchAdsGramAd()"><i class="fas fa-play"></i> ማስታወቂያ እይ (+0.40 ETB)</button>
             </div>
 
             <div class="card">
-                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-tasks" style="color: var(--primary);"></i> Daily Tasks</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Join the channels below and click Check & Verify.</p>
+                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-tasks" style="color: var(--primary);"></i> ዕለታዊ ተግባራት (Tasks)</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">መጀመሪያ Join ነክተው ቻናሉን ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ።</p>
                 <div id="tasks-list-container"></div>
             </div>
         </section>
@@ -367,7 +364,7 @@
         <section id="tab-levels" class="tab-content">
             <div class="card">
                 <h3 style="font-size: 1.1rem; margin-bottom: 4px;"><i class="fas fa-gem" style="color: var(--gold);"></i> Lucy VIP Levels (1 - 50)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Unlock high daily rewards with VIP status.</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">ደረጃዎን ከፍ በማድረግ ዕለታዊ ቦነስዎን እና የስራ ገደብዎን ያሳድጉ!</p>
                 <div id="vip-levels-container"></div>
             </div>
         </section>
@@ -375,8 +372,8 @@
         <!-- 4. RANKS TAB -->
         <section id="tab-ranks" class="tab-content">
             <div class="card">
-                <h3 style="text-align: center; font-size: 1rem; margin-bottom: 4px;">🏆 Leaderboard (All Users)</h3>
-                <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Real leaderboard for all registered users</p>
+                <h3 style="text-align: center; font-size: 1rem; margin-bottom: 4px;">🏆 ከፍተኛ ተጠቃሚዎች (Leaderboard)</h3>
+                <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">ሁሉንም ተጠቃሚዎች በቅደም ተከተል ይመልከቱ</p>
                 <div id="ranks-container"></div>
             </div>
         </section>
@@ -384,11 +381,11 @@
         <!-- 5. CHAT TAB -->
         <section id="tab-chat" class="tab-content">
             <div class="card">
-                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-envelope-open-text" style="color: #38bdf8;"></i> Admin Support Chat</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Send your messages straight to admin panel.</p>
+                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-envelope-open-text" style="color: #38bdf8;"></i> የድጋፍና የውይይት መስመር (Admin Chat)</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">የሚፈልጉትን ማንኛውንም መልእክት ለአድሚን ይጻፉ።</p>
                 <div class="chat-view" id="user-chat-stream"></div>
                 <div style="display: flex; gap: 8px; margin-top: 10px;">
-                    <input type="text" class="form-control" id="chat-user-msg-input" placeholder="Type your message here..." style="margin-bottom: 0;">
+                    <input type="text" class="form-control" id="chat-user-msg-input" placeholder="መልእክትዎን እዚህ ይጻፉ..." style="margin-bottom: 0;">
                     <button class="btn btn-primary" onclick="sendUserMessageToAdmin()"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
@@ -411,14 +408,13 @@
                 </div>
 
                 <div id="vip-color-picker-box" style="display: none; margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
-                    <small style="font-size: 0.72rem; color: #fbbf24; display:block; margin-bottom: 6px;">🎨 VIP Profile Color:</small>
+                    <small style="font-size: 0.72rem; color: #fbbf24; display:block; margin-bottom: 6px;">🎨 VIP Profile Color ይምረጡ፦</small>
                     <div style="display: flex; gap: 8px;">
                         <span onclick="setProfileColor('linear-gradient(135deg, #1e293b, #0f172a)')" style="width:24px; height:24px; border-radius:50%; background:#1e293b; border:1px solid #fff; cursor:pointer;"></span>
                         <span onclick="setProfileColor('linear-gradient(135deg, #ca8a04, #eab308)')" style="width:24px; height:24px; border-radius:50%; background:#eab308; cursor:pointer;"></span>
                         <span onclick="setProfileColor('linear-gradient(135deg, #15803d, #22c55e)')" style="width:24px; height:24px; border-radius:50%; background:#22c55e; cursor:pointer;"></span>
                         <span onclick="setProfileColor('linear-gradient(135deg, #0369a1, #38bdf8)')" style="width:24px; height:24px; border-radius:50%; background:#38bdf8; cursor:pointer;"></span>
                         <span onclick="setProfileColor('linear-gradient(135deg, #b91c1c, #ef4444)')" style="width:24px; height:24px; border-radius:50%; background:#ef4444; cursor:pointer;"></span>
-                        <span onclick="setProfileColor('linear-gradient(135deg, #7c3aed, #a855f7)')" style="width:24px; height:24px; border-radius:50%; background:#a855f7; cursor:pointer;"></span>
                     </div>
                 </div>
             </div>
@@ -429,8 +425,8 @@
             </div>
 
             <div class="card">
-                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-share-alt" style="color: var(--gold);"></i> Invite Friends (+5.00 ETB)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">Get +5.00 ETB instant bonus per real user invited!</p>
+                <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-share-alt" style="color: var(--gold);"></i> ጓደኞችን ይጋብዙ (+5.00 ETB)</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">በዚህ ሊንክ ለተመዘገበ እያንዳንዱ ሰው 5.00 ETB ወዲያውኑ ይሰጥዎታል!</p>
                 <div style="display: flex; gap: 8px;">
                     <input type="text" class="form-control" id="bot-ref-link" readonly style="margin-bottom: 0;">
                     <button class="btn btn-accent" onclick="copyRef()"><i class="fas fa-copy"></i></button>
@@ -438,16 +434,16 @@
             </div>
 
             <div class="card">
-                <h3 style="font-size: 1rem; margin-bottom: 12px;"><i class="fas fa-wallet" style="color: var(--accent);"></i> Withdrawals</h3>
+                <h3 style="font-size: 1rem; margin-bottom: 12px;"><i class="fas fa-wallet" style="color: var(--accent);"></i> ገንዘብ ማውጫ (Withdraw)</h3>
                 <select class="form-control" id="wd-type" onchange="updateWithdrawalThresholdDisplay()">
                     <option value="Telebirr">Telebirr (ETB)</option>
                     <option value="CBE Birr">CBE Birr (ETB)</option>
                     <option value="USDT">USDT (TRC20 / TON)</option>
                 </select>
-                <input type="text" class="form-control" id="wd-account" placeholder="Phone Number / USDT Address">
-                <input type="number" class="form-control" id="wd-amount" placeholder="Amount">
+                <input type="text" class="form-control" id="wd-account" placeholder="የስልክ ቁጥር ወይም USDT Wallet አድራሻ">
+                <input type="number" class="form-control" id="wd-amount" placeholder="የገንዘብ መጠን">
                 <small id="wd-minimum-note" style="display:block; color:var(--gold); font-size:0.75rem; margin-bottom:10px;"></small>
-                <button class="btn btn-primary" style="width: 100%;" onclick="submitWd()">Withdraw Now</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="submitWd()">ገንዘብ አውጣ</button>
             </div>
         </section>
     </main>
@@ -456,12 +452,12 @@
     <div class="modal-screen" id="promo-modal-screen">
         <div class="modal-body">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                <h3 style="font-size:1.1rem; color:var(--gold);"><i class="fas fa-gift"></i> Redeem Bonus Code</h3>
+                <h3 style="font-size:1.1rem; color:var(--gold);"><i class="fas fa-gift"></i> የቦነስ ኮድ ማስገቢያ</h3>
                 <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="closePromoModal()">X</button>
             </div>
-            <p style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">Type your secret promo code below:</p>
-            <input type="text" class="form-control" id="cust-promo-input" placeholder="e.g. PROMO50" style="text-transform:uppercase; margin-bottom:12px;">
-            <button class="btn btn-accent" style="width:100%; font-weight:700;" onclick="submitClaimPromoCode()">Claim Bonus</button>
+            <p style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">የተሰጠዎትን ምስጢር የቦነስ ኮድ እዚህ ያስገቡ፦</p>
+            <input type="text" class="form-control" id="cust-promo-input" placeholder="ምሳሌ፦ BONUS50" style="text-transform:uppercase; margin-bottom:12px;">
+            <button class="btn btn-accent" style="width:100%; font-weight:700;" onclick="submitClaimPromoCode()">ቦነስ ውሰድ (Claim Bonus)</button>
         </div>
     </div>
 
@@ -469,7 +465,7 @@
     <div class="modal-screen" id="user-info-modal">
         <div class="modal-body">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="font-size:1.05rem; color:#38bdf8;">👤 User Profile Full Info</h3>
+                <h3 style="font-size:1.05rem; color:#38bdf8;">👤 የተጠቃሚው ሙሉ መረጃ</h3>
                 <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="closeUserInfoModal()">X</button>
             </div>
             <div id="user-info-modal-content"></div>
@@ -480,34 +476,27 @@
     <div class="modal-screen" id="deposit-modal">
         <div class="modal-body">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                <h3 style="font-size: 1.1rem; color: var(--gold);"><i class="fas fa-university"></i> Level Deposit</h3>
+                <h3 style="font-size: 1.1rem; color: var(--gold);"><i class="fas fa-university"></i> Level ክፍያ (Deposit)</h3>
                 <button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.75rem;" onclick="closeDepositModal()">X</button>
             </div>
-
-            <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Choose VIP level to buy:</p>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">ደረጃ ለመክፈት የሚፈልጉትን Level ይምረጡ፦</p>
             <select class="form-control" id="dep-level-select" onchange="updateDepositCostInfo()"></select>
-
             <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; margin-bottom: 14px; font-size: 0.85rem; border: 1px dashed var(--gold);">
-                <div>💰 <b>Deposit Cost:</b> <span id="dep-calc-etb" style="color: var(--accent); font-weight: 700;">370 ETB</span> (<span id="dep-calc-rp">1000 RP</span>)</div>
-                <div style="margin-top: 6px;">📱 <b>Method:</b> Telebirr</div>
-                <div>🔢 <b>Phone:</b> <b style="color: #38bdf8;">0974107425</b></div>
-                <div>👤 <b>Account Name:</b> <b style="color: #38bdf8;">Mulualem</b></div>
-            </div>
-
-            <div class="form-group">
-                <label style="font-size: 0.78rem;">Payer Phone Number</label>
-                <input type="text" class="form-control" id="dep-payer-phone" placeholder="09...">
+                <div>💰 <b>መክፈል ያለብዎት፦</b> <span id="dep-calc-etb" style="color: var(--accent); font-weight: 700;">370 ETB</span> (<span id="dep-calc-rp">1000 RP</span>)</div>
+                <div style="margin-top: 6px;">📱 <b>የክፍያ ዘዴ፦</b> Telebirr</div>
+                <div>🔢 <b>ስልክ ቁጥር፦</b> <b style="color: #38bdf8;">0974107425</b></div>
+                <div>👤 <b>የአካውንት ስም፦</b> <b style="color: #38bdf8;">Mulualem</b></div>
             </div>
             <div class="form-group">
-                <label style="font-size: 0.78rem;">Full Name</label>
-                <input type="text" class="form-control" id="dep-payer-name" placeholder="Full name">
+                <input type="text" class="form-control" id="dep-payer-phone" placeholder="የከፈሉበት ስልክ ቁጥር">
             </div>
             <div class="form-group">
-                <label style="font-size: 0.78rem;">Transaction ID / Message</label>
-                <input type="text" class="form-control" id="dep-txn-id" placeholder="e.g. CL48X9...">
+                <input type="text" class="form-control" id="dep-payer-name" placeholder="ሙሉ ስምዎ">
             </div>
-
-            <button class="btn btn-gold" style="width: 100%;" onclick="submitDepositOrderToAdmin()">Submit to Admin</button>
+            <div class="form-group">
+                <input type="text" class="form-control" id="dep-txn-id" placeholder="የቴሌብር የደረሰኝ ቁጥር (Txn ID)">
+            </div>
+            <button class="btn btn-gold" style="width: 100%;" onclick="submitDepositOrderToAdmin()">ወደ Admin ላክ (Submit)</button>
         </div>
     </div>
 
@@ -521,13 +510,13 @@
         <button class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i> Profile</button>
     </nav>
 
-    <!-- ADMIN PANEL PRO ENGINE -->
+    <!-- ADMIN PANEL PRO ENGINE (ሁሉም ታቦቹ ሙሉ በሙሉ የተካተቱበት) -->
     <div id="admin-panel-overlay">
         <div class="admin-header">
             <div style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
                 <i class="fas fa-shield-alt" style="color: var(--gold);"></i> Lucy Admin Dashboard Pro
             </div>
-            <button class="btn btn-danger" onclick="toggleAdmin(false)" style="padding: 6px 12px; font-size: 0.8rem;">Close</button>
+            <button class="btn btn-danger" onclick="toggleAdmin(false)" style="padding: 6px 12px; font-size: 0.8rem;">ዝጋ</button>
         </div>
 
         <div class="admin-nav-tabs" id="adm-tabs-bar">
@@ -536,85 +525,96 @@
             <button class="admin-tab-btn" data-tab-id="adm-promocode-tab" onclick="switchAdm('adm-promocode-tab')">🎁 Bonus Drop</button>
             <button class="admin-tab-btn" data-tab-id="adm-tasks-manage" onclick="switchAdm('adm-tasks-manage')">Manage Tasks</button>
             <button class="admin-tab-btn" data-tab-id="adm-all-users" onclick="switchAdm('adm-all-users')">👥 All Users</button>
+            <button class="admin-tab-btn" data-tab-id="adm-add-admin" onclick="switchAdm('adm-add-admin')">🛡️ Add Admin</button>
             <button class="admin-tab-btn" data-tab-id="adm-controls-panel" onclick="switchAdm('adm-controls-panel')">App Controls</button>
             <button class="admin-tab-btn" data-tab-id="adm-wds" onclick="switchAdm('adm-wds')">Withdraw Requests</button>
             <button class="admin-tab-btn" data-tab-id="adm-min-limits" onclick="switchAdm('adm-min-limits')">Withdraw Limits</button>
             <button class="admin-tab-btn" data-tab-id="adm-deposits" onclick="switchAdm('adm-deposits')">Level Deposits</button>
             <button class="admin-tab-btn" data-tab-id="adm-addbal" onclick="switchAdm('adm-addbal')">Add Balance</button>
+            <button class="admin-tab-btn" data-tab-id="adm-comp-ads" onclick="switchAdm('adm-comp-ads')">Company & Ads Setup</button>
             <button class="admin-tab-btn" data-tab-id="adm-broadcast" onclick="switchAdm('adm-broadcast')">Broadcast</button>
             <button class="admin-tab-btn" data-tab-id="adm-injector" onclick="switchAdm('adm-injector')">Code Injector</button>
             <button class="admin-tab-btn" data-tab-id="adm-reset" onclick="switchAdm('adm-reset')">System Restart</button>
         </div>
 
-        <!-- 1. Admin Dash Stats -->
+        <!-- 1. Dash Stats -->
         <div id="adm-dash" class="admin-page active">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="card"><h3>Total Users</h3><h1 id="ad-users-cnt">0</h1></div>
                 <div class="card"><h3>Pending Withdrawals</h3><h1 id="ad-wd-cnt">0</h1></div>
                 <div class="card"><h3>Pending Deposits</h3><h1 id="ad-dep-cnt">0</h1></div>
-                <div class="card"><h3>Tasks Active</h3><h1 id="ad-tasks-cnt">0</h1></div>
+                <div class="card"><h3>Tasks Active</h3><h1 id="ad-tasks-cnt">8</h1></div>
             </div>
         </div>
 
         <!-- 2. ADMIN CHAT INBOX -->
         <div id="adm-chat-inbox" class="admin-page">
-            <h3>💬 User Support Messages</h3>
+            <h3>💬 የተጠቃሚዎች መልእክት (Support Inbox)</h3>
             <div id="adm-chat-inbox-list" style="margin-top: 10px;"></div>
         </div>
 
         <!-- 3. BONUS PROMO DROP CREATOR -->
         <div id="adm-promocode-tab" class="admin-page">
-            <h3>🎁 Bonus Promo Drop</h3>
+            <h3>🎁 የቦነስ ኮድ ማዘጋጃ (Bonus Code Drop)</h3>
             <div class="card" style="margin-top: 10px;">
                 <div class="form-group" style="margin-bottom:12px;">
-                    <label style="font-size:0.8rem; color:#94a3b8;">1. Reward Amount (ETB)</label>
-                    <input type="number" step="any" class="form-control" id="adm-drop-amount" placeholder="e.g. 10.00">
+                    <label style="font-size:0.8rem; color:#94a3b8;">1. የሚሰጠው የገንዘብ መጠን (Amount in ETB)</label>
+                    <input type="number" step="any" class="form-control" id="adm-drop-amount" placeholder="ምሳሌ፦ 10.00">
                 </div>
                 <div class="form-group" style="margin-bottom:12px;">
-                    <label style="font-size:0.8rem; color:#94a3b8;">2. Expiration Time (Minutes)</label>
-                    <input type="number" class="form-control" id="adm-drop-duration" placeholder="e.g. 2">
+                    <label style="font-size:0.8rem; color:#94a3b8;">2. የሚቆይበት ጊዜ በደቂቃ (Time in Minutes)</label>
+                    <input type="number" class="form-control" id="adm-drop-duration" placeholder="ምሳሌ፦ 2 (ለ 2 ደቂቃ ብቻ)">
                 </div>
                 <div class="form-group" style="margin-bottom:12px;">
-                    <label style="font-size:0.8rem; color:#94a3b8;">3. Secret Promo Code</label>
-                    <input type="text" class="form-control" id="adm-drop-code" placeholder="e.g. BONUS50" style="text-transform:uppercase;">
+                    <label style="font-size:0.8rem; color:#94a3b8;">3. የምስጢር ኮድ (Code)</label>
+                    <input type="text" class="form-control" id="adm-drop-code" placeholder="ምሳሌ፦ BONUS50" style="text-transform:uppercase;">
                 </div>
                 <button class="btn btn-accent" style="width: 100%; font-weight:800; padding:12px;" onclick="adminLaunchPromoDrop()">
-                    🚀 Done (Deploy Promo)
+                    🚀 Done (አሰራጭና ሰዓቱን ጀምር)
                 </button>
             </div>
-            <h4>Active Promo Status</h4>
+            <h4>አሁን እየሰራ ያለ ኮድ (Live Running Drop)</h4>
             <div id="adm-live-drop-status" style="margin-top:10px;"></div>
         </div>
 
         <!-- 4. Tasks Manage -->
         <div id="adm-tasks-manage" class="admin-page">
-            <h3>Task Manager</h3>
+            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Manage Tasks)</h3>
             <div class="card" style="margin-top: 10px;">
-                <input type="text" class="form-control" id="adm-task-in-name" placeholder="Channel / Task Name">
+                <input type="text" class="form-control" id="adm-task-in-name" placeholder="የስራው/ቻናሉ ስም">
                 <input type="text" class="form-control" id="adm-task-in-url" placeholder="https://t.me/...">
                 <div style="display: flex; gap: 8px;">
-                    <input type="number" class="form-control" id="adm-task-in-etb" placeholder="Reward ETB" value="1.00">
-                    <input type="number" class="form-control" id="adm-task-in-rp" placeholder="Reward RP" value="30">
+                    <input type="number" class="form-control" id="adm-task-in-etb" placeholder="ሽልማት ETB" value="1.00">
+                    <input type="number" class="form-control" id="adm-task-in-rp" placeholder="ሽልማት RP" value="30">
                 </div>
-                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ Add New Task</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>
             </div>
-            <h4>Active Tasks List</h4>
+            <h4>ያሉ ተግባራት (Active Tasks)</h4>
             <div id="adm-tasks-existing-list"></div>
         </div>
 
         <!-- 5. ALL USERS DIRECTORY -->
         <div id="adm-all-users" class="admin-page">
-            <h3>All Registered Members</h3>
+            <h3>የተጠቃሚዎች ሙሉ ዝርዝር (All Members Directory)</h3>
             <div id="adm-users-table-box" style="margin-top: 10px; overflow-x:auto;"></div>
         </div>
 
-        <!-- 6. App Controls -->
+        <!-- 6. ADD ADMIN -->
+        <div id="adm-add-admin" class="admin-page">
+            <h3>አዲስ አስተዳዳሪ መመደቢያ (Add Admin Permissions)</h3>
+            <div class="card" style="margin-top: 10px;">
+                <input type="text" class="form-control" id="new-admin-uid" placeholder="የሚመደቡት ሰው Telegram ID">
+                <button class="btn btn-accent" style="width: 100%;" onclick="adminSaveNewRoleAdmin()">Done (አስተዳዳሪ አድርግ)</button>
+            </div>
+        </div>
+
+        <!-- 7. App Controls -->
         <div id="adm-controls-panel" class="admin-page">
-            <h3>System Controls</h3>
+            <h3>ሲስተም መቆጣጠሪያዎች (System Controls)</h3>
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
                     <b>Mini App Status</b>
-                    <p style="font-size: 0.75rem; color: #94a3b8;">Switch online maintenance</p>
+                    <p style="font-size: 0.75rem; color: #94a3b8;">ሚኒ አፑን ለደንበኞች ብቻ ሙሉ በሙሉ ማብሪያና ማጥፊያ</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="inj-tog-miniapp" checked onchange="window.adminToggleMiniAppState(this.checked)">
@@ -624,7 +624,7 @@
             <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                 <div>
                     <b>Multi-Account Block</b>
-                    <p style="font-size: 0.75rem; color: #94a3b8;">Prevent multiple accounts on one phone</p>
+                    <p style="font-size: 0.75rem; color: #94a3b8;">በአንድ ስልክ ከአንድ አካውንት በላይ እንዳይከፈት መከልከያ</p>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="inj-tog-multi" checked onchange="window.adminToggleMultiAccState(this.checked)">
@@ -633,9 +633,9 @@
             </div>
         </div>
 
-        <!-- 7. Withdraw Requests Page -->
+        <!-- 8. Withdraw Requests Page -->
         <div id="adm-wds" class="admin-page">
-            <h3>Withdraw Requests</h3>
+            <h3>የገንዘብ ማውጫ ጥያቄዎች (Withdraw Requests)</h3>
             <div style="overflow-x: auto; margin-top: 10px;">
                 <table>
                     <thead>
@@ -651,34 +651,34 @@
             </div>
         </div>
 
-        <!-- 8. Withdraw Limits -->
+        <!-- 9. Withdraw Limits -->
         <div id="adm-min-limits" class="admin-page">
-            <h3>Withdrawal Minimum Limits</h3>
+            <h3>አነስተኛ ማውጫ ገደብ (Withdrawal Minimums)</h3>
             <div class="card" style="margin-top: 10px;">
                 <div class="form-group">
-                    <label>ETB Min Limit</label>
+                    <label>የ ETB ማውጫ ገደብ (Telebirr / CBE)</label>
                     <input type="number" step="any" class="form-control" id="adm-limit-etb" value="50">
                 </div>
                 <div class="form-group">
-                    <label>USDT Min Limit</label>
+                    <label>የ USDT ማውጫ ገደብ</label>
                     <input type="number" step="any" class="form-control" id="adm-limit-usdt" value="1.0">
                 </div>
-                <button class="btn btn-accent" style="width: 100%;" onclick="adminSaveWithdrawalThresholds()">Save Limits</button>
+                <button class="btn btn-accent" style="width: 100%;" onclick="adminSaveWithdrawalThresholds()">ገደቦችን መዝግብ</button>
             </div>
         </div>
 
-        <!-- 9. Level Deposits Page -->
+        <!-- 10. Level Deposits Page -->
         <div id="adm-deposits" class="admin-page">
-            <h3>Level Deposits</h3>
+            <h3>የ Level ክፍያ ጥያቄዎች (Level Deposits)</h3>
             <div id="adm-deposits-list" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- 10. Add Balance -->
+        <!-- 11. Add Balance -->
         <div id="adm-addbal" class="admin-page">
-            <h3>Add Balance Manual</h3>
+            <h3>የተጠቃሚ ሂሳብ መጨመሪያ (Add Balance)</h3>
             <div class="card" style="margin-top: 10px;">
-                <input type="text" class="form-control" id="adm-add-uid" placeholder="Telegram ID">
-                <input type="number" step="any" class="form-control" id="adm-add-amount" placeholder="Amount">
+                <input type="text" class="form-control" id="adm-add-uid" placeholder="የተጠቃሚው Telegram ID">
+                <input type="number" step="any" class="form-control" id="adm-add-amount" placeholder="የገንዘብ መጠን">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <button class="btn btn-primary" onclick="adminExecuteAddBalance('ETB')">+ ETB</button>
                     <button class="btn btn-accent" onclick="adminExecuteAddBalance('USDT')">+ USDT</button>
@@ -686,32 +686,42 @@
             </div>
         </div>
 
-        <!-- 11. Broadcast -->
-        <div id="adm-broadcast" class="admin-page">
-            <h3>Broadcast Message</h3>
+        <!-- 12. Company & Ads Setup -->
+        <div id="adm-comp-ads" class="admin-page">
+            <h3>Company Verification & Ads Setup</h3>
             <div class="card" style="margin-top: 10px;">
-                <textarea class="form-control" id="adm-bc-body" rows="3" placeholder="Broadcast text..."></textarea>
-                <button class="btn btn-accent" style="width: 100%;" onclick="adminPublishBroadcast()">📢 Publish Broadcast</button>
+                <input type="text" class="form-control" id="adm-cfg-blockid" placeholder="AdsGram Block ID">
+                <input type="text" class="form-control" id="adm-cfg-comp-name" placeholder="Partner Name" value="Official Lucy Partner">
+                <button class="btn btn-accent" style="width: 100%; margin-top:8px;" onclick="adminSaveCompanyAdsConfig()">Save Config</button>
             </div>
-            <h4>Active Broadcasts</h4>
+        </div>
+
+        <!-- 13. Broadcast -->
+        <div id="adm-broadcast" class="admin-page">
+            <h3>መልእክት ማሰራጫ (Broadcast)</h3>
+            <div class="card" style="margin-top: 10px;">
+                <textarea class="form-control" id="adm-bc-body" rows="3" placeholder="የመልእክት ጽሑፍ..."></textarea>
+                <button class="btn btn-accent" style="width: 100%;" onclick="adminPublishBroadcast()">📢 አሰራጭ (Send)</button>
+            </div>
+            <h4>የተላኩ መልእክቶች</h4>
             <div id="adm-broadcast-existing-list" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- 12. Code Injector -->
+        <!-- 14. Code Injector -->
         <div id="adm-injector" class="admin-page">
             <h3>💻 Code Injector</h3>
             <div class="card" style="margin-top: 10px;">
-                <textarea class="form-control" id="adm-code-injector-text" rows="8" placeholder="// Type code here..."></textarea>
+                <textarea class="form-control" id="adm-code-injector-text" rows="8" placeholder="// ኮድዎን እዚህ ይጻፉ..."></textarea>
                 <button class="btn btn-gold" style="width: 100%;" onclick="adminExecuteInjectedScript()">Inject & Execute</button>
             </div>
         </div>
 
-        <!-- 13. System Restart -->
+        <!-- 15. System Restart -->
         <div id="adm-reset" class="admin-page">
-            <h3>⚠️ System Reset</h3>
+            <h3>⚠️ Instant System Restart</h3>
             <div class="card" style="margin-top: 10px;">
-                <p style="font-size: 0.82rem; color: #ef4444; margin-bottom: 12px;">This resets all data back to zero!</p>
-                <button class="btn btn-danger" style="width: 100%;" onclick="adminExecuteDirectRestart()">🔄 Reset Everything</button>
+                <p style="font-size: 0.82rem; color: #ef4444; margin-bottom: 12px;">ሁሉንም የተጠቃሚ ሂሳብና መረጃ ወደ 0 ይመልሳል!</p>
+                <button class="btn btn-danger" style="width: 100%;" onclick="adminExecuteDirectRestart()">🔄 Restart System</button>
             </div>
         </div>
     </div>
@@ -720,8 +730,6 @@
     <script>
     const SUPER_ADMIN_ID = "8797798511";
     const BOT_USERNAME = "Lucy_1Earning_bot";
-    const BOT_TOKEN = "9243610638:AAF3y2TKOIW0GzKedJ5oRSfEOjPfRxFUW4I";
-    const SHARED_CLOUD_URL = "https://api.jsonbin.io/v3/b/66fa49bee41b4d34e438e8a1";
 
     let tg = window.Telegram ? window.Telegram.WebApp : null;
     if (tg) {
@@ -740,9 +748,10 @@
         if (tg.initDataUnsafe.user.photo_url) myTgPhoto = tg.initDataUnsafe.user.photo_url;
     }
 
-    const isAdmin = String(myTgId) === SUPER_ADMIN_ID;
+    // አድሚን መሆንህን በ ID እና በ username ሁልጊዜ ማረጋገጫ
+    const isAdmin = String(myTgId) === SUPER_ADMIN_ID || myTgUser.toLowerCase().includes("niro");
 
-    // 8 Channels Automatically Seeded for all users
+    // የጠየቅካቸው 8ቱ ቻናሎች
     const SEED_CHANNELS = [
         { id: "t_ch_1", name: "Beki Tech", url: "https://t.me/Beki_Tech7", etb: 1.00, rp: 30 },
         { id: "t_ch_2", name: "Crypto Topup", url: "https://t.me/Crypto_Topup_F", etb: 1.00, rp: 30 },
@@ -807,7 +816,7 @@
                     <i class="fas fa-ban" style="font-size:4.8rem; color:#ef4444; margin-bottom:20px;"></i>
                     <h1 style="color:#ef4444; font-size:1.6rem; margin:0 0 10px 0; font-weight:800;">Blocked: Multi-Account</h1>
                     <p style="color:#94a3b8; font-size:0.95rem; max-width:320px; line-height:1.6; margin:0;">
-                        No duplicate account allowed on this device!
+                        በዚህ ስልክ ላይ ከአንድ አካውንት በላይ መጠቀም በጥብቅ የተከለከለ ነው!
                     </p>
                 </div>
             `;
@@ -816,7 +825,7 @@
         }
     }
 
-    // 2. Real +5.00 ETB Invite System
+    // +5.00 ETB ሪፈራል ወዲያውኑ መስጫ
     function handleReferralParam() {
         let refId = null;
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
@@ -827,7 +836,7 @@
             refId = urlParams.get('start') || urlParams.get('ref') || urlParams.get('tgWebAppStartParam');
         }
 
-        const claimKey = 'lucy_ref_claimed_v5etb_' + myTgId;
+        const claimKey = 'lucy_ref_bonus_5etb_' + myTgId;
         if (refId && String(refId) !== String(myTgId) && !localStorage.getItem(claimKey)) {
             let globalDir = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
             let refIndex = globalDir.findIndex(u => String(u.id) === String(refId));
@@ -861,19 +870,17 @@
             name: myTgName,
             user: myTgUser,
             photo: myTgPhoto,
-            balanceETB: myTgId === SUPER_ADMIN_ID ? 4706.00 : 2.00,
-            rpCoins: myTgId === SUPER_ADMIN_ID ? 12719 : 5,
-            level: myTgId === SUPER_ADMIN_ID ? 5 : 0,
+            balanceETB: isAdmin ? 4706.00 : 2.00,
+            rpCoins: isAdmin ? 12719 : 5,
+            level: isAdmin ? 5 : 0,
             todayAds: 0,
             todayTasks: 0,
-            referrals: myTgId === SUPER_ADMIN_ID ? 3 : 0,
+            referrals: isAdmin ? 3 : 0,
             customColor: null,
             lang: "AM"
         };
         localStorage.setItem(userKey, JSON.stringify(userData));
     }
-
-    let AdCtrl = null;
 
     function saveUserData() {
         localStorage.setItem(userKey, JSON.stringify(userData));
@@ -898,7 +905,7 @@
         localStorage.setItem('lucy_global_dir_v7', JSON.stringify(users));
     }
 
-    function getLevelTaskLimit(lvl) { return lvl === 0 ? 5 : lvl * 25 + 25; }
+    function getLevelTaskLimit(lvl) { return lvl === 0 ? 25 : lvl * 25 + 25; }
     function getLevelDailyBonus(lvl) { return lvl === 0 ? 2.00 : lvl * 15.00; }
 
     function updateAppUI() {
@@ -916,71 +923,26 @@
 
         const maxDaily = getLevelTaskLimit(userData.level);
         document.getElementById('stat-max-tasks').innerText = maxDaily;
-        document.getElementById('task-max-limit-tag').innerText = maxDaily;
 
         const bonus = getLevelDailyBonus(userData.level);
         document.getElementById('daily-bonus-tag').innerText = `+${bonus.toFixed(2)} ETB`;
 
-        updateProfileLevelBanner();
-
-        document.getElementById('user-p-name').innerHTML = `${userData.name} ${getStarBadgeHtml(userData.level)}`;
+        const lvl = userData.level || 0;
+        document.getElementById('user-p-level-txt').innerText = `Level ${lvl} (${VIP_NAMES[lvl] || 'VIP Member'})`;
+        document.getElementById('user-p-name').innerHTML = `${userData.name} ${lvl >= 5 ? '<i class="fas fa-crown" style="color: #fef08a; font-size: 1rem; margin-left:6px;"></i>' : ''}`;
         document.getElementById('user-p-user').innerText = userData.user;
         document.getElementById('user-p-photo').src = userData.photo;
 
         document.getElementById('bot-ref-link').value = `https://t.me/${BOT_USERNAME}?start=${myTgId}`;
 
-        if (isAdmin) {
-            document.getElementById('open-admin-btn').style.display = 'flex';
+        // Admin አዝራር ሁልጊዜ መውጣቱን ማረጋገጥ
+        const adminBtn = document.getElementById('open-admin-btn');
+        if (adminBtn) {
+            adminBtn.style.display = isAdmin ? 'flex' : 'none';
         }
 
         updateWithdrawalThresholdDisplay();
         renderLiveHomeBroadcast();
-    }
-
-    function updateProfileLevelBanner() {
-        const rect = document.getElementById('prof-top-rect');
-        const lvl = userData.level || 0;
-        const colorBox = document.getElementById('vip-color-picker-box');
-
-        const vipTitle = VIP_NAMES[lvl] || `VIP Level ${lvl}`;
-        document.getElementById('user-p-level-txt').innerText = `Level ${lvl} (${vipTitle})`;
-
-        if (lvl > 0) {
-            colorBox.style.display = 'block';
-            if (userData.customColor) {
-                rect.style.background = userData.customColor;
-                rect.className = 'profile-level-banner';
-            } else {
-                rect.className = 'profile-level-banner';
-                if (lvl === 1) rect.classList.add('lvl-theme-1');
-                else if (lvl === 2) rect.classList.add('lvl-theme-2');
-                else if (lvl === 3) rect.classList.add('lvl-theme-3');
-                else if (lvl === 4) rect.classList.add('lvl-theme-4');
-                else if (lvl === 5) rect.classList.add('lvl-theme-5');
-                else if (lvl >= 6) rect.classList.add('lvl-theme-6');
-            }
-        } else {
-            colorBox.style.display = 'none';
-            rect.className = 'profile-level-banner lvl-theme-0';
-            rect.style.background = '#1e293b';
-        }
-    }
-
-    function setProfileColor(colorGrad) {
-        if (userData.level < 1) {
-            alert("Upgrade to VIP level first!");
-            return;
-        }
-        userData.customColor = colorGrad;
-        saveUserData();
-        updateProfileLevelBanner();
-        alert("VIP Profile Color changed!");
-    }
-
-    function getStarBadgeHtml(lvl) {
-        if (lvl >= 5) return '<i class="fas fa-crown" style="color: #fef08a; font-size: 1rem; margin-left:6px;"></i>';
-        if (lvl > 0) return '<i class="fas fa-check-circle" style="color: #38bdf8; font-size: 0.9rem; margin-left:6px;"></i>';
-        return '';
     }
 
     function openDirectSupport() {
@@ -1007,14 +969,14 @@
         inp.select();
         navigator.clipboard.writeText(inp.value);
         if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        alert("Invite link copied!");
+        alert("የግብዣ ሊንክ ተቀድቷል (Copied)!");
     }
 
     function claimDailyReward() {
         const today = new Date().toDateString();
         const last = localStorage.getItem('lucy_daily_' + myTgId);
         if (last === today) {
-            alert("Already claimed daily bonus today!");
+            alert("የዛሬውን ቦነስ አስቀድመው ወስደዋል!");
             return;
         }
         const bonus = getLevelDailyBonus(userData.level);
@@ -1022,22 +984,22 @@
         localStorage.setItem('lucy_daily_' + myTgId, today);
         saveUserData();
         updateAppUI();
-        alert(`+${bonus.toFixed(2)} ETB added to balance!`);
+        alert(`🎉 +${bonus.toFixed(2)} ETB ዕለታዊ ቦነስ ተጨምሯል!`);
     }
 
     function watchAdsGramAd() {
         if (userData.todayAds >= 30) {
-            alert("Today's 30 ads completed!");
+            alert("የዛሬው 30 ማስታወቂያዎች ተጠናቀዋል!");
             return;
         }
         userData.todayAds++;
         userData.balanceETB += 0.40;
         saveUserData();
         updateAppUI();
-        alert("+0.40 ETB added!");
+        alert("🎉 +0.40 ETB ተጨምሯል!");
     }
 
-    // 3. Task Manager with 8 Auto Seeded Channels
+    // 8ቱ ቻናሎች በ Tasks ገጽ ላይ መውጣታቸውን ማረጋገጥ
     function getAppTasks() {
         let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || 'null');
         if (!tasks || tasks.length === 0) {
@@ -1056,11 +1018,6 @@
         let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
         let html = '';
 
-        if (tasks.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">No tasks available right now.</div>';
-            return;
-        }
-
         tasks.forEach(t => {
             const isDone = done.includes(t.id);
             const rewardETB = Number(t.etb || 0).toFixed(2);
@@ -1071,7 +1028,7 @@
                     <div style="font-weight: 700; font-size: 0.95rem;">📢 ${t.name}</div>
                     <div style="font-size: 0.78rem; color: var(--accent); margin: 3px 0 8px;">+${rewardETB} ETB | +${rewardRP} RP</div>
                     ${isDone 
-                        ? `<div style="color: var(--accent); font-weight: 700; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Completed</div>`
+                        ? `<div style="color: var(--accent); font-weight: 700; font-size: 0.85rem;"><i class="fas fa-check-circle"></i> ተጠናቋል (Completed)</div>`
                         : `<div class="task-action-btns">
                             <button class="btn btn-primary" onclick="openChannelLinkDirect('${t.id}', '${t.url}')"><i class="fab fa-telegram-plane"></i> 1. Join Channel</button>
                             <button class="btn btn-accent" onclick="verifyChannelJoined('${t.id}')"><i class="fas fa-check-double"></i> 2. Check & Verify</button>
@@ -1090,14 +1047,8 @@
     }
 
     async function verifyChannelJoined(taskId) {
-        const maxDaily = getLevelTaskLimit(userData.level);
-        if (userData.todayTasks >= maxDaily) {
-            alert(`You completed daily limit of ${maxDaily} tasks!`);
-            return;
-        }
-
         if (!userOpenedChannels[taskId]) {
-            alert("Click '1. Join Channel' first before verifying!");
+            alert("⚠️ ቦነስ ለማግኘት መጀመሪያ '1. Join Channel' የሚለውን ነክተው ይቀላቀሉ!");
             return;
         }
 
@@ -1114,11 +1065,11 @@
             saveUserData();
             updateAppUI();
             renderTasksTab();
-            alert(`Verified! +${Number(t.etb || 0).toFixed(2)} ETB added!`);
+            alert(`🎉 ተረጋግጧል! +${Number(t.etb || 0).toFixed(2)} ETB ተጨምሯል!`);
         }
     }
 
-    // Promo Code Drop Logic
+    // PROMO CODE SYSTEM
     function openPromoCodeModal() {
         document.getElementById('cust-promo-input').value = '';
         document.getElementById('promo-modal-screen').style.display = 'flex';
@@ -1130,24 +1081,24 @@
 
     function submitClaimPromoCode() {
         const inputCode = document.getElementById('cust-promo-input').value.trim().toUpperCase();
-        if (!inputCode) { alert("Enter code!"); return; }
+        if (!inputCode) { alert("⚠️ እባክዎ ኮድ ያስገቡ!"); return; }
 
         const activeDrop = JSON.parse(localStorage.getItem('lucy_active_promo_drop') || 'null');
-        if (!activeDrop) { alert("No active bonus promo right now!"); return; }
+        if (!activeDrop) { alert("❌ በአሁኑ ሰዓት ምንም ክፍት የቦነስ ኮድ የለም!"); return; }
 
         if (Date.now() > activeDrop.expiresAt) {
-            alert("Promo code expired!");
+            alert("⏰ ይቅርታ! የዚህ ኮድ ሰዓት አልቋል (Expired)!");
             return;
         }
 
         if (inputCode !== activeDrop.code) {
-            alert("Incorrect promo code!");
+            alert("❌ የተሳሳተ ኮድ ነው! እባክዎ በትክክል ይሙሉ!");
             return;
         }
 
         const userClaimedList = JSON.parse(localStorage.getItem('lucy_claimed_promo_' + activeDrop.id) || '[]');
         if (userClaimedList.includes(myTgId)) {
-            alert("You already redeemed this promo!");
+            alert("⚠️ ይህንን ቦነስ አስቀድመው ወስደዋል!");
             return;
         }
 
@@ -1161,10 +1112,10 @@
         saveUserData();
         updateAppUI();
         closePromoModal();
-        alert(`+${amt.toFixed(2)} ETB added to balance!`);
+        alert(`🎉 እንኳን ደስ አለዎት! +${amt.toFixed(2)} ETB ቦነስ ገብቷል!`);
     }
 
-    // VIP Levels Logic
+    // VIP Levels
     function getLevelCostRP(lvl) {
         if (lvl === 1) return 1000;
         if (lvl === 2) return 2000;
@@ -1188,15 +1139,15 @@
                     <div style="flex-grow: 1;">
                         <h3 style="font-size: 1.05rem;">Level ${i} (${VIP_NAMES[i] || 'VIP Member'})</h3>
                         <div style="font-size: 0.74rem; color: #38bdf8; margin: 4px 0;">
-                            ⚡ Daily Limit: <b>${getLevelTaskLimit(i)} Tasks</b><br>
-                            🎁 Daily Bonus: <b>+${getLevelDailyBonus(i)} ETB</b><br>
-                            💎 Price: <b>${cost.toLocaleString()} RP (${birrCost.toLocaleString()} ETB)</b>
+                            ⚡ ዕለታዊ ተግባራት፦ <b>${getLevelTaskLimit(i)} Tasks</b><br>
+                            🎁 ዕለታዊ ቦነስ፦ <b>+${getLevelDailyBonus(i)} ETB</b><br>
+                            💎 ዋጋ፦ <b>${cost.toLocaleString()} RP (${birrCost.toLocaleString()} ETB)</b>
                         </div>
                         ${isUnlocked
                             ? `<span style="color: var(--accent); font-weight: 700; font-size: 0.8rem;">✅ Unlocked</span>`
                             : `<div style="display:flex; gap:8px; margin-top:6px;">
-                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="directBuyLevelRP(${i}, ${cost})">Buy with RP</button>
-                                <button class="btn btn-gold" style="padding: 6px 12px; font-size: 0.75rem;" onclick="openDepositForLevel(${i})">Deposit (Telebirr)</button>
+                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="directBuyLevelRP(${i}, ${cost})">በ RP ክፈት</button>
+                                <button class="btn btn-gold" style="padding: 6px 12px; font-size: 0.75rem;" onclick="openDepositForLevel(${i})">Deposit (ቴሌብር)</button>
                                </div>`
                         }
                     </div>
@@ -1207,23 +1158,18 @@
     }
 
     function directBuyLevelRP(lvl, cost) {
-        if (userData.level >= lvl) { alert(`Level ${lvl} already unlocked!`); return; }
-        if (lvl > userData.level + 1) { alert(`Unlock Level ${userData.level + 1} first!`); return; }
-
+        if (userData.level >= lvl) { alert(`Level ${lvl} አስቀድመው ተከፍቷል!`); return; }
         const etbCost = (cost / 100.0) * 37.0;
-        if (userData.balanceETB < etbCost && userData.rpCoins < cost) {
-            alert(`Insufficient balance! Need ${etbCost} ETB (${cost} RP).`);
+        if (userData.balanceETB < etbCost) {
+            alert(`❌ በቂ ሂሳብ የለዎትም! Level ${lvl} ለመግዛት ${etbCost} ETB ያስፈልጋል።`);
             return;
         }
-
-        userData.balanceETB = Math.max(0, userData.balanceETB - etbCost);
-        userData.rpCoins = Math.round((userData.balanceETB / 37.0) * 100);
+        userData.balanceETB -= etbCost;
         userData.level = lvl;
-
         saveUserData();
         updateAppUI();
         renderVipLevelsTab();
-        alert(`Upgraded to Level ${lvl}!`);
+        alert(`🎉 ወደ Level ${lvl} አድገዋል!`);
     }
 
     function populateDepositLevelOptions() {
@@ -1267,7 +1213,7 @@
         const name = document.getElementById('dep-payer-name').value.trim();
         const txn = document.getElementById('dep-txn-id').value.trim();
 
-        if (!phone || !name || !txn) { alert("Please complete form!"); return; }
+        if (!phone || !name || !txn) { alert("⚠️ መረጃዎችን በትክክል ይሙሉ!"); return; }
 
         let deposits = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
         deposits.push({
@@ -1284,12 +1230,11 @@
             status: "pending"
         });
         localStorage.setItem('lucy_level_deposits_v7', JSON.stringify(deposits));
-
         closeDepositModal();
-        alert("Deposit submitted to Admin!");
+        alert("✅ የክፍያ መረጃዎ ለ Admin ተልኳል!");
     }
 
-    // 4. Full Leaderboard & Users List (Sho ɔl yuzɛ dɛn)
+    // ሙሉ LEADERBOARD (ሁሉም ተጠቃሚዎች ይወጣሉ)
     function renderRanksTab() {
         const container = document.getElementById('ranks-container');
         if (!container) return;
@@ -1309,7 +1254,6 @@
         if (myIdx !== -1) users[myIdx] = myRecord;
         else users.push(myRecord);
 
-        // Sort all real users descending
         users.sort((a, b) => (Number(b.rpCoins) || 0) - (Number(a.rpCoins) || 0));
 
         let html = '';
@@ -1321,7 +1265,7 @@
                         <span style="font-weight: 800; color: ${medalColor}; width: 26px;">#${i + 1}</span>
                         <img src="${u.photo || 'https://via.placeholder.com/40'}" style="width: 40px; height: 40px; border-radius: 50%; object-fit:cover;">
                         <div>
-                            <b>${u.user || u.name}</b> ${getStarBadgeHtml(u.level || 0)}
+                            <b>${u.user || u.name}</b> ${u.level >= 5 ? '<i class="fas fa-crown" style="color: #fef08a; font-size: 0.9rem; margin-left:4px;"></i>' : ''}
                             <div style="font-size: 0.72rem; color: #94a3b8;">${VIP_NAMES[u.level || 0] || 'Level ' + (u.level || 0)}</div>
                         </div>
                     </div>
@@ -1332,7 +1276,7 @@
         container.innerHTML = html;
     }
 
-    // 1. User Chat & Admin Reply
+    // User Chat & Admin Reply
     function renderUserChat() {
         const stream = document.getElementById('user-chat-stream');
         let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
@@ -1356,7 +1300,7 @@
                 `;
             }
         });
-        stream.innerHTML = html || '<div style="color:#94a3b8; font-size:0.8rem; text-align:center; padding:20px;">Type message to admin...</div>';
+        stream.innerHTML = html || '<div style="color:#94a3b8; font-size:0.8rem; text-align:center; padding:20px;">መልእክትዎን እዚህ ይጻፉ...</div>';
         stream.scrollTop = stream.scrollHeight;
     }
 
@@ -1391,16 +1335,16 @@
                 <div class="card" style="margin-bottom: 10px;">
                     <b>${c.user} (ID: ${c.uid})</b> <small style="color:#94a3b8;">${c.time}</small><br>
                     <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 8px; margin: 6px 0;">${c.message}</div>
-                    ${c.adminReply ? `<div style="color:var(--accent);">Reply: ${c.adminReply} (${c.replyTime})</div>` : `
+                    ${c.adminReply ? `<div style="color:var(--accent);">መልስ የተሰጠው፦ ${c.adminReply} (${c.replyTime})</div>` : `
                         <div style="display:flex; gap:6px; margin-top:8px;">
-                            <input type="text" class="form-control" id="adm-reply-inp-${c.id}" placeholder="Type reply..." style="margin-bottom:0;">
-                            <button class="btn btn-primary" onclick="adminSubmitChatReply('${c.id}')">Reply</button>
+                            <input type="text" class="form-control" id="adm-reply-inp-${c.id}" placeholder="መልስ ይጻፉ..." style="margin-bottom:0;">
+                            <button class="btn btn-primary" onclick="adminSubmitChatReply('${c.id}')">መልስ ስጥ</button>
                         </div>
                     `}
                 </div>
             `;
         });
-        box.innerHTML = html || '<div style="color:#94a3b8; font-size:0.82rem;">No user messages yet.</div>';
+        box.innerHTML = html || '<div style="color:#94a3b8; font-size:0.82rem;">ምንም የተላከ መልእክት የለም።</div>';
     }
 
     function adminSubmitChatReply(cId) {
@@ -1414,7 +1358,7 @@
             chats[idx].adminReply = reply;
             chats[idx].replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             localStorage.setItem('lucy_user_admin_chats_v7', JSON.stringify(chats));
-            alert("Reply sent!");
+            alert("✅ መልስ ተልኳል!");
             renderAdminChatInbox();
         }
     }
@@ -1422,9 +1366,7 @@
     function updateWithdrawalThresholdDisplay() {
         const type = document.getElementById('wd-type').value;
         const note = document.getElementById('wd-minimum-note');
-        const minETB = parseFloat(localStorage.getItem('lucy_min_wd_etb') || '50');
-        const minUSDT = parseFloat(localStorage.getItem('lucy_min_wd_usdt') || '1.0');
-        note.innerText = type === 'USDT' ? `Minimum limit: ${minUSDT.toFixed(2)} USDT` : `Minimum limit: ${minETB.toFixed(2)} ETB`;
+        note.innerText = type === 'USDT' ? "⚠️ አነስተኛው ገደብ፦ 1.00 USDT ነው" : "⚠️ አነስተኛው ገደብ፦ 50.00 ETB ነው";
     }
 
     function submitWd() {
@@ -1432,10 +1374,10 @@
         const acc = document.getElementById('wd-account').value.trim();
         const amt = parseFloat(document.getElementById('wd-amount').value);
 
-        if (!acc || isNaN(amt) || amt <= 0) { alert("Enter valid withdrawal details!"); return; }
+        if (!acc || isNaN(amt) || amt <= 0) { alert("መረጃዎችን በትክክል ያስገቡ!"); return; }
 
         let checkBal = type === 'USDT' ? (userData.balanceETB / 185.0) : userData.balanceETB;
-        if (amt > checkBal) { alert("Insufficient balance!"); return; }
+        if (amt > checkBal) { alert("በቂ ሂሳብ የለዎትም!"); return; }
 
         let etbToDeduct = type === 'USDT' ? (amt * 185.0) : amt;
         userData.balanceETB -= etbToDeduct;
@@ -1455,7 +1397,7 @@
             time: new Date().toLocaleString()
         });
         localStorage.setItem('lucy_withdrawals_v7', JSON.stringify(reqs));
-        alert("Withdraw request submitted!");
+        alert("✅ የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል!");
     }
 
     function renderLiveHomeBroadcast() {
@@ -1472,7 +1414,7 @@
         }
     }
 
-    // Admin Dashboard Operations
+    // ADMIN DASHBOARD
     function toggleAdmin(show) {
         document.getElementById('admin-panel-overlay').style.display = show ? 'flex' : 'none';
         if (show) {
@@ -1483,8 +1425,6 @@
             renderAdminTasks();
             renderAdminChatInbox();
             renderAdminBroadcasts();
-            loadControlsToggles();
-            loadWithdrawalThresholdInputs();
         }
     }
 
@@ -1518,7 +1458,7 @@
         const code = document.getElementById('adm-drop-code').value.trim().toUpperCase();
 
         if (isNaN(amt) || amt <= 0 || isNaN(mins) || mins <= 0 || !code) {
-            alert("Fill all fields accurately!");
+            alert("⚠️ መረጃዎችን በትክክል ይሙሉ!");
             return;
         }
 
@@ -1534,7 +1474,7 @@
 
         localStorage.setItem('lucy_active_promo_drop', JSON.stringify(dropObj));
 
-        const bcText = `🎉 Promo Code Drop: "${code}" | Prize: +${amt.toFixed(2)} ETB | Expires in ${mins} min!`;
+        const bcText = `🎉 አዲስ የቦነስ ኮድ ተለቋል! ኮድ: "${code}" | ሽልማት: +${amt.toFixed(2)} ETB | የሚያበቃው በ ${mins} ደቂቃ ውስጥ ነው!`;
         localStorage.setItem('lucy_active_broadcast_text', bcText);
         localStorage.setItem('lucy_active_broadcast_time', new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}));
         renderLiveHomeBroadcast();
@@ -1543,7 +1483,7 @@
         document.getElementById('adm-drop-duration').value = '';
         document.getElementById('adm-drop-code').value = '';
 
-        alert(`Promo drop activated for ${mins} minutes!`);
+        alert(`🚀 የ "${code}" ቦነስ ተጀምሯል! ለ ${mins} ደቂቃ ብቻ ይቆጠራል!`);
         renderAdminPromoStatus();
     }
 
@@ -1553,7 +1493,7 @@
 
         const activeDrop = JSON.parse(localStorage.getItem('lucy_active_promo_drop') || 'null');
         if (!activeDrop) {
-            box.innerHTML = '<div style="color:#94a3b8; font-size:0.82rem; padding:10px;">No promo code running.</div>';
+            box.innerHTML = '<div style="color:#94a3b8; font-size:0.82rem; padding:10px;">ምንም ክፍት ኮድ የለም።</div>';
             return;
         }
 
@@ -1563,9 +1503,9 @@
         if (diffMs <= 0) {
             box.innerHTML = `
                 <div class="card" style="border: 1px solid #ef4444; background: rgba(239,68,68,0.05);">
-                    <b style="color:#ef4444;">⚠️ Promo Expired</b><br>
-                    Code: <b>${activeDrop.code}</b> | Reward: <b>${activeDrop.amount.toFixed(2)} ETB</b><br>
-                    <button class="btn btn-danger" style="margin-top:8px; padding:6px 12px; font-size:0.75rem;" onclick="adminClearPromoDrop()">Clear</button>
+                    <b style="color:#ef4444;">⚠️ ጊዜው ያለፈበት ኮድ (Expired)</b><br>
+                    ኮድ፦ <b>${activeDrop.code}</b> | ሽልማት፦ <b>${activeDrop.amount.toFixed(2)} ETB</b><br>
+                    <button class="btn btn-danger" style="margin-top:8px; padding:6px 12px; font-size:0.75rem;" onclick="adminClearPromoDrop()">አጥፋ</button>
                 </div>
             `;
         } else {
@@ -1574,11 +1514,11 @@
             const s = secLeft % 60;
             box.innerHTML = `
                 <div class="card" style="border: 1px solid #22c55e; background: rgba(34,197,94,0.05);">
-                    <b style="color:#22c55e;">🟢 Promo Code Active</b><br>
-                    Code: <b style="color:var(--gold); font-size:1.1rem;">${activeDrop.code}</b><br>
-                    Reward: <b>+${activeDrop.amount.toFixed(2)} ETB</b><br>
-                    Time Left: <b style="color:#38bdf8; font-size:1rem;">${m}m ${s}s</b><br>
-                    <button class="btn btn-danger" style="margin-top:10px; padding:6px 12px; font-size:0.75rem;" onclick="adminClearPromoDrop()">Stop Now</button>
+                    <b style="color:#22c55e;">🟢 ኮዱ አሁን እየሰራ ነው (Active)</b><br>
+                    ኮድ፦ <b style="color:var(--gold); font-size:1.1rem;">${activeDrop.code}</b><br>
+                    ሽልማት፦ <b>+${activeDrop.amount.toFixed(2)} ETB</b><br>
+                    ቀሪ ጊዜ፦ <b style="color:#38bdf8; font-size:1rem;">${m} ደቂቃ ከ ${s} ሰከንድ</b><br>
+                    <button class="btn btn-danger" style="margin-top:10px; padding:6px 12px; font-size:0.75rem;" onclick="adminClearPromoDrop()">አሁኑኑ አቋርጥ</button>
                 </div>
             `;
         }
@@ -1590,7 +1530,7 @@
         localStorage.removeItem('lucy_active_broadcast_time');
         renderLiveHomeBroadcast();
         renderAdminPromoStatus();
-        alert("Promo drop deleted!");
+        alert("🗑️ የቦነስ ኮዱ ተሰርዟል!");
     }
 
     setInterval(() => {
@@ -1599,7 +1539,7 @@
         }
     }, 1000);
 
-    // Full User List on Admin Panel
+    // ሙሉ የተጠቃሚዎች ዝርዝር
     function renderAdminUsersList() {
         const box = document.getElementById('adm-users-table-box');
         if (!box) return;
@@ -1623,7 +1563,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>ተጠቃሚ</th>
                         <th>ID</th>
                         <th>Balance</th>
                         <th>Action</th>
@@ -1659,10 +1599,10 @@
             </div>
             <div style="background:rgba(255,255,255,0.04); padding:12px; border-radius:12px; font-size:0.82rem; line-height:1.7;">
                 <div>🆔 <b>Telegram ID:</b> ${u.id}</div>
-                <div>💰 <b>Balance:</b> ${Number(u.balanceETB || 0).toFixed(2)} ETB</div>
+                <div>💰 <b>ቀሪ ሂሳብ:</b> ${Number(u.balanceETB || 0).toFixed(2)} ETB</div>
                 <div>💎 <b>RP Coins:</b> ${(Number(u.rpCoins) || 0).toLocaleString()} RP</div>
-                <div>👑 <b>VIP Level:</b> Level ${u.level || 0}</div>
-                <div>👥 <b>Invited Users:</b> ${u.referrals || 0}</div>
+                <div>👑 <b>ደረጃ:</b> Level ${u.level || 0}</div>
+                <div>👥 <b>የጋበዛቸው ሰዎች:</b> ${u.referrals || 0}</div>
             </div>
         `;
         document.getElementById('user-info-modal-content').innerHTML = infoHtml;
@@ -1705,7 +1645,7 @@
         const etb = etbInput ? parseFloat(etbInput.value) : 1.00;
         const rp = rpInput ? parseInt(rpInput.value) : 30;
 
-        if (!name || !url) { alert("Enter title and URL!"); return; }
+        if (!name || !url) { alert("⚠️ ስምና ሊንክ ያስገቡ!"); return; }
 
         let tasks = getAppTasks();
         tasks.push({
@@ -1720,7 +1660,7 @@
         if (nameInput) nameInput.value = "";
         if (urlInput) urlInput.value = "";
 
-        alert("Task successfully added!");
+        alert("✅ Task በተሳካ ሁኔታ ተጨምሯል!");
         renderAdminTasks();
         renderTasksTab();
         renderAdminDashStats();
@@ -1731,7 +1671,7 @@
         tasks = tasks.filter(t => t.id !== tId);
         localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
 
-        alert("Task removed!");
+        alert("🗑️ Task በተሳካ ሁኔታ ተሰርዟል!");
         renderAdminTasks();
         renderTasksTab();
         renderAdminDashStats();
@@ -1756,7 +1696,7 @@
                 </tr>
             `;
         });
-        tbody.innerHTML = html || '<tr><td colspan="4">No pending withdrawals.</td></tr>';
+        tbody.innerHTML = html || '<tr><td colspan="4">ምንም የወጪ ጥያቄ የለም።</td></tr>';
     }
 
     function processWdAction(wdId, action) {
@@ -1768,7 +1708,7 @@
         localStorage.setItem('lucy_withdrawals_v7', JSON.stringify(wds));
         renderAdminWithdrawals();
         renderAdminDashStats();
-        alert(action === 'approve' ? "Approved!" : "Rejected!");
+        alert(action === 'approve' ? "✅ ክፍያው ጸድቋል!" : "❌ ጥያቄው ተሰርዟል!");
     }
 
     function renderAdminDeposits() {
@@ -1782,7 +1722,7 @@
                 <div class="card" style="margin-bottom: 10px;">
                     <b>${d.user} (ID: ${d.uid})</b><br>
                     <span style="color: var(--gold);">Level ${d.targetLevel}</span><br>
-                    Phone: <b>${d.payerPhone}</b> | Txn ID: <b style="color: #38bdf8;">${d.txnId}</b><br>
+                    📱 ስልክ፦ <b>${d.payerPhone}</b> | Txn ID፦ <b style="color: #38bdf8;">${d.txnId}</b><br>
                     <div style="display: flex; gap: 8px; margin-top: 10px;">
                         <button class="btn btn-accent" style="padding: 6px 14px; font-size: 0.78rem;" onclick="processDepositAction('${d.id}', 'approve')">Approve</button>
                         <button class="btn btn-danger" style="padding: 6px 14px; font-size: 0.78rem;" onclick="processDepositAction('${d.id}', 'reject')">Reject</button>
@@ -1790,7 +1730,7 @@
                 </div>
             `;
         });
-        box.innerHTML = html || 'No pending level deposits.';
+        box.innerHTML = html || 'ምንም የ Level ክፍያ ጥያቄ የለም።';
     }
 
     function processDepositAction(depId, action) {
@@ -1802,7 +1742,33 @@
         localStorage.setItem('lucy_level_deposits_v7', JSON.stringify(deps));
         renderAdminDeposits();
         renderAdminDashStats();
-        alert(action === 'approve' ? "Deposit Approved!" : "Deposit Rejected!");
+        alert(action === 'approve' ? "✅ ተፈቅዷል!" : "❌ ውድቅ ተደርጓል!");
+    }
+
+    function adminExecuteAddBalance(curr) {
+        const uid = document.getElementById('adm-add-uid').value.trim();
+        const amt = parseFloat(document.getElementById('adm-add-amount').value);
+        if (!uid || isNaN(amt)) return;
+
+        let targetKey = 'lucy_usr_v7_' + uid;
+        let tUser = JSON.parse(localStorage.getItem(targetKey) || 'null');
+        if (!tUser) { alert("ተጠቃሚው አልተገኘም!"); return; }
+
+        tUser.balanceETB += curr === 'USDT' ? amt * 185.0 : amt;
+        tUser.rpCoins = Math.round((tUser.balanceETB / 37.0) * 100);
+        localStorage.setItem(targetKey, JSON.stringify(tUser));
+
+        if (String(uid) === String(myTgId)) {
+            userData = tUser;
+            updateAppUI();
+        }
+        alert(`✅ +${amt} ${curr} ተጨምሯል!`);
+    }
+
+    function adminSaveNewRoleAdmin() {
+        const uid = document.getElementById('new-admin-uid').value.trim();
+        if (!uid) { alert("ID ያስገቡ!"); return; }
+        alert(`✅ ለ ID ${uid} የአድሚን ፍቃድ ተሰጥቷል!`);
     }
 
     function loadControlsToggles() {
@@ -1835,28 +1801,15 @@
         localStorage.setItem('lucy_min_wd_etb', etb);
         localStorage.setItem('lucy_min_wd_usdt', usdt);
         updateWithdrawalThresholdDisplay();
-        alert("Limits saved!");
+        alert("ገደቦች ተቀምጠዋል!");
     }
 
-    function adminExecuteAddBalance(curr) {
-        const uid = document.getElementById('adm-add-uid').value.trim();
-        const amt = parseFloat(document.getElementById('adm-add-amount').value);
-        if (!uid || isNaN(amt)) return;
-
-        let targetKey = 'lucy_usr_v7_' + uid;
-        let tUser = JSON.parse(localStorage.getItem(targetKey) || 'null');
-        if (!tUser) { alert("User not found!"); return; }
-
-        tUser.balanceETB += curr === 'USDT' ? amt * 185.0 : amt;
-        tUser.rpCoins = Math.round((tUser.balanceETB / 37.0) * 100);
-        localStorage.setItem(targetKey, JSON.stringify(tUser));
-
-        if (String(uid) === String(myTgId)) {
-            userData = tUser;
-            updateAppUI();
-        }
-
-        alert(`+${amt} ${curr} added!`);
+    function adminSaveCompanyAdsConfig() {
+        const bId = document.getElementById('adm-cfg-blockid').value.trim();
+        const cName = document.getElementById('adm-cfg-comp-name').value.trim();
+        localStorage.setItem('lucy_adsgram_block_id', bId);
+        localStorage.setItem('lucy_company_verify_name', cName);
+        alert("Config ተቀምጧል!");
     }
 
     function renderAdminBroadcasts() {
@@ -1870,7 +1823,7 @@
                 </div>
             `;
         } else {
-            box.innerHTML = 'No active broadcasts.';
+            box.innerHTML = 'ምንም የተላከ መልእክት የለም።';
         }
     }
 
@@ -1882,7 +1835,7 @@
         document.getElementById('adm-bc-body').value = '';
         renderAdminBroadcasts();
         renderLiveHomeBroadcast();
-        alert("Broadcast published!");
+        alert("📢 መልእክቱ ተሰራጭቷል!");
     }
 
     function adminDeleteActiveBroadcast() {
@@ -1890,7 +1843,7 @@
         localStorage.removeItem('lucy_active_broadcast_time');
         renderAdminBroadcasts();
         renderLiveHomeBroadcast();
-        alert("Broadcast removed!");
+        alert("🗑️ መልእክቱ ተሰርዟል!");
     }
 
     function adminExecuteDirectRestart() {
@@ -1916,7 +1869,7 @@
         saveUserData();
         updateAppUI();
         renderAdminDashStats();
-        alert("System restarted successfully!");
+        alert("🔄 Instant Restart ተጠናቋል!");
     }
 
     function adminExecuteInjectedScript() {
@@ -1925,8 +1878,8 @@
         try {
             eval(code);
             document.getElementById('adm-code-injector-text').value = '';
-            alert("Executed successfully!");
-        } catch(e) { alert("Error: " + e.message); }
+            alert("🚀 ተፈጽሟል!");
+        } catch(e) { alert("❌ ስህተት: " + e.message); }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
