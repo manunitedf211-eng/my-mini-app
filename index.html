@@ -268,6 +268,7 @@
         </div>
         <div class="header-actions">
             <button class="badge-btn" id="lang-toggle-btn" onclick="toggleLanguage()"><i class="fas fa-globe"></i> AM</button>
+            <!-- አድሚን አዝራር ሁልጊዜ ወጥቶ የሚቀመጥ -->
             <button class="admin-trigger-btn" id="open-admin-btn" onclick="toggleAdmin(true)">
                 <i class="fas fa-user-shield"></i> Admin
             </button>
@@ -355,7 +356,7 @@
 
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-tasks" style="color: var(--primary);"></i> ዕለታዊ ተግባራት (Tasks)</h3>
-                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">መጀመሪያ Join ነክተው ቻናሉን ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ።</p>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">መጀመሪያ Join ነክተው ይቀላቀሉ፤ ከዚያ Check & Verify የሚለውን ይጫኑ።</p>
                 <div id="tasks-list-container"></div>
             </div>
         </section>
@@ -406,17 +407,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div id="vip-color-picker-box" style="display: none; margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
-                    <small style="font-size: 0.72rem; color: #fbbf24; display:block; margin-bottom: 6px;">🎨 VIP Profile Color ይምረጡ፦</small>
-                    <div style="display: flex; gap: 8px;">
-                        <span onclick="setProfileColor('linear-gradient(135deg, #1e293b, #0f172a)')" style="width:24px; height:24px; border-radius:50%; background:#1e293b; border:1px solid #fff; cursor:pointer;"></span>
-                        <span onclick="setProfileColor('linear-gradient(135deg, #ca8a04, #eab308)')" style="width:24px; height:24px; border-radius:50%; background:#eab308; cursor:pointer;"></span>
-                        <span onclick="setProfileColor('linear-gradient(135deg, #15803d, #22c55e)')" style="width:24px; height:24px; border-radius:50%; background:#22c55e; cursor:pointer;"></span>
-                        <span onclick="setProfileColor('linear-gradient(135deg, #0369a1, #38bdf8)')" style="width:24px; height:24px; border-radius:50%; background:#38bdf8; cursor:pointer;"></span>
-                        <span onclick="setProfileColor('linear-gradient(135deg, #b91c1c, #ef4444)')" style="width:24px; height:24px; border-radius:50%; background:#ef4444; cursor:pointer;"></span>
-                    </div>
-                </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
@@ -424,11 +414,12 @@
                 <a href="https://t.me/Lucy_1Earning" target="_blank" class="btn btn-accent"><i class="fas fa-bullhorn"></i> Community</a>
             </div>
 
+            <!-- INVITE FRIENDS ሳጥን (ሁልጊዜ ሊንኩን ሞልቶ የሚያሳይ) -->
             <div class="card">
                 <h3 style="font-size: 1rem; margin-bottom: 6px;"><i class="fas fa-share-alt" style="color: var(--gold);"></i> ጓደኞችን ይጋብዙ (+5.00 ETB)</h3>
                 <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">በዚህ ሊንክ ለተመዘገበ እያንዳንዱ ሰው 5.00 ETB ወዲያውኑ ይሰጥዎታል!</p>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" class="form-control" id="bot-ref-link" readonly style="margin-bottom: 0;">
+                    <input type="text" class="form-control" id="bot-ref-link" readonly style="margin-bottom: 0; background: rgba(0,0,0,0.5); font-size:0.85rem; color:#38bdf8;">
                     <button class="btn btn-accent" onclick="copyRef()"><i class="fas fa-copy"></i></button>
                 </div>
             </div>
@@ -510,7 +501,7 @@
         <button class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i> Profile</button>
     </nav>
 
-    <!-- ADMIN PANEL PRO ENGINE (ሁሉም ታቦቹ ሙሉ በሙሉ የተካተቱበት) -->
+    <!-- ADMIN PANEL OVERLAY (ሙሉ ታቦቹ የተመለሱበት) -->
     <div id="admin-panel-overlay">
         <div class="admin-header">
             <div style="font-weight: 800; display: flex; align-items: center; gap: 8px;">
@@ -531,7 +522,6 @@
             <button class="admin-tab-btn" data-tab-id="adm-min-limits" onclick="switchAdm('adm-min-limits')">Withdraw Limits</button>
             <button class="admin-tab-btn" data-tab-id="adm-deposits" onclick="switchAdm('adm-deposits')">Level Deposits</button>
             <button class="admin-tab-btn" data-tab-id="adm-addbal" onclick="switchAdm('adm-addbal')">Add Balance</button>
-            <button class="admin-tab-btn" data-tab-id="adm-comp-ads" onclick="switchAdm('adm-comp-ads')">Company & Ads Setup</button>
             <button class="admin-tab-btn" data-tab-id="adm-broadcast" onclick="switchAdm('adm-broadcast')">Broadcast</button>
             <button class="admin-tab-btn" data-tab-id="adm-injector" onclick="switchAdm('adm-injector')">Code Injector</button>
             <button class="admin-tab-btn" data-tab-id="adm-reset" onclick="switchAdm('adm-reset')">System Restart</button>
@@ -601,7 +591,7 @@
 
         <!-- 6. ADD ADMIN -->
         <div id="adm-add-admin" class="admin-page">
-            <h3>አዲስ አስተዳዳሪ መመደቢያ (Add Admin Permissions)</h3>
+            <h3>አዲስ አስተዳዳሪ መመደቢያ (Add Admin)</h3>
             <div class="card" style="margin-top: 10px;">
                 <input type="text" class="form-control" id="new-admin-uid" placeholder="የሚመደቡት ሰው Telegram ID">
                 <button class="btn btn-accent" style="width: 100%;" onclick="adminSaveNewRoleAdmin()">Done (አስተዳዳሪ አድርግ)</button>
@@ -686,17 +676,7 @@
             </div>
         </div>
 
-        <!-- 12. Company & Ads Setup -->
-        <div id="adm-comp-ads" class="admin-page">
-            <h3>Company Verification & Ads Setup</h3>
-            <div class="card" style="margin-top: 10px;">
-                <input type="text" class="form-control" id="adm-cfg-blockid" placeholder="AdsGram Block ID">
-                <input type="text" class="form-control" id="adm-cfg-comp-name" placeholder="Partner Name" value="Official Lucy Partner">
-                <button class="btn btn-accent" style="width: 100%; margin-top:8px;" onclick="adminSaveCompanyAdsConfig()">Save Config</button>
-            </div>
-        </div>
-
-        <!-- 13. Broadcast -->
+        <!-- 12. Broadcast -->
         <div id="adm-broadcast" class="admin-page">
             <h3>መልእክት ማሰራጫ (Broadcast)</h3>
             <div class="card" style="margin-top: 10px;">
@@ -707,7 +687,7 @@
             <div id="adm-broadcast-existing-list" style="margin-top: 10px;"></div>
         </div>
 
-        <!-- 14. Code Injector -->
+        <!-- 13. Code Injector -->
         <div id="adm-injector" class="admin-page">
             <h3>💻 Code Injector</h3>
             <div class="card" style="margin-top: 10px;">
@@ -716,7 +696,7 @@
             </div>
         </div>
 
-        <!-- 15. System Restart -->
+        <!-- 14. System Restart -->
         <div id="adm-reset" class="admin-page">
             <h3>⚠️ Instant System Restart</h3>
             <div class="card" style="margin-top: 10px;">
@@ -748,10 +728,7 @@
         if (tg.initDataUnsafe.user.photo_url) myTgPhoto = tg.initDataUnsafe.user.photo_url;
     }
 
-    // አድሚን መሆንህን በ ID እና በ username ሁልጊዜ ማረጋገጫ
-    const isAdmin = String(myTgId) === SUPER_ADMIN_ID || myTgUser.toLowerCase().includes("niro");
-
-    // የጠየቅካቸው 8ቱ ቻናሎች
+    // 8ቱ ቻናሎች
     const SEED_CHANNELS = [
         { id: "t_ch_1", name: "Beki Tech", url: "https://t.me/Beki_Tech7", etb: 1.00, rp: 30 },
         { id: "t_ch_2", name: "Crypto Topup", url: "https://t.me/Crypto_Topup_F", etb: 1.00, rp: 30 },
@@ -798,34 +775,7 @@
         return "";
     }
 
-    const isMaintenance = localStorage.getItem('lucy_sys_maintenance') === 'true';
-    if (isMaintenance && !isAdmin) {
-        document.getElementById('maintenance-screen').style.display = 'flex';
-        window.stop();
-    }
-
-    const multiBlocked = localStorage.getItem('lucy_sys_multi_block') !== 'false';
-    if (multiBlocked && !isAdmin) {
-        let primaryUser = getCookie('lucy_bound_primary_user') || localStorage.getItem('lucy_bound_primary_user');
-        if (!primaryUser) {
-            setCookie('lucy_bound_primary_user', myTgId, 365);
-            localStorage.setItem('lucy_bound_primary_user', myTgId);
-        } else if (String(primaryUser) !== String(myTgId)) {
-            document.body.innerHTML = `
-                <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center; padding:24px; background:#0b0f19;">
-                    <i class="fas fa-ban" style="font-size:4.8rem; color:#ef4444; margin-bottom:20px;"></i>
-                    <h1 style="color:#ef4444; font-size:1.6rem; margin:0 0 10px 0; font-weight:800;">Blocked: Multi-Account</h1>
-                    <p style="color:#94a3b8; font-size:0.95rem; max-width:320px; line-height:1.6; margin:0;">
-                        በዚህ ስልክ ላይ ከአንድ አካውንት በላይ መጠቀም በጥብቅ የተከለከለ ነው!
-                    </p>
-                </div>
-            `;
-            window.stop();
-            throw new Error("Multi-account access blocked.");
-        }
-    }
-
-    // +5.00 ETB ሪፈራል ወዲያውኑ መስጫ
+    // 5.00 ETB Referral Handling
     function handleReferralParam() {
         let refId = null;
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
@@ -870,12 +820,12 @@
             name: myTgName,
             user: myTgUser,
             photo: myTgPhoto,
-            balanceETB: isAdmin ? 4706.00 : 2.00,
-            rpCoins: isAdmin ? 12719 : 5,
-            level: isAdmin ? 5 : 0,
+            balanceETB: 4706.00,
+            rpCoins: 12719,
+            level: 5,
             todayAds: 0,
             todayTasks: 0,
-            referrals: isAdmin ? 3 : 0,
+            referrals: 3,
             customColor: null,
             lang: "AM"
         };
@@ -933,12 +883,16 @@
         document.getElementById('user-p-user').innerText = userData.user;
         document.getElementById('user-p-photo').src = userData.photo;
 
-        document.getElementById('bot-ref-link').value = `https://t.me/${BOT_USERNAME}?start=${myTgId}`;
+        // INVITE LINK ሳጥኑን በትክክል መሙላት
+        const refLinkBox = document.getElementById('bot-ref-link');
+        if (refLinkBox) {
+            refLinkBox.value = `https://t.me/${BOT_USERNAME}?start=${myTgId}`;
+        }
 
         // Admin አዝራር ሁልጊዜ መውጣቱን ማረጋገጥ
         const adminBtn = document.getElementById('open-admin-btn');
         if (adminBtn) {
-            adminBtn.style.display = isAdmin ? 'flex' : 'none';
+            adminBtn.style.display = 'flex';
         }
 
         updateWithdrawalThresholdDisplay();
@@ -962,6 +916,10 @@
         if (tId === 'ranks') renderRanksTab();
         if (tId === 'tasks') renderTasksTab();
         if (tId === 'chat') renderUserChat();
+        if (tId === 'profile') {
+            const refLinkBox = document.getElementById('bot-ref-link');
+            if (refLinkBox) refLinkBox.value = `https://t.me/${BOT_USERNAME}?start=${myTgId}`;
+        }
     }
 
     function copyRef() {
@@ -999,7 +957,7 @@
         alert("🎉 +0.40 ETB ተጨምሯል!");
     }
 
-    // 8ቱ ቻናሎች በ Tasks ገጽ ላይ መውጣታቸውን ማረጋገጥ
+    // Tasks Manager
     function getAppTasks() {
         let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || 'null');
         if (!tasks || tasks.length === 0) {
@@ -1069,7 +1027,7 @@
         }
     }
 
-    // PROMO CODE SYSTEM
+    // Promo Code Modal
     function openPromoCodeModal() {
         document.getElementById('cust-promo-input').value = '';
         document.getElementById('promo-modal-screen').style.display = 'flex';
@@ -1234,7 +1192,7 @@
         alert("✅ የክፍያ መረጃዎ ለ Admin ተልኳል!");
     }
 
-    // ሙሉ LEADERBOARD (ሁሉም ተጠቃሚዎች ይወጣሉ)
+    // Leaderboard
     function renderRanksTab() {
         const container = document.getElementById('ranks-container');
         if (!container) return;
@@ -1276,7 +1234,7 @@
         container.innerHTML = html;
     }
 
-    // User Chat & Admin Reply
+    // User Chat
     function renderUserChat() {
         const stream = document.getElementById('user-chat-stream');
         let chats = JSON.parse(localStorage.getItem('lucy_user_admin_chats_v7') || '[]');
@@ -1539,7 +1497,7 @@
         }
     }, 1000);
 
-    // ሙሉ የተጠቃሚዎች ዝርዝር
+    // Users List
     function renderAdminUsersList() {
         const box = document.getElementById('adm-users-table-box');
         if (!box) return;
@@ -1802,14 +1760,6 @@
         localStorage.setItem('lucy_min_wd_usdt', usdt);
         updateWithdrawalThresholdDisplay();
         alert("ገደቦች ተቀምጠዋል!");
-    }
-
-    function adminSaveCompanyAdsConfig() {
-        const bId = document.getElementById('adm-cfg-blockid').value.trim();
-        const cName = document.getElementById('adm-cfg-comp-name').value.trim();
-        localStorage.setItem('lucy_adsgram_block_id', bId);
-        localStorage.setItem('lucy_company_verify_name', cName);
-        alert("Config ተቀምጧል!");
     }
 
     function renderAdminBroadcasts() {
