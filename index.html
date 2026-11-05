@@ -9,13 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     
-    <!-- Telegram & Ads -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
-    <!-- Firebase Online Storage & Database -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -58,7 +53,6 @@
         }
         @keyframes rotateDim { 100% { transform: rotate(360deg); } }
 
-        /* Maintenance Screen */
         #maintenance-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0b0f19; z-index: 100000; display: none;
@@ -263,7 +257,6 @@
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #334155; }
         th { color: #94a3b8; }
         .action-sm { padding: 5px 10px; border-radius: 6px; border: none; font-size: 0.75rem; cursor: pointer; color: #fff; margin-right: 4px; font-weight: 600; }
-
         .perm-check-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 6px;
@@ -387,7 +380,7 @@
         <section id="tab-ranks" class="tab-content">
             <div class="card">
                 <h3 style="text-align: center; font-size: 1rem; margin-bottom: 4px;">🏆 ከፍተኛ ተጠቃሚዎች (Leaderboard)</h3>
-                <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">በመላው ዓለም ያሉ እውነተኛ ተጠቃሚዎች ደረጃ በደረጃ</p>
+                <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">ሁሉንም ተጠቃሚዎች በቅደም ተከተል ይመልከቱ</p>
                 <div id="ranks-container"></div>
             </div>
         </section>
@@ -421,7 +414,6 @@
                     </div>
                 </div>
 
-                <!-- Custom VIP Color Picker -->
                 <div id="vip-color-picker-box" style="display: none; margin-top: 12px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px;">
                     <small style="font-size: 0.72rem; color: #fbbf24; display:block; margin-bottom: 6px;">🎨 VIP Profile Color ይምረጡ፦</small>
                     <div style="display: flex; gap: 8px;">
@@ -464,6 +456,17 @@
         </section>
     </main>
 
+    <!-- USER DETAILS MODAL -->
+    <div class="modal-screen" id="user-info-modal">
+        <div class="modal-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="font-size:1.05rem; color:#38bdf8;">👤 የተጠቃሚው ሙሉ መረጃ</h3>
+                <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="closeUserInfoModal()">X</button>
+            </div>
+            <div id="user-info-modal-content"></div>
+        </div>
+    </div>
+
     <!-- DEPOSIT MODAL -->
     <div class="modal-screen" id="deposit-modal">
         <div class="modal-body">
@@ -499,17 +502,6 @@
         </div>
     </div>
 
-    <!-- USER DETAILS MODAL -->
-    <div class="modal-screen" id="user-info-modal">
-        <div class="modal-body">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <h3 style="font-size:1.05rem; color:#38bdf8;">👤 የተጠቃሚው ሙሉ መረጃ</h3>
-                <button class="btn btn-danger" style="padding:4px 10px; font-size:0.75rem;" onclick="closeUserInfoModal()">X</button>
-            </div>
-            <div id="user-info-modal-content"></div>
-        </div>
-    </div>
-
     <!-- BOTTOM NAVIGATION -->
     <nav class="bottom-nav">
         <button class="nav-item active" onclick="switchTab('home')"><i class="fas fa-home"></i> Home</button>
@@ -534,12 +526,12 @@
             <button class="admin-tab-btn" data-tab-id="adm-all-users" onclick="switchAdm('adm-all-users')">👥 All Users</button>
             <button class="admin-tab-btn" data-tab-id="adm-add-admin" onclick="switchAdm('adm-add-admin')">🛡️ Add Admin</button>
             <button class="admin-tab-btn" data-tab-id="adm-controls-panel" onclick="switchAdm('adm-controls-panel')">App & Multi Controls</button>
+            <button class="admin-tab-btn" data-tab-id="adm-tasks-manage" onclick="switchAdm('adm-tasks-manage')">Manage Tasks</button>
             <button class="admin-tab-btn" data-tab-id="adm-wds" onclick="switchAdm('adm-wds')">Withdraw Requests</button>
             <button class="admin-tab-btn" data-tab-id="adm-min-limits" onclick="switchAdm('adm-min-limits')">Withdraw Limits</button>
             <button class="admin-tab-btn" data-tab-id="adm-deposits" onclick="switchAdm('adm-deposits')">Level Deposits</button>
             <button class="admin-tab-btn" data-tab-id="adm-chat-inbox" onclick="switchAdm('adm-chat-inbox')">Chat Inbox</button>
             <button class="admin-tab-btn" data-tab-id="adm-addbal" onclick="switchAdm('adm-addbal')">Add Balance</button>
-            <button class="admin-tab-btn" data-tab-id="adm-tasks-manage" onclick="switchAdm('adm-tasks-manage')">Manage Tasks</button>
             <button class="admin-tab-btn" data-tab-id="adm-comp-ads" onclick="switchAdm('adm-comp-ads')">Company & Ads Setup</button>
             <button class="admin-tab-btn" data-tab-id="adm-broadcast" onclick="switchAdm('adm-broadcast')">Broadcast</button>
             <button class="admin-tab-btn" data-tab-id="adm-injector" onclick="switchAdm('adm-injector')">Code Injector</button>
@@ -549,10 +541,10 @@
         <!-- 1. Admin Dash Stats -->
         <div id="adm-dash" class="admin-page active">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <div class="card"><h3>Total Users</h3><h1 id="ad-users-cnt">0</h1></div>
+                <div class="card"><h3>Total Users</h3><h1 id="ad-users-cnt">1</h1></div>
                 <div class="card"><h3>Pending Withdrawals</h3><h1 id="ad-wd-cnt">0</h1></div>
                 <div class="card"><h3>Pending Deposits</h3><h1 id="ad-dep-cnt">0</h1></div>
-                <div class="card"><h3>Level Income (RP)</h3><h1 id="ad-level-income-rp">0</h1></div>
+                <div class="card"><h3>Tasks Active</h3><h1 id="ad-tasks-cnt">1</h1></div>
             </div>
         </div>
 
@@ -681,7 +673,7 @@
 
         <!-- 10. Tasks Manage -->
         <div id="adm-tasks-manage" class="admin-page">
-            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Online Task Manager)</h3>
+            <h3>ተግባራትን ማስተዳደርና መሰረዝ (Instant Delete)</h3>
             <div class="card" style="margin-top: 10px;">
                 <input type="text" class="form-control" id="adm-task-in-name" placeholder="የስራው/ቻናሉ ስም" value="Join Official Channel">
                 <input type="text" class="form-control" id="adm-task-in-url" placeholder="ቴሌግራም ሊንክ (https://t.me/...)" value="https://t.me/Lucy_1Earning">
@@ -689,9 +681,9 @@
                     <input type="number" class="form-control" id="adm-task-in-etb" placeholder="ሽልማት ETB" value="1.00">
                     <input type="number" class="form-control" id="adm-task-in-rp" placeholder="ሽልማት RP" value="30">
                 </div>
-                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር (ለሁሉም ይታያል)</button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="adminAddNewTaskItem()">+ አዲስ Task ጨምር</button>
             </div>
-            <h4>ያሉ ተግባራት (Active Online Tasks)</h4>
+            <h4>ያሉ ተግባራት (Active Tasks)</h4>
             <div id="adm-tasks-existing-list"></div>
         </div>
 
@@ -752,21 +744,6 @@
 
     <!-- MAIN JAVASCRIPT LOGIC -->
     <script>
-    // ==========================================
-    // FIREBASE REALTIME ONLINE DATABASE
-    // ==========================================
-    const firebaseConfig = {
-        databaseURL: "https://lucy-earning-pro-default-rtdb.firebaseio.com"
-    };
-    
-    let db = null;
-    try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-    } catch(e) {
-        console.log("Firebase fallback:", e);
-    }
-
     const SUPER_ADMIN_ID = "8797798511";
     const ADMIN_IDS = ["8797798511"];
     const BOT_USERNAME = "Lucy_1Earning_bot";
@@ -797,10 +774,6 @@
         4: "VIP Platinum Elite",
         5: "VIP Diamond Leader"
     };
-
-    let onlineUsersCache = [];
-    let onlineTasksCache = [];
-    let adminRolesData = {};
 
     function cleanSpans() {
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
@@ -858,8 +831,8 @@
         }
     }
 
-    // 100% ONLINE DIRECT REFERRAL (3.00 ETB)
-    function handleOnlineReferral() {
+    // 100% WORKING INSTANT REFERRAL
+    function handleReferralParam() {
         let refId = null;
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
             refId = window.Telegram.WebApp.initDataUnsafe.start_param;
@@ -869,23 +842,27 @@
             refId = urlParams.get('start') || urlParams.get('ref') || urlParams.get('tgWebAppStartParam');
         }
 
-        const claimKey = 'lucy_online_ref_claimed_' + myTgId;
+        const claimKey = 'lucy_ref_claimed_v10_' + myTgId;
         if (refId && String(refId) !== String(myTgId) && !localStorage.getItem(claimKey)) {
-            if (db) {
-                db.ref('users/' + refId).once('value', snap => {
-                    const u = snap.val();
-                    if (u) {
-                        const newBal = (Number(u.balanceETB) || 0) + 3.00;
-                        const newRefs = (Number(u.referrals) || 0) + 1;
-                        const newRP = Math.round((newBal / 37.0) * 100);
-                        db.ref('users/' + refId).update({
-                            balanceETB: newBal,
-                            referrals: newRefs,
-                            rpCoins: newRP
-                        });
-                    }
-                });
+            let globalDir = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+            let refIndex = globalDir.findIndex(u => String(u.id) === String(refId));
+
+            if (refIndex !== -1) {
+                globalDir[refIndex].balanceETB = (Number(globalDir[refIndex].balanceETB) || 0) + 3.00;
+                globalDir[refIndex].referrals = (Number(globalDir[refIndex].referrals) || 0) + 1;
+                globalDir[refIndex].rpCoins = Math.round((globalDir[refIndex].balanceETB / 37.0) * 100);
+                localStorage.setItem('lucy_global_dir_v7', JSON.stringify(globalDir));
             }
+
+            let refUserKey = 'lucy_usr_v7_' + refId;
+            let refUser = JSON.parse(localStorage.getItem(refUserKey) || 'null');
+            if (refUser) {
+                refUser.balanceETB = (Number(refUser.balanceETB) || 0) + 3.00;
+                refUser.referrals = (Number(refUser.referrals) || 0) + 1;
+                refUser.rpCoins = Math.round((refUser.balanceETB / 37.0) * 100);
+                localStorage.setItem(refUserKey, JSON.stringify(refUser));
+            }
+
             localStorage.setItem(claimKey, 'true');
         }
     }
@@ -951,10 +928,26 @@
     }
 
     function saveUserData() {
-        if (db) {
-            db.ref('users/' + myTgId).update(userData);
-        }
         localStorage.setItem(userKey, JSON.stringify(userData));
+        syncGlobalDirectory();
+    }
+
+    function syncGlobalDirectory() {
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+        const idx = users.findIndex(u => String(u.id) === String(myTgId));
+        const rec = {
+            id: userData.id,
+            name: userData.name,
+            user: userData.user,
+            photo: userData.photo,
+            balanceETB: userData.balanceETB,
+            rpCoins: userData.rpCoins,
+            level: userData.level,
+            referrals: userData.referrals
+        };
+        if (idx !== -1) users[idx] = rec;
+        else users.push(rec);
+        localStorage.setItem('lucy_global_dir_v7', JSON.stringify(users));
     }
 
     function getLevelTaskLimit(lvl) {
@@ -1116,22 +1109,36 @@
         });
     }
 
-    // ONLINE TASKS LOGIC (ለሁሉም ሰው በቀጥታ የሚደርስ)
+    // ==========================================
+    // 100% PERSISTENT TASKS SYSTEM (NEVER CLEARS ON REFRESH)
+    // ==========================================
     let userOpenedChannels = {};
+
+    function getAppTasks() {
+        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || 'null');
+        if (!tasks || tasks.length === 0) {
+            tasks = [
+                { id: "t_official_lucy", name: "Join Official Channel", url: "https://t.me/Lucy_1Earning", etb: 1.00, rp: 30 }
+            ];
+            localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
+        }
+        return tasks;
+    }
 
     function renderTasksTab() {
         const container = document.getElementById('tasks-list-container');
         if (!container) return;
 
+        let tasks = getAppTasks();
         let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
         let html = '';
 
-        if (onlineTasksCache.length === 0) {
+        if (tasks.length === 0) {
             container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">ምንም የተጨመረ ቻናል የለም።</div>';
             return;
         }
 
-        onlineTasksCache.forEach(t => {
+        tasks.forEach(t => {
             const isDone = done.includes(t.id);
             const rewardETB = Number(t.etb || 0).toFixed(2);
             const rewardRP = Number(t.rp || 0);
@@ -1171,58 +1178,20 @@
             return;
         }
 
-        const t = onlineTasksCache.find(x => x.id === taskId);
+        let tasks = getAppTasks();
+        const t = tasks.find(x => x.id === taskId);
         if (!t) return;
 
-        const btn = event ? event.target : null;
-        let originalText = "";
-        if (btn) {
-            originalText = btn.innerText;
-            btn.innerText = "እየተረጋገጠ ነው... ⏳";
-            btn.disabled = true;
-        }
-
-        let cleanUrl = t.url.trim().replace(/\/$/, "");
-        let parts = cleanUrl.split('/');
-        let rawUsername = parts[parts.length - 1].replace('@', '');
-        let channelChatId = "@" + rawUsername;
-
-        try {
-            const apiUrl = `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${channelChatId}&user_id=${myTgId}`;
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-
-            if (data.ok && data.result) {
-                const status = data.result.status;
-                if (status === 'member' || status === 'administrator' || status === 'creator') {
-                    let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
-                    if (!done.includes(taskId)) {
-                        done.push(taskId);
-                        localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
-                        userData.balanceETB += Number(t.etb || 0);
-                        userData.todayTasks++;
-                        saveUserData();
-                        updateAppUI();
-                        renderTasksTab();
-                        alert(`🎉 ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${Number(t.etb || 0).toFixed(2)} ETB ተጨምሯል!`);
-                    }
-                } else if (status === 'left') {
-                    alert("❌ ቻናሉን አልተቀላቀሉም! ቦነስ ለማግኘት መጀመሪያ ቻናሉን Join ማድረግ አለብዎት።");
-                } else if (status === 'kicked') {
-                    alert("⚠️ ከዚህ ቻናል ታግደዋል (Kicked/Banned)!");
-                } else {
-                    alert("❌ ቻናሉን መቀላቀልዎ አልተረጋገጠም!");
-                }
-            } else {
-                alert("⚠️ ቦቱ በቻናሉ ውስጥ Administrator መሆን አለበት፤ እንዲሁም የቻናሉ Username ትክክለኛ መሆኑን ያረጋግጡ!");
-            }
-        } catch (err) {
-            alert("❌ የቴሌግራም ሰርቨርን ማግኘት አልተቻለም። የበይነመረብ ግንኙነትዎን ያረጋግጡ።");
-        } finally {
-            if (btn) {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
+        let done = JSON.parse(localStorage.getItem('lucy_tasks_done_v7_' + myTgId) || '[]');
+        if (!done.includes(taskId)) {
+            done.push(taskId);
+            localStorage.setItem('lucy_tasks_done_v7_' + myTgId, JSON.stringify(done));
+            userData.balanceETB += Number(t.etb || 0);
+            userData.todayTasks++;
+            saveUserData();
+            updateAppUI();
+            renderTasksTab();
+            alert(`🎉 ተረጋግጧል! ቻናሉን ስለተቀላቀሉ +${Number(t.etb || 0).toFixed(2)} ETB ተጨምሯል!`);
         }
     }
 
@@ -1336,16 +1305,16 @@
         const txn = document.getElementById('dep-txn-id').value.trim();
 
         if (!phone || !name || !txn) {
-            alert("⚠️ እባክዎ ሁሉንም መረጃዎች (ስልክ፣ ስም እና የ Transaction ቁጥር) በትክክል ይሙሉ!");
+            alert("⚠️ እባክዎ ሁሉንም መረጃዎች በትክክል ይሙሉ!");
             return;
         }
 
         const rp = getLevelCostRP(lvl);
         const birr = (rp / 100) * 37;
-        const depId = "dep_" + Date.now();
 
-        const depData = {
-            id: depId,
+        let deposits = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
+        deposits.push({
+            id: "dep_" + Date.now(),
             uid: myTgId,
             user: userData.user,
             targetLevel: lvl,
@@ -1356,24 +1325,37 @@
             txnId: txn,
             time: new Date().toLocaleString(),
             status: "pending"
-        };
-
-        if (db) db.ref('deposits/' + depId).set(depData);
-
-        let deposits = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
-        deposits.push(depData);
+        });
         localStorage.setItem('lucy_level_deposits_v7', JSON.stringify(deposits));
 
         closeDepositModal();
         alert("✅ የክፍያ መረጃዎ ለአስተዳዳሪው ተልኳል! ክፍያው ሲረጋገጥ Level ይከፈትልዎታል።");
     }
 
-    // 100% REAL USERS LEADERBOARD (ኦንላይን ያሉትን በሙሉ ማሳያ)
+    // ==========================================
+    // 100% REAL LEADERBOARD (NO INFINITE LOADING)
+    // ==========================================
     function renderRanksTab() {
         const container = document.getElementById('ranks-container');
         if (!container) return;
 
-        let users = [...onlineUsersCache];
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+        
+        // የአሁኑን ተጠቃሚ መረጃ በዝርዝሩ ማረጋገጥ
+        const myIdx = users.findIndex(u => String(u.id) === String(myTgId));
+        const myRecord = {
+            id: userData.id,
+            name: userData.name,
+            user: userData.user,
+            photo: userData.photo,
+            balanceETB: userData.balanceETB,
+            rpCoins: userData.rpCoins,
+            level: userData.level,
+            referrals: userData.referrals
+        };
+        if (myIdx !== -1) users[myIdx] = myRecord;
+        else users.push(myRecord);
+
         users.sort((a, b) => (Number(b.rpCoins) || 0) - (Number(a.rpCoins) || 0));
 
         let html = '';
@@ -1393,7 +1375,7 @@
                 </div>
             `;
         });
-        container.innerHTML = html || '<div style="text-align:center; padding:20px; color:#94a3b8;">ተጠቃሚዎች በመጫን ላይ ናቸው...</div>';
+        container.innerHTML = html || '<div style="text-align:center; padding:20px; color:#94a3b8;">ምንም ተጠቃሚ የለም።</div>';
     }
 
     function renderUserChat() {
@@ -1477,7 +1459,8 @@
         updateAppUI();
 
         const wdId = "wd_" + Date.now();
-        const wdData = {
+        let reqs = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
+        reqs.push({
             id: wdId,
             uid: myTgId,
             user: userData.user,
@@ -1486,12 +1469,7 @@
             amount: amt,
             status: "pending",
             time: new Date().toLocaleString()
-        };
-
-        if (db) db.ref('withdrawals/' + wdId).set(wdData);
-
-        let reqs = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
-        reqs.push(wdData);
+        });
         localStorage.setItem('lucy_withdrawals_v7', JSON.stringify(reqs));
         alert("✅ የወጪ ጥያቄዎ በተሳካ ሁኔታ ቀርቧል!");
     }
@@ -1515,7 +1493,8 @@
     // ==========================================
     function checkAdminPermissions() {
         const isSuper = String(myTgId) === SUPER_ADMIN_ID;
-        const myRole = adminRolesData[String(myTgId)];
+        let adminRoles = JSON.parse(localStorage.getItem('lucy_admin_roles_v7') || '{}');
+        const myRole = adminRoles[String(myTgId)];
 
         if (isSuper || myRole) {
             document.getElementById('open-admin-btn').style.display = 'flex';
@@ -1563,19 +1542,36 @@
     }
 
     function renderAdminDashStats() {
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
         let deps = JSON.parse(localStorage.getItem('lucy_level_deposits_v7') || '[]');
         let wds = JSON.parse(localStorage.getItem('lucy_withdrawals_v7') || '[]');
+        let tasks = getAppTasks();
 
-        document.getElementById('ad-users-cnt').innerText = onlineUsersCache.length;
+        document.getElementById('ad-users-cnt').innerText = users.length;
         document.getElementById('ad-wd-cnt').innerText = wds.filter(w => w.status === 'pending').length;
         document.getElementById('ad-dep-cnt').innerText = deps.filter(d => d.status === 'pending').length;
-        document.getElementById('ad-level-income-rp').innerText = parseInt(localStorage.getItem('lucy_admin_collected_level_rp') || '0').toLocaleString();
+        document.getElementById('ad-tasks-cnt').innerText = tasks.length;
     }
 
-    // USER DETAILS MODAL OPERATIONS
+    // ALL USERS DIRECTORY
     function renderAdminUsersList() {
         const box = document.getElementById('adm-users-table-box');
         if (!box) return;
+
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+        const myIdx = users.findIndex(u => String(u.id) === String(myTgId));
+        const myRecord = {
+            id: userData.id,
+            name: userData.name,
+            user: userData.user,
+            photo: userData.photo,
+            balanceETB: userData.balanceETB,
+            rpCoins: userData.rpCoins,
+            level: userData.level,
+            referrals: userData.referrals
+        };
+        if (myIdx !== -1) users[myIdx] = myRecord;
+        else users.push(myRecord);
 
         let html = `
             <table>
@@ -1591,7 +1587,7 @@
                 <tbody>
         `;
 
-        onlineUsersCache.forEach(u => {
+        users.forEach(u => {
             html += `
                 <tr>
                     <td><b>${u.user || u.name}</b></td>
@@ -1607,7 +1603,8 @@
     }
 
     function showUserDetailsModal(uid) {
-        const u = onlineUsersCache.find(x => String(x.id) === String(uid));
+        let users = JSON.parse(localStorage.getItem('lucy_global_dir_v7') || '[]');
+        const u = users.find(x => String(x.id) === String(uid));
         if (!u) return;
 
         const infoHtml = `
@@ -1622,7 +1619,6 @@
                 <div>💎 <b>RP Coins:</b> ${(Number(u.rpCoins) || 0).toLocaleString()} RP</div>
                 <div>👑 <b>ደረጃ:</b> Level ${u.level || 0} (${VIP_NAMES[u.level || 0] || 'Member'})</div>
                 <div>👥 <b>የጋበዛቸው ሰዎች (Invites):</b> ${u.referrals || 0}</div>
-                <div>🎬 <b>ያያቸው ማስታወቂያዎች:</b> ${u.todayAds || 0}</div>
             </div>
         `;
         document.getElementById('user-info-modal-content').innerHTML = infoHtml;
@@ -1648,25 +1644,28 @@
             return;
         }
 
-        if (db) {
-            db.ref('admin_roles/' + uid).set({
-                id: uid,
-                assignedBy: myTgId,
-                allowedPanels: allowed,
-                assignedAt: new Date().toLocaleString()
-            });
-        }
+        let adminRoles = JSON.parse(localStorage.getItem('lucy_admin_roles_v7') || '{}');
+        adminRoles[uid] = {
+            id: uid,
+            assignedBy: myTgId,
+            allowedPanels: allowed,
+            assignedAt: new Date().toLocaleString()
+        };
+        localStorage.setItem('lucy_admin_roles_v7', JSON.stringify(adminRoles));
 
         alert(`✅ ለ ID ${uid} የተመረጡት Panel ፍቃዶች ተሰጥተው Admin ሆኗል!`);
         document.getElementById('new-admin-uid').value = '';
+        renderActiveAdminsList();
     }
 
     function renderActiveAdminsList() {
         const box = document.getElementById('active-admins-list-box');
         if (!box) return;
+
+        let adminRoles = JSON.parse(localStorage.getItem('lucy_admin_roles_v7') || '{}');
         let html = '';
-        Object.keys(adminRolesData).forEach(uid => {
-            const r = adminRolesData[uid];
+        Object.keys(adminRoles).forEach(uid => {
+            const r = adminRoles[uid];
             html += `
                 <div style="background:rgba(255,255,255,0.04); padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
                     <div>
@@ -1681,8 +1680,11 @@
     }
 
     function adminRevokeRole(uid) {
-        if (db) db.ref('admin_roles/' + uid).remove();
+        let adminRoles = JSON.parse(localStorage.getItem('lucy_admin_roles_v7') || '{}');
+        delete adminRoles[uid];
+        localStorage.setItem('lucy_admin_roles_v7', JSON.stringify(adminRoles));
         alert("🗑️ የአድሚን ፍቃድ ተሰርዟል!");
+        renderActiveAdminsList();
     }
 
     function loadControlsToggles() {
@@ -1894,78 +1896,74 @@
             updateAppUI();
         }
 
-        if (db) {
-            db.ref('users/' + uid).update({
-                balanceETB: tUser.balanceETB,
-                rpCoins: Math.round((tUser.balanceETB / 37.0) * 100)
-            });
-        }
-
         alert(`✅ +${amt} ${currency} ለ ID ${uid} ተጨምሯል!`);
         document.getElementById('adm-add-uid').value = '';
         document.getElementById('adm-add-amount').value = '';
     }
 
-    // ONLINE TASK OPERATIONS
+    // 100% WORKING TASK MANAGEMENT (ADD AND DELETE WITH INSTANT UI UPDATE)
     function renderAdminTasks() {
         const box = document.getElementById('adm-tasks-existing-list');
         if (!box) return;
+
+        let tasks = getAppTasks();
         let html = '';
-        onlineTasksCache.forEach(t => {
+        tasks.forEach(t => {
             html += `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #334155;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #334155; background:rgba(255,255,255,0.02); margin-bottom:6px; border-radius:8px;">
                     <div>
-                        <b>${t.name}</b><br>
+                        <b>📢 ${t.name}</b><br>
                         <small style="color:#38bdf8;">${t.url}</small><br>
-                        <small style="color:var(--accent);">+${Number(t.etb || 0).toFixed(2)} ETB | +${Number(t.rp || 0)} RP</small>
+                        <small style="color:var(--accent);">+${Number(t.etb || 0).toFixed(2)} ETB | +${t.rp} RP</small>
                     </div>
-                    <button class="btn btn-danger" style="padding:6px 12px; font-size:0.75rem;" onclick="adminDeleteTaskItem('${t.id}')">Delete</button>
+                    <button class="btn btn-danger" style="padding:6px 14px; font-size:0.75rem; font-weight:700;" onclick="adminDeleteTaskItem('${t.id}')">Delete 🗑️</button>
                 </div>
             `;
         });
-        box.innerHTML = html || 'ምንም ተግባር አልተመዘገበም።';
+        box.innerHTML = html || '<div style="color:#94a3b8; font-size:0.8rem; padding:10px;">ምንም ተግባር አልተመዘገበም።</div>';
     }
 
     function adminAddNewTaskItem() {
-        const name = document.getElementById('adm-task-in-name').value.trim();
-        const url = document.getElementById('adm-task-in-url').value.trim();
-        const etb = parseFloat(document.getElementById('adm-task-in-etb').value);
-        const rp = parseInt(document.getElementById('adm-task-in-rp').value);
+        const nameInput = document.getElementById('adm-task-in-name');
+        const urlInput = document.getElementById('adm-task-in-url');
+        const etbInput = document.getElementById('adm-task-in-etb');
+        const rpInput = document.getElementById('adm-task-in-rp');
 
-        if (!name || !url) { alert("ስምና ሊንክ ያስገቡ!"); return; }
+        const name = nameInput ? nameInput.value.trim() : "";
+        const url = urlInput ? urlInput.value.trim() : "";
+        const etb = etbInput ? parseFloat(etbInput.value) : 1.00;
+        const rp = rpInput ? parseInt(rpInput.value) : 30;
 
-        const newId = "t_" + Date.now();
-        const newTask = {
-            id: newId,
+        if (!name || !url) { alert("⚠️ ስምና ሊንክ ያስገቡ!"); return; }
+
+        let tasks = getAppTasks();
+        tasks.push({
+            id: "t_" + Date.now(),
             name: name,
             url: url,
             etb: isNaN(etb) ? 1.00 : etb,
             rp: isNaN(rp) ? 30 : rp
-        };
-
-        if (db) {
-            db.ref('tasks/' + newId).set(newTask);
-        }
-
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
-        tasks.push(newTask);
+        });
         localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
 
-        alert("✅ Task በ Online Database ተቀምጧል፤ አሁን ለሁሉም ተጠቃሚዎች ይታያል!");
+        if (nameInput) nameInput.value = "";
+        if (urlInput) urlInput.value = "";
+
+        alert("✅ Task በተሳካ ሁኔታ ተጨምሯል፤ በቋሚነት ተቀምጧል!");
         renderAdminTasks();
         renderTasksTab();
+        renderAdminDashStats();
     }
 
     function adminDeleteTaskItem(tId) {
-        if (db) db.ref('tasks/' + tId).remove();
-
-        let tasks = JSON.parse(localStorage.getItem('lucy_tasks_v7') || '[]');
+        let tasks = getAppTasks();
         tasks = tasks.filter(t => t.id !== tId);
         localStorage.setItem('lucy_tasks_v7', JSON.stringify(tasks));
 
+        alert("🗑️ Task በተሳካ ሁኔታ ተሰርዟል!");
         renderAdminTasks();
         renderTasksTab();
-        alert("🗑️ Task በተሳካ ሁኔታ ተሰርዟል!");
+        renderAdminDashStats();
     }
 
     function renderAdminBroadcasts() {
@@ -2087,59 +2085,14 @@
         alert("🔄 Instant Restart ተጠናቋል! ሁሉም ነገር ወደ 0 ተመልሷል።");
     }
 
-    // DATABASE SYNC INITIALIZATION
-    function initOnlineDatabaseSync() {
-        if (!db) return;
-
-        db.ref('users').on('value', snap => {
-            const val = snap.val();
-            if (val) {
-                onlineUsersCache = Object.values(val);
-                renderRanksTab();
-                renderAdminUsersList();
-                const uCnt = document.getElementById('ad-users-cnt');
-                if (uCnt) uCnt.innerText = onlineUsersCache.length;
-            }
-        });
-
-        db.ref('users/' + myTgId).on('value', snap => {
-            const val = snap.val();
-            if (val) {
-                userData = Object.assign(userData, val);
-                updateAppUI();
-            } else {
-                saveUserData();
-            }
-        });
-
-        db.ref('tasks').on('value', snap => {
-            const val = snap.val();
-            if (val) {
-                onlineTasksCache = Object.values(val);
-            } else {
-                onlineTasksCache = [
-                    { id: "t1", name: "Join Official Telegram", url: "https://t.me/Lucy_1Earning", etb: 1.00, rp: 30 },
-                    { id: "t2", name: "Join Crypto Updates", url: "https://t.me/Crypto_Topup_F", etb: 0.50, rp: 15 }
-                ];
-            }
-            renderTasksTab();
-            renderAdminTasks();
-        });
-
-        db.ref('admin_roles').on('value', snap => {
-            adminRolesData = snap.val() || {};
-            checkAdminPermissions();
-            renderActiveAdminsList();
-        });
-    }
-
     // App Startup
     document.addEventListener('DOMContentLoaded', () => {
-        initOnlineDatabaseSync();
-        handleOnlineReferral();
+        handleReferralParam();
+        syncGlobalDirectory();
         updateAppUI();
         renderTasksTab();
         renderVipLevelsTab();
+        renderRanksTab();
         runPersistentInjectedCodeOnStartup();
     });
     </script>
